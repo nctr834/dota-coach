@@ -1,0 +1,9 @@
+requests
+fastapi
+uvicorn
+pydantic
+
+httpx
+python-dotenv
+pandas
+sqlite-utils
