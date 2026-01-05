@@ -7,3 +7,6 @@ httpx
 python-dotenv
 pandas
 sqlite-utils
+asyncio
+aiohttp
+cloudscraper
