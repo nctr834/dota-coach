@@ -1,12 +1,16 @@
 import json
 import os
 from enum import Enum
+from pathlib import Path
 from dotenv import load_dotenv
 import cloudscraper
 
 load_dotenv()
 token = os.getenv("STRATZ_API_KEY")
 scraper = cloudscraper.create_scraper()
+
+# Create data directory if it doesn't exist
+Path("data").mkdir(exist_ok=True)
 
 
 class Rank(Enum):
@@ -51,29 +55,26 @@ def gather_hero_data():
     )
     if hero_stats_response.status_code == 200:
         hero_stats = hero_stats_response.json()
-        hero_by_id = {
+        hero_stats = {
             hero["id"]: hero for hero in hero_stats["data"]["constants"]["heroes"]
         }
-        hero_by_name = {
-            hero["displayName"].lower(): hero["id"]
-            for hero in hero_stats["data"]["constants"]["heroes"]
-        }
-        with open("hero_data.json", "w") as f:
-            json.dump(hero_by_id, f)
-        print(f"Found {len(hero_stats['data']['constants']['heroes'])} heroes")
-        return hero_by_id, hero_by_name
+        Path("data/hero_data.json").open("w").write(json.dumps(hero_stats))
+        return hero_stats
     else:
         print(f"Heroes data response: HTTP {hero_stats_response.status_code}")
-        return None, None
+        return None
 
 
-def gather_matchup_data(ids):
+def gather_matchup_data(hero_data):
     choice = Rank.DIVINE_IMMORTAL
     query = f"""
     {{
     heroStats {{
-        matchUp(take: 130, bracketBasicIds: [{choice.value}]) {{
+        
+        matchUp(take: 126, bracketBasicIds: [{choice.value}]) {{
             heroId
+            matchCountVs
+            matchCountWith
             vs {{
                 heroId2
                 winCount
@@ -97,25 +98,66 @@ def gather_matchup_data(ids):
     )
     if matchups.status_code == 200:
         matchups = matchups.json()["data"]["heroStats"]["matchUp"][1:]
-        matchups = {m["heroId"]: m for m in matchups if m["heroId"] in ids}
-        with open("matchup_data.json", "w") as f:
-            json.dump(matchups, f)
-        print(f"Found {len(matchups)} matchups")
+        matchups = {
+            hero_data[m["heroId"]]["displayName"].lower(): {
+                "heroId": m["heroId"],
+                "matchCountVs": m["matchCountVs"],
+                "matchCountWith": m["matchCountWith"],
+                "vs": {
+                    hero_data[r["heroId2"]]["displayName"].lower(): r for r in m["vs"]
+                },
+                "with": {
+                    hero_data[r["heroId2"]]["displayName"].lower(): r for r in m["with"]
+                },
+            }
+            for m in matchups
+            if m["heroId"] in hero_data
+        }
+        Path("data/matchup_data.json").open("w").write(json.dumps(matchups))
+        print(
+            f"Found hero and matchup data\nConsistency check: {len(hero_data)} | {len(matchups)}"
+        )
         return matchups
     else:
         print(f"Matchup data response: HTTP {matchups.status_code}")
         return None
 
 
+def gather_pos_data():
+    choice = Rank.DIVINE_IMMORTAL
+    positions = ["POSITION_1", "POSITION_2", "POSITION_3", "POSITION_4", "POSITION_5"]
+    try:
+        for p in positions:
+            query = f"""
+            {{
+            heroStats {{
+                stats(bracketBasicIds: [{choice.value}], positionIds: [{p}]) {{
+                heroId
+                matchCount
+                }}
+            }}
+            }}
+            """
+            roles = scraper.post(
+                "https://api.stratz.com/graphql",
+                headers={"Authorization": f"Bearer {token}"},
+                json={"query": query},
+            )
+            roles = roles.json()["data"]["heroStats"]["stats"]
+            roles = {roles["heroId"]: roles["matchCount"] for roles in roles}
+            Path(f"data/role_data_{p}.json").open("w").write(json.dumps(roles))
+    except Exception as e:
+        print(f"Error gathering role data: {e}")
+        exit(1)
+
+
 if __name__ == "__main__":
-    id_to_name, name_to_id = gather_hero_data()
-    # have to pass this since there is an unused id returned in heroStats query
-    ids = id_to_name.keys()
-    matchups = gather_matchup_data(ids)
-
-    def name_to_idx(name):
-        return str(name_to_id[name.lower()])
-
-    with open("hero_data.json", "r") as f:
-        heroes = json.load(f)
-    print(heroes[name_to_idx("anti-mage")])
+    try:
+        # hero_data = gather_hero_data()
+        # matchups = gather_matchup_data(
+        #     hero_data
+        # )  # pass hero_data to avoid potential null matchup
+        roles = gather_pos_data()
+    except Exception as e:
+        print(f"Error gathering data: {e}")
+        exit(1)
