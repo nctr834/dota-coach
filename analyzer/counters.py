@@ -9,7 +9,7 @@ with open("data/matchup_data.json", "r") as f:
     matchup_data = json.load(f)
 
 
-hero_sums = {
+hero_sums_vs = {
     hero: (
         sum(
             matchup_data[hero]["vs"][enemy]["winCount"]
@@ -20,40 +20,50 @@ hero_sums = {
     for hero in matchup_data
 }
 
+hero_sums_with = {
+    hero: (
+        sum(
+            matchup_data[hero]["with"][enemy]["winCount"]
+            for enemy in matchup_data[hero]["with"]
+        ),
+        matchup_data[hero]["matchCountWith"],
+    )
+    for hero in matchup_data
+}
+
 
 def get_counter_score(hero, enemy, matchup_data):
-    return 100 * (
-        (
-            matchup_data[hero]["vs"][enemy]["winCount"]
-            / matchup_data[hero]["vs"][enemy]["matchCount"]
-            - (
-                (hero_sums[hero][0] + hero_sums[enemy][0])
-                / (hero_sums[hero][1] + hero_sums[enemy][1])
-            )
-        )
-    )
+    if hero == enemy:
+        return 0
+    PRIOR_MATCHES = 100
+    PRIOR_WR = 0.5
+
+    wins = matchup_data[hero]["vs"][enemy]["winCount"]
+    matches = matchup_data[hero]["vs"][enemy]["matchCount"]
+
+    vs_wr = (wins + PRIOR_MATCHES * PRIOR_WR) / (matches + PRIOR_MATCHES)
+    hero_base = hero_sums_vs[hero][0] / hero_sums_vs[hero][1]
+    enemy_base = hero_sums_vs[enemy][0] / hero_sums_vs[enemy][1]
+    expected = (hero_base + enemy_base) / 2
+    return 100 * (vs_wr - expected)
 
 
 def get_synergy_score(hero, ally, matchup_data):
-    return 100 * (
-        (
-            matchup_data[hero]["with"][ally]["winCount"]
-            / matchup_data[hero]["with"][ally]["matchCount"]
-            - (
-                (hero_sums[hero][0] + hero_sums[ally][0])
-                / (hero_sums[hero][1] + hero_sums[ally][1])
-            )
-        )
-    )
+    if hero == ally:
+        return 0
+    PRIOR_MATCHES = 100
+    PRIOR_WR = 0.5
+
+    wins = matchup_data[hero]["with"][ally]["winCount"]
+    matches = matchup_data[hero]["with"][ally]["matchCount"]
+
+    with_wr = (wins + PRIOR_MATCHES * PRIOR_WR) / (matches + PRIOR_MATCHES)
+    hero_base = hero_sums_with[hero][0] / hero_sums_with[hero][1]
+    ally_base = hero_sums_with[ally][0] / hero_sums_with[ally][1]
+    expected = (hero_base + ally_base) / 2
+    return 100 * (with_wr - expected)
 
 
 if __name__ == "__main__":
-    print("Counter score:", get_counter_score("anti-mage", "axe"))
-    print("Counter score:", get_counter_score("axe", "anti-mage"))
-    print("Counter score:", get_counter_score("anti-mage", "puck"))
-    print("Counter score:", get_counter_score("puck", "anti-mage"))
-    print("Counter score:", get_counter_score("storm spirit", "axe"))
-    print("Counter score:", get_counter_score("storm spirit", "puck"))
-    print("Synergy score:", get_synergy_score("anti-mage", "storm spirit"))
-    print("Synergy score:", get_synergy_score("axe", "puck"))
-    print("Hero Win Rate:", hero_winrates["anti-mage"])
+    print("Counter score:", get_counter_score("shadow shaman", "phoenix", matchup_data))
+    print("Counter score:", get_counter_score("phoenix", "shadow shaman", matchup_data))

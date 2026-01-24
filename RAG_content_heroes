@@ -1,0 +1,780 @@
+# Dota 2 Hero Guide - RAG Context
+
+## Carry / Position 1
+
+**Anti-Mage**
+Goal: Farm faster than anyone via Blink mobility, burn mana to cripple casters, delete heroes with Mana Void, become unkillable late with Counterspell.
+Requires: Safe farm for Battle Fury (before 16 min ideal), team willing to 4v5 while you accelerate, Manta timing for dispel and illusion pressure. Strong against int/mana-dependent lineups.
+Fights: Split push until you have 2-3 items, then Blink onto isolated backline targets. Save Counterspell for big spells. Use Mana Void when enemies are low mana for max damage.
+Don't: Fight early without core items, skip BFury for "fighting build", Blink aggressively into multiple heroes, pick into physical damage lineups that ignore mana burn.
+
+**Arc Warden**
+Goal: Create overwhelming map pressure with Tempest Double clone. Farm multiple locations, siege highground safely, win through item/economic advantage.
+Requires: Micro skills for clone management, Midas timing, Gleipnir/Maelstrom for wave clear, understanding which items duplicate (Midas, BKB, Refresher).
+Fights: Send clone in first to use items and test enemy reactions. Keep real hero safe. Use Magnetic Field for save, Spark Wraiths for zoning.
+Don't: Send clone to die for nothing (it feeds gold), forget to use clone's items, pick into heavy gank lineups without vision.
+
+**Chaos Knight**
+Goal: Delete single targets with massive burst from Reality Rift + Chaos Bolt + illusion damage. Overwhelm with Phantasm illusions that hit like trucks.
+Requires: Armlet toggling skill, mana management (very limited pool), single-target lockdown from team, BKB for teamfights.
+Fights: Pop Phantasm before engaging, Reality Rift priority target into your illusions, Chaos Bolt for stun. BKB and run at backline.
+Don't: Spam spells (you'll be oom in 2 rotations), fight without Phantasm, pick into AoE clear (Earthshaker, Leshrac, Sven).
+
+**Drow Ranger**
+Goal: Dominate from range with massive Marksmanship agility, enable ranged allies with precision aura, kite melees who can't close the gap.
+Requires: Positioning discipline (Marksmanship disables when enemies close), Hurricane Pike for self-peel, team to frontline for you.
+Fights: Stay max range, use Gust to push away divers, Pike yourself away if jumped. Never frontline. Frost Arrows to kite.
+Don't: Let enemies get on top of you (lose ult), pick into gap-closers (Storm, Slark, PA) without counters, frontline ever.
+
+**Faceless Void**
+Goal: Win teamfights with Chronosphere - catch multiple enemies while your team kills them inside. Scale with attack speed and bash procs.
+Requires: Chrono timing and placement (practice in demo), MoM or Maelstrom for farming, BKB vs heavy disable, team coordination.
+Fights: Wait for enemies to clump, Blink/Time Walk in, Chrono 2-3 priority targets. Time Walk out if Chrono is bad. Let ranged allies shoot in.
+Don't: Chrono your own team (classic throw), use Chrono for single support kills, Time Walk forward then have no escape.
+
+**Gyrocopter**
+Goal: Deal massive AoE physical and magical damage in teamfights. Flash farm with Flak Cannon, dominate early-mid with Rocket Barrage and Call Down.
+Requires: Early aggression with Rocket Barrage (700 damage at close range), Flak Cannon for farming and fighting, positioning for multi-hero Flak.
+Fights: Call Down to start, Rocket Barrage if you can get close, Flak Cannon from safe distance. Position to hit multiple heroes with Flak bounces.
+Don't: Pick expecting late-game dominance (falls off), use Flak to farm when fight is imminent, ignore Rocket Barrage range requirement.
+
+**Juggernaut**
+Goal: Win lane with Blade Fury kill threat, sustain team with Healing Ward, delete heroes with Omnislash, scale with crit.
+Requires: Understanding Blade Fury makes you magic immune but can't attack during, Healing Ward micro, Omnislash when enemy isolated.
+Fights: Blade Fury through disables to get close, Omnislash isolated targets (not into creeps), keep Healing Ward alive and moving.
+Don't: Blade Fury then walk away (commit to kills), let Healing Ward die, Omnislash into creep waves, use Fury just for damage when you could right-click.
+
+**Lifestealer**
+Goal: Sustain through fights with Feast lifesteal, shred tanks with %HP damage, surprise initiate with Infest, ignore disables with Rage.
+Requires: Target selection (Feast wrecks high-HP heroes), Infest bomb coordination with initiators (Storm, Spirit Breaker), Rage timing.
+Fights: Infest ally initiator, pop out after they go in, Rage through disables, hit the highest HP target for max Feast value.
+Don't: Pick into kiting lineups (no gap close), Rage too early wasting duration walking, Infest squishy supports.
+
+**Luna**
+Goal: Farm extremely fast with Moon Glaives, win teamfights with Eclipse nuke, enable team with Lunar Blessing aura, melt buildings.
+Requires: Early farming acceleration, Manta for illusion glaive bounces, BKB to channel Eclipse safely, glaive bounce positioning.
+Fights: Eclipse when enemies grouped (damage splits), BKB and right-click with Glaives bouncing. Position for max bounce value.
+Don't: Eclipse single targets, fight at night without vision (you're squishy), clump your illusions (glaives need spread).
+
+**Medusa**
+Goal: Become unkillable late with Mana Shield, win fights with Stone Gaze, farm fast with Split Shot, stat-stack with items.
+Requires: Extreme farming patience (needs 3+ major items), Mana Shield mana management, Stone Gaze timing when enemies commit.
+Fights: Stand in the middle of everything, Stone Gaze when enemies commit and face you, tank with Mana Shield, Split Shot everyone.
+Don't: Fight early (you're food without items), waste Stone Gaze, pick into mana burn (AM destroys you).
+
+**Monkey King**
+Goal: Dominate lane with Jingu Mastery stacks, get pickoffs with Boundless Strike stun, win teamfights with Wukong's Command ring.
+Requires: Lane dominance to stack Jingu (4 hits = massive damage), tree positioning, Wukong's placement in chokes, Echo Sabre.
+Fights: Get Jingu stacks then Boundless Strike for huge damage, Wukong's in chokepoints so enemies can't escape ring easily.
+Don't: Get knocked out of trees (stunned + damage), waste Boundless Strike without Jingu buff, place Wukong's where enemies walk out.
+
+**Morphling**
+Goal: Be impossible to kill with Attribute Shift, burst targets by Morphing into them and using their spells, sustain with high agi.
+Requires: Mastery of Attribute Shift (survival vs damage balance), understanding every hero's spells for Morph targets, E-Blade for burst.
+Fights: Morph into high-impact target, use their spells, Morph back. Attribute Shift to agi for damage, shift str when taking heat. Waveform to disjoint.
+Don't: Get stunlocked at low str (instant death), Morph into useless targets, shift full agi without escape plan.
+
+**Naga Siren**
+Goal: Dominate the map with illusion split push, trap enemies with Ensnare, control fights with Song of the Siren, scale with Rip Tide armor reduction.
+Requires: Illusion micro for split push, Radiance or Diffusal timing, Song coordination with team (don't heal enemies), cut waves behind towers.
+Fights: Song to setup or disengage (NOT when team is killing), Ensnare priority targets (pierces BKB), illusions spread for Rip Tide procs.
+Don't: Song when team is about to kill someone (heals them), send illusions to die without purpose, pick into AoE clear.
+
+**Phantom Assassin**
+Goal: Delete heroes with massive Coup de Grace crits, snowball with early kills, become evasive nightmare with Blur.
+Requires: Desolator or Battle Fury timing, Blur awareness (disappears from minimap), BKB for teamfights, target selection.
+Fights: Blink Strike to backline, BKB, pray for crits. Dagger to slow runners. Blur makes you hard to see coming.
+Don't: Pick into MKB/break carriers, forget Dagger applies attack modifiers (Deso, lifesteal), dive without Blink Strike.
+
+**Phantom Lancer**
+Goal: Overwhelm with illusion army from Juxtapose, drain mana with Doppelganger and Diffusal, become impossible to identify among illusions.
+Requires: Diffusal Blade timing, Doppelganger use for dispel and dodge, constant illusion generation through attacking.
+Fights: Create chaos with illusions everywhere, Doppelganger to dodge big spells and dispel, burn their mana so they can't cast.
+Don't: Pick into AoE (Earthshaker, Leshrac, Sven), clump illusions, use Doppel offensively when you need escape.
+
+**Slark**
+Goal: Snowball by stealing stats with Essence Shift, purge disables with Dark Pact, be impossible to catch with Shadow Dance and Pounce.
+Requires: Target isolation for stat stacking, Dark Pact timing (purge after stuns land, not before), Shadow Dance awareness.
+Fights: Pounce priority target, Dark Pact to purge their stuns, steal stats, Shadow Dance when you need regen or to know if seen.
+Don't: Dark Pact too early (purges before stuns apply), Pounce predictably, fight into AoE stuns, ignore Shadow Dance passive.
+
+**Spectre**
+Goal: Scale infinitely with Desolate and Dispersion, haunt into any fight globally, chase with Spectral Dagger pathing.
+Requires: Surviving lane phase, Radiance timing, Haunt usage for kills AND farming (illusion on every enemy), tank items for Dispersion.
+Fights: Haunt when fight starts to be everywhere at once, Reality to the best target, Dagger for pathing and slow, tank damage for Dispersion.
+Don't: Haunt for single support kills (huge CD), fight early without items, forget Spectral Dagger gives terrain pathing.
+
+**Sven**
+Goal: One-shot teams with God's Strength cleave, stun groups with Storm Hammer, farm ancients with Great Cleave.
+Requires: BKB (you get kited hard), Blink or Shadow Blade for initiation, Echo Sabre for burst, understanding cleave geometry.
+Fights: God's Strength, BKB, Blink in, Storm Hammer clump, cleave everyone down. Hit the hero in front to cleave backline.
+Don't: Pop God's Strength then get kited whole duration, initiate without team follow-up, skip BKB.
+
+**Templar Assassin**
+Goal: Dominate mid with Refraction, burst heroes with Meld strike and Psi Blades spill, control map with Traps.
+Requires: Refraction charge management, Meld positioning for armor reduction, Trap placement on runes/paths, Blink for Meld initiation, Deso.
+Fights: Blink behind target, Meld strike for armor reduction, Psi Blades through them to hit backline. Traps for slow/vision.
+Don't: Let Refraction get stripped by DoTs (Veno, Viper destroy you), miss Psi Blades spill, pick into break carriers.
+
+**Terrorblade**
+Goal: Highest armor and illusion damage in game. Farm insanely fast with Metamorphosis ranged form, Sunder to survive burst, Reflection to slow.
+Requires: Metamorphosis timing (use for farming AND fighting), Sunder awareness (can target allies to save them), illusion micro.
+Fights: Metamorphosis, send illusions in, Sunder when you get low (swap HP with enemy or ally), Reflection to slow their carry.
+Don't: Fight without Metamorphosis, Sunder too late (if stunlocked can't cast), pick into AoE magic damage (low HP pool).
+
+**Troll Warlord**
+Goal: Highest attack speed in game with Fervor and Battle Trance. Perma-bash targets, sustain with Battle Trance status resist.
+Requires: Fervor stack management (don't switch targets), Battle Trance timing for surviving burst and committing, BKB.
+Fights: Commit to one target, build Fervor stacks, Battle Trance when you need to survive or finish, ranged form to chase.
+Don't: Switch targets and lose Fervor stacks, Battle Trance when already dead, forget ranged axes slow and melee axes root.
+
+**Ursa**
+Goal: Stack Fury Swipes to deal massive damage to single targets, delete Roshan early, burst with Overpower + Enrage.
+Requires: Gap closing (Blink or Abyssal), Enrage timing for damage reduction, Roshan timing (can solo at 10-15 min with lifesteal).
+Fights: Blink in, Overpower, stack Fury Swipes on one target, Enrage when you take damage for reduction. Don't switch targets.
+Don't: Get kited (your weakness), switch targets (lose stacks), Enrage too early, forget Overpower can prep before fight.
+
+**Weaver**
+Goal: Be unkillable with Shukuchi invis and Time Lapse, deal double attacks with Geminate, shred armor with The Swarm.
+Requires: Time Lapse timing (rewinds 5 seconds - track your HP mentally), Shukuchi max MS for chasing/escaping, attack speed.
+Fights: Shukuchi in, attack, Shukuchi out, Time Lapse if things go wrong. The Swarm for armor reduction and vision.
+Don't: Time Lapse when last 5 seconds were also bad, pick into AoE disable, Shukuchi directly into enemies predictably.
+
+**Wraith King** (skeleton_king)
+Goal: Refuse to die with Reincarnation, crit with Mortal Strike, lifesteal with Vampiric Spirit skeletons, stun with Wraithfire Blast.
+Requires: Mana for Reincarnation (key), Armlet toggling, Radiance for skeleton army, Blink for initiation.
+Fights: Blink stun priority target, right-click with skeletons, die, Reincarnate, keep fighting. Slow aura on Reincarnation helps.
+Don't: Run out of mana (no Reincarnation = you just die), pick into AM/Diffusal mana burn.
+
+
+## Mid / Position 2
+
+**Alchemist**
+Goal: Farm faster than any hero with Greevil's Greed, become 12-slotted (give Aghs to teammates), tank with Chemical Rage regen.
+Requires: Uncontested farm (team creates space), Radiance timing, Aghs gifting priority decisions, Chemical Rage during fights.
+Fights: Chemical Rage before engaging (not after), tank with insane regen, Acid Spray for armor reduction, Concoction stun.
+Don't: Fight without Chemical Rage, farm jungle when lanes available, gift Aghs before your core items.
+
+**Batrider**
+Goal: Initiate by dragging priority targets with Flaming Lasso into your team, dominate lane with Sticky Napalm stacks, scout with Firefly.
+Requires: Blink for Lasso initiation, Napalm stack management in lane, Firefly pathing over trees for escape.
+Fights: Blink in, Lasso priority target, Firefly and drag them back to team. Napalm stacks amplify all damage.
+Don't: Lasso without team nearby (can't kill solo), Firefly and then walk on ground, skip Blink.
+
+**Bloodseeker**
+Goal: Snowball with Thirst MS/damage from low HP enemies, silence runners with Blood Rite, punish movement with Rupture.
+Requires: Map awareness for Thirst (see low HP enemies globally), Rupture target selection, Blood Rite placement prediction.
+Fights: Rupture mobile hero (they can't run), Blood Rite where they'll stand, Thirst gives you speed as enemies get low.
+Don't: Rupture targets with blinks that don't require movement, ignore Bloodrage amp works BOTH ways (you take more damage).
+
+**Broodmother**
+Goal: Take over a lane completely with Spiderlings, solo kill heroes with Insatiable Hunger, become unkillable with Spin Web MS/regen.
+Requires: Lane where you can dominate (pick after seeing enemy offlane), Spiderling micro, Spin Web network management.
+Fights: Stay in Web network, Insatiable Hunger for sustain and damage, swarm with Spiderlings. Silken Bolo pierces spell immunity.
+Don't: Pick into AoE (Axe, ES, LC, Leshrac), feed Spiderlings (they give gold), leave your Web network.
+
+**Death Prophet**
+Goal: Siege towers and win fights with Exorcism spirits, sustain with Spirit Siphon, push early timing windows.
+Requires: Exorcism timing (long CD, commit when up), Spirit Siphon targets (more = more heal), Eul's for setup, tanky items.
+Fights: Exorcism, run at enemies so spirits hit, Spirit Siphon multiple targets, Silence key casters. Don't run away from enemies.
+Don't: Fight without Exorcism, run away during Exorcism (spirits need to hit), pick when you can't end before 40 min.
+
+**Dragon Knight**
+Goal: Tank everything with Dragon Blood regen/armor, stun with Dragon Tail, gain range and AoE with Elder Dragon Form, take towers.
+Requires: Elder Dragon Form management (push and fight when up), BKB for teamfights, Blink for initiation, Soul Ring for mana.
+Fights: Elder Dragon Form, Blink stun, tank everything, corrosive breath for tower push. Extended Dragon Tail range in dragon form.
+Don't: Fight without Elder Dragon Form if avoidable, pick expecting flashy outplays (you're straightforward).
+
+**Ember Spirit**
+Goal: Global mobility with Fire Remnants, AoE magic damage with Sleight + Chains/Flameguard, scale with spell amp or cleave.
+Requires: Remnant management (always have one safe), Sleight timing for chain combos, decision between magic or physical build.
+Fights: Keep a Remnant safe, Sleight in for damage, Chains to root, Remnant out. Flame Guard for shield. Global mobility.
+Don't: Use all Remnants aggressively (no escape), pick into Silences without dispel ready, forget Sleight dodges everything.
+
+**Huskar**
+Goal: Dominate HP-based matchups with Burning Spears, dive with Berserker's Blood attack speed/regen at low HP, delete targets with Life Break.
+Requires: Armlet for toggling at low HP, Life Break target selection, lane dominance, knowing your limits at various HP levels.
+Fights: Life Break in, Armlet toggle at low HP for Berserker's Blood bonuses, Burning Spears stack damage. You're stronger at low HP.
+Don't: Pick into pure/physical burst (you want magic damage to resist), Life Break without kill potential.
+
+**Invoker**
+Goal: Have an answer for everything with 10 spells. Scale infinitely, control fights with Tornado/EMP/Meteor/Deafening Blast.
+Requires: Spell memorization, Quas/Wex vs Exort decision, combo execution, invoke timing, extensive practice.
+Fights: Tornado to setup, EMP for mana drain, Meteor + Deafening Blast combo, Cold Snap for lockdown, Alacrity your carry.
+Don't: Panic-invoke wrong spells, forget Alacrity on carry, use Tornado at wrong time (lifts enemies away from spells).
+
+**Kunkka**
+Goal: One-shot clumped enemies with Tidebringer cleave, combo with X Marks + Torrent + Ghostship for guaranteed damage.
+Requires: X Mark combo timing (X, wait, Torrent, wait, return, Ghostship), Tidebringer positioning to cleave backline.
+Fights: X someone, Torrent where they'll return, Ghostship on top, Tidebringer cleave. Rum buff delays damage on allies.
+Don't: Miss Torrent without X combo, forget X Marks can save allies, Tidebringer the tank when carry is behind them.
+
+**Leshrac**
+Goal: Constant AoE damage with Pulse Nova, stun with Split Earth, demolish towers with Diabolic Edict, dominate lane with Lightning Storm.
+Requires: Bloodstone for Pulse Nova sustain, Split Earth setup (Eul's), tank items to survive in melee range.
+Fights: Pulse Nova on, run at everyone, Split Earth to stun, Lightning Storm spam. Diabolic Edict shreds isolated targets.
+Don't: Toggle Pulse Nova without mana, miss Split Earth (it's slow), fight without Pulse Nova mana.
+
+**Lina**
+Goal: Burst heroes with Laguna Blade, stack Fiery Soul for attack speed, stun with Light Strike Array, scale into right-clicks late.
+Requires: LSA landing (Eul's setup helps), Fiery Soul stack maintenance, decision between magic burst or attack build.
+Fights: LSA stun (Eul's setup if needed), Dragon Slave, Laguna Blade to finish. Keep Fiery Soul stacks for attack speed.
+Don't: Miss Light Strike Array, waste Laguna on tanky heroes (want to delete squishies), let stacks drop.
+
+**Lone Druid**
+Goal: Two-hero power with Spirit Bear, demolish towers with Demolish, adapt with True Form transformation.
+Requires: Bear micro, bear item builds (tanky or damage), Savage Roar for disengage, knowing when ranged vs True Form.
+Fights: Bear attacks while you stay safe, Savage Roar to fear enemies away, True Form when you need to tank.
+Don't: Let the bear die (you're half a hero), forget bear Entangle procs, wander without your bear.
+
+**Lycan**
+Goal: End games fast with push and Shapeshift MS, summon wolves for scouting and damage, amplify summons with Howl.
+Requires: Wolves micro for scouting/stacking, Shapeshift timing for kills and escapes, push-focused item build, ending before 30 min.
+Fights: Shapeshift for haste and crit, Howl to amp all summon damage, wolves provide vision and DPS.
+Don't: Pick expecting late-game scaling, ignore wolf scouting, let games go long (you fall off).
+
+**Magnus**
+Goal: Win teamfights with Reverse Polarity into Skewer combo, buff carry with Empower cleave, farm fast with Shockwave.
+Requires: Blink for RP, Skewer awareness and positioning, Empower on the right carry, RP patience (wait for good ones).
+Fights: Blink RP 2-3 heroes, Skewer them into team, Shockwave. Keep Empower on your carry always.
+Don't: Panic RP on one hero (wait for 2-3), Skewer enemies away from your team, forget Empower during downtime.
+
+**Meepo**
+Goal: End games at 25-30 min with XP advantage from clones, permastun with Earthbind, burst with Poof, global presence.
+Requires: Micro skills for all Meepos, Earthbind chain timing, Poof positioning, keeping all Meepos healthy.
+Fights: Net to root, Poof all Meepos onto target, keep chain-netting. Spread Meepos in fights to avoid AoE.
+Don't: Let any Meepo die (you all die), pick into AoE (Earthshaker, Sven, Lich), clump Meepos.
+
+**Necrophos** (necrolyte)
+Goal: Win fights of attrition with Heartstopper Aura and Death Pulse sustain, execute with Reaper's Scythe (adds respawn time).
+Requires: Staying alive in fights for Sadist stacks, Scythe timing (want to kill not just damage), frontline items.
+Fights: Stay in the middle, Death Pulse constantly for heal and damage, Heartstopper Aura burns them down, Scythe low HP targets.
+Don't: Scythe tanky heroes at high HP (it's %missing HP damage), pick into burst that kills you before you heal.
+
+**Outworld Destroyer** (obsidian_destroyer)
+Goal: Steal int with Arcane Orb, imprison key targets with Astral Imprisonment, nuke with Sanity's Eclipse based on int difference.
+Requires: Int stacking items, Astral timing for saves or setup, Sanity's Eclipse when int difference is high, auto-attack focus.
+Fights: Arcane Orb to steal int, Astral to save ally or setup, Sanity's Eclipse when you have big int advantage.
+Don't: Astral enemies when team is trying to kill them, Sanity's Eclipse without int advantage.
+
+**Pangolier**
+Goal: Initiate and escape with Rolling Thunder, chain stuns with Shield Crash and Swashbuckle, scale with Lucky Shot procs.
+Requires: Rolling Thunder control (bouncing off walls), Swashbuckle vector targeting, Shield Crash stacking, Diffusal.
+Fights: Roll in bouncing off terrain for multi-stuns, Swashbuckle through enemies, Shield Crash for damage reduction.
+Don't: Roll into bad positions, forget Rolling Thunder stuns on contact AND terrain bounces.
+
+**Puck**
+Goal: Elusive playmaker with Phase Shift and Illusory Orb jukes, silence with Waning Rift, control fights with Dream Coil leash.
+Requires: Orb jaunt timing, Phase Shift dodge reactions, Dream Coil placement, Blink for initiation.
+Fights: Orb in, Waning Rift silence, Dream Coil to leash, Phase Shift to dodge, Orb out. Extremely slippery.
+Don't: Jaunt into danger, break your own Dream Coil by killing targets, Phase Shift too late.
+
+**Queen of Pain**
+Goal: High-mobility burst mage with Blink and Sonic Wave, dominate lane with Shadow Strike, constant repositioning.
+Requires: Blink usage for aggression AND escape, Sonic Wave angles for multi-hero hits, Shadow Strike harass.
+Fights: Blink in, Scream, Sonic Wave through multiple heroes, Blink out (or BKB and stay).
+Don't: Blink in without Blink back available, miss Sonic Wave on grouped enemies, pick into magic resist stackers.
+
+**Razor**
+Goal: Drain enemy carry's damage with Static Link, force fights around you with Eye of the Storm and Plasma Field.
+Requires: Static Link on the right target and maintaining it, Eye of the Storm uptime, frontline positioning.
+Fights: Link their carry, don't break the link, Eye of the Storm on, tank everything. You have their damage now.
+Don't: Link the support instead of carry, break Link by walking away, pick into kiting.
+
+**Shadow Fiend** (nevermore)
+Goal: Farm fast with triple Raze, dominate mid with Necromastery souls, burst with Requiem of Souls, armor reduction aura.
+Requires: Raze accuracy, Necromastery soul collection (don't die - lose half), Requiem timing, Eul's or BKB for setup.
+Fights: Eul's yourself, Requiem while landing, Raze combo. Or BKB Requiem. Presence aura helps whole team.
+Don't: Die and lose souls, miss Razes, Requiem at range (more souls = more damage up close).
+
+**Silencer**
+Goal: Punish spell usage with Arcane Curse, int steal with Glaives and Last Word, ruin teamfights with Global Silence.
+Requires: Global Silence timing (save for key spells like Black Hole), Glaives management, Last Word on channelers.
+Fights: Wait for enemy to commit big spells then Global Silence, or Global preemptively to stop initiation. Int steal is permanent.
+Don't: Global too early (enemies wait it out), ignore permanent int steal scaling.
+
+**Skywrath Mage**
+Goal: Delete single targets with Mystic Flare, Ancient Seal silence and amp, spam Arcane Bolt, punish immobile heroes.
+Requires: Rod of Atos or teammate lockdown for Mystic Flare, mana sustain, Ancient Seal on priority targets.
+Fights: Ancient Seal (amps magic damage), Concussive Shot slow, Mystic Flare on rooted/stunned target. Need setup.
+Don't: Mystic Flare without setup (enemies walk out), pick into BKB rushers.
+
+**Sniper**
+Goal: Dominate from extreme range with Take Aim, zone with Shrapnel, execute with Assassinate, proc Headshot ministuns.
+Requires: Positioning (you die instantly if caught), Hurricane Pike for self-peel, Shrapnel zoning.
+Fights: Stay maximum range, Shrapnel zones, Assassinate fleeing targets. Pike yourself away if jumped.
+Don't: Frontline ever, pick into gap closers without team protection.
+
+**Storm Spirit**
+Goal: Infinite mobility with Ball Lightning, zip around fights, catch isolated targets, scale with mana pool.
+Requires: Ball Lightning mana management, Orchid/Bloodthorn timing for pickoffs, knowing your mana limits.
+Fights: Zip in, Orchid target, combo, zip to next target or out. Calculate mana before committing.
+Don't: Ball Lightning without mana calculation (stranded = dead), pick into mana burn or silence.
+
+**Tinker**
+Goal: Be everywhere with Boots of Travel rearm, spam nukes with Rearm, never let enemies push with March of the Machines.
+Requires: BoT timing, Rearm combos, tree hiding for TP, constant map pressure, Blink for positioning.
+Fights: Blink in, Laser/Rockets, Rearm, repeat. Defense Matrix for saves. March to zone. TP out.
+Don't: TP to same spot repeatedly (predictable), Rearm without mana, pick into long-range initiation.
+
+**Viper**
+Goal: Win any 1v1 with Nethertoxin break and damage, chase with Poison Attack slow, zone with Corrosive Skin.
+Requires: Nethertoxin on passive-dependent heroes, lane dominance, Dragon Lance for range.
+Fights: Nethertoxin under enemy (breaks passives), Poison Attack slow, Viper Strike for slow. Very oppressive 1v1.
+Don't: Pick and then play passive (you win lanes), forget Nethertoxin disables passives.
+
+**Visage**
+Goal: Burst with Soul Assumption stacks, dominate with Familiar summons, tank with Gravekeeper's Cloak layers.
+Requires: Familiar micro (stun requires landing), Soul Assumption timing (need damage in area first), Cloak management.
+Fights: Familiars dive and stun, Soul Assumption when stacks are up, Cloak layers make you tanky.
+Don't: Let Familiars die (3 hits and dead, long CD), miss Familiar stuns, ignore Soul Assumption damage.
+
+**Void Spirit**
+Goal: Slippery magic damage dealer with multiple escapes and remnants, burst with Resonant Pulse shield and Aether Remnant pulls.
+Requires: Remnant placement for escapes AND damage, Astral Step charge management, Dissimilate timing.
+Fights: Aether Remnant to pull, Resonant Pulse for shield and damage, Astral Step to chase/escape, Dissimilate to dodge.
+Don't: Use all Astral Step charges offensively, forget Dissimilate invulnerability.
+
+**Zeus** (zuus)
+Goal: Global damage and vision with Thundergod's Wrath, spam Arc Lightning for farm, burst with Lightning Bolt, reveal invis.
+Requires: Nimbus placement for teamfights, Thundergod's timing for kills or vision, Bolt for invis detection.
+Fights: Nimbus in fight area, spam Bolt and Arc Lightning, Thundergod's Wrath to finish low HP heroes globally.
+Don't: Thundergod's at start of fight (want to finish low HP heroes), forget Bolt and Wrath reveal invis.
+
+
+## Offlane / Position 3
+
+**Axe**
+Goal: Force enemies to attack you with Berserker's Call, spin to win with Counter Helix procs, execute with Culling Blade, cut waves.
+Requires: Blink for Call initiation, lane cutting to disrupt carry farm, Blade Mail synergy, Call into Cull combo.
+Fights: Blink into multiple enemies, Call them, spin procs while Blade Mail reflects, Culling Blade threshold kills.
+Don't: Call one support (want multiple or carry), Blade Mail without being focused, pick into magic damage (Helix needs attacks).
+
+**Beastmaster**
+Goal: Control map with Hawk vision, initiate with Primal Roar piercing stun, push with summons, Inner Beast aura.
+Requires: Hawk micro for scouting, Roar target selection, boar slow usage, Aghs for AoE stun if ahead.
+Fights: Roar priority target (pierces BKB), boars slow everyone, Hawks for vision. Inner Beast helps whole team.
+Don't: Let Hawks die (they give gold), Roar the support instead of carry, forget boar slow stacks.
+
+**Brewmaster**
+Goal: Win fights with Primal Split elemental pandas, setup with Cinder Brew slow and amp, Thunder Clap slow.
+Requires: Primal Split micro (Cyclone enemy carry, Dispel ally, Haze important target), Cinder Brew combos.
+Fights: Thunder Clap to slow, Cinder Brew for damage amp, Primal Split when focused. Micro pandas to control fight.
+Don't: Die before Primal Split, forget Cinder Brew increases damage taken, waste Cyclone on wrong target.
+
+**Bristleback**
+Goal: Unkillable from behind with Bristleback passive, stack Quill Spray for ramping damage, slow with Viscous Nasal Goo.
+Requires: Running away (face away for damage reduction), Quill stacking on same targets, Warpath stacks, tank items.
+Fights: Turn your back to enemies, spam Quill Spray on same targets (stacks damage), Nasal Goo for armor reduction.
+Don't: Face enemies directly (lose Bristleback), switch targets and lose Quill stacks, pick into Silver Edge.
+
+**Centaur Warrunner** (centaur)
+Goal: Initiate with Hoof Stomp stun, return damage with Retaliate, enable team escapes with Stampede global MS.
+Requires: Blink for Stomp initiation, Stampede timing for saves or chases, Double Edge usage (costs HP).
+Fights: Blink Stomp, Double Edge, Retaliate returns damage when hit. Stampede to engage or save team globally.
+Don't: Miss Hoof Stomp, Stampede when nothing is happening, forget Double Edge hits in AoE.
+
+**Clockwerk** (rattletrap)
+Goal: Isolate targets with Power Cogs, initiate from anywhere with Hookshot, disrupt positioning, Battery Assault in close range.
+Requires: Hookshot accuracy, Cog trapping of key targets, Battery Assault uptime inside cogs, Blade Mail.
+Fights: Hookshot priority target, Cog them with you inside, Battery Assault spam. They can't escape.
+Don't: Cog teammates out of kills, Hookshot into 5 heroes without team, waste Rocket Flare vision.
+
+**Dark Seer**
+Goal: Team fight dominance with Vacuum into Wall of Replica, harass with Ion Shell, escape with Surge.
+Requires: Vacuum Wall combo timing and placement, Ion Shell on right targets (melee creep in lane), Surge saves.
+Fights: Vacuum enemies into Wall of Replica, their illusions fight against them. Ion Shell on ally who dives in.
+Don't: Vacuum single targets (wait for clumps), Ion Shell wrong target in lane, miss Vacuum into Wall.
+
+**Doom** (doom_bringer)
+Goal: Remove one hero from the fight with Doom ultimate, consume creeps for abilities with Devour, tank with Scorched Earth.
+Requires: Doom target selection (doom the key hero), Devour ability choices (Centaur stun, Satyr purge, Wolf aura).
+Fights: Doom their most important hero (mutes abilities AND items), Scorched Earth for sustain, use Devoured abilities.
+Don't: Doom the support instead of carry, forget Doom mutes items, ignore Devour abilities.
+
+**Earth Spirit**
+Goal: Playmaker with stone remnant combos, Rolling Boulder initiation, AoE silence with Geomagnetic Grip, spread Magnetize.
+Requires: Stone remnant management (limited resource), combo execution, Magnetize spreading, Boulder accuracy.
+Fights: Roll in with Boulder, kick stones through enemies, Grip to silence, Magnetize spreads DoT when refreshed.
+Don't: Run out of stones, miss Boulder kicks, forget Grip silences, use Magnetize on single targets.
+
+**Elder Titan**
+Goal: Massive damage and sleep with Echo Stomp, remove base stats with Natural Order aura, split targets with Earth Splitter.
+Requires: Echo Stomp into Earth Splitter combo, Natural Order positioning near enemies, Astral Spirit for buffs.
+Fights: Echo Stomp to sleep, Earth Splitter on sleeping enemies, Natural Order removes BASE armor and magic resist (huge).
+Don't: Wake enemies from Echo Stomp prematurely, miss Earth Splitter, ignore Astral Spirit damage amp.
+
+**Legion Commander**
+Goal: Snowball with Duel damage wins, sustain with Press the Attack, nuke waves with Overwhelming Odds.
+Requires: Blink into Duel, winning Duel damage victories, Press the Attack timing for saves/dispel.
+Fights: Blink Duel priority target with team follow-up, Press the Attack for dispel and heal, win Duels to snowball.
+Don't: Duel wrong target and lose damage, Duel without team follow-up, pick into Silver Edge (disables passive).
+
+**Mars**
+Goal: Create fight zones with Arena of Blood (blocks movement and projectiles), Spear pin stuns, God's Rebuke crit.
+Requires: Arena placement for trapping, Spear accuracy for wall pins, Rebuke farming, Bulwark direction management.
+Fights: Spear someone into wall/tree/Arena for stun, Arena to trap them, God's Rebuke for damage. Bulwark face attackers.
+Don't: Arena open space (no pins), miss Spear pins, face wrong way for Bulwark, forget Arena blocks projectiles.
+
+**Nature's Prophet** (furion)
+Goal: Global presence with Teleportation, push and farm with Treants, damage with Wrath of Nature bounces.
+Requires: Teleport decisions, Treant push micro, Sprout usage for trapping/tree jukes, Wrath timing.
+Fights: Teleport to join fights, Sprout to trap, Wrath of Nature (damage increases per bounce). Push constantly.
+Don't: Teleport into 5 heroes, let Treants feed tower gold, forget Wrath damage increases per bounce.
+
+**Night Stalker**
+Goal: Dominate at night with enhanced abilities, silence with Crippling Fear, chase with Hunter in the Night MS/AS.
+Requires: Night timing awareness, Crippling Fear zoning, Dark Ascension for teamfights, early aggression.
+Fights: At night you're a monster - Crippling Fear zone, Void to slow, Hunter in the Night gives MS/AS. Dark Ascension for flying vision.
+Don't: Fight during day, forget Dark Ascension gives flying vision, ignore minimap vision reduction on enemies at night.
+
+**Primal Beast**
+Goal: Charge through enemies with Onslaught, AoE damage with Trample, rock stuns with Pulverize, grab with ultimate.
+Requires: Onslaught pathing through multiple heroes, Trample uptime, Pulverize aim, grabbing priority targets.
+Fights: Onslaught through their team, Trample while moving for damage, Pulverize to stun, Ult to grab and slam carry.
+Don't: Onslaught past everyone, forget Trample does more damage the more you move, grab the tank.
+
+**Sand King**
+Goal: Big teamfight ultimates with Epicenter, Burrowstrike stun initiation, Sandstorm for farming and invis, Caustic Finale.
+Requires: Blink Epicenter combo, Burrowstrike stun chaining, Sandstorm channel discipline, Caustic Finale awareness.
+Fights: Channel Epicenter, Blink in, Burrowstrike through multiple heroes. Epicenter pulses as you move.
+Don't: Epicenter without Blink, Burrowstrike single targets (line them up), cancel Sandstorm early.
+
+**Slardar**
+Goal: Reveal enemies with Corrosive Haze true sight and armor reduction, stun with Slithereen Crush, chase with sprint.
+Requires: Haze on right targets (armor reduction is huge), Blink Crush initiations, sprint timing, Bash procs.
+Fights: Blink Crush to stun, Corrosive Haze priority targets for armor reduction and vision. Bash to lock down.
+Don't: Haze already revealed/dead targets, sprint into danger without team, forget Haze gives vision.
+
+**Tidehunter**
+Goal: Win teamfights with Ravage AoE stun, reduce enemy damage with Anchor Smash, tank with Kraken Shell debuff removal.
+Requires: Ravage timing and positioning, Blink for initiation, Anchor Smash uptime, Kraken Shell threshold.
+Fights: Blink into multiple enemies, Ravage, Anchor Smash to reduce their damage. Kraken Shell auto-purges debuffs.
+Don't: Ravage single targets (wait for more), Blink too obvious, forget Kraken Shell auto-purges.
+
+**Timbersaw** (shredder)
+Goal: Shred strength heroes with pure damage, stay alive with Reactive Armor stacks, chain mobility with Timber Chain.
+Requires: Tree positioning for Timber Chain and Chakram, Reactive Armor stacking, Bloodstone sustain, strength heroes to destroy.
+Fights: Timber Chain through trees for mobility, Whirling Death cuts stat, Chakram for pure damage. Pure damage wrecks str heroes.
+Don't: Pick into int/agi lineups (no str to shred), fight without trees, use Chakram without mana.
+
+**Underlord** (abyssal_underlord)
+Goal: Team-wide global mobility with Dark Rift, AoE damage with Firestorm, Pit of Malice root, Atrophy Aura damage steal.
+Requires: Dark Rift timing and target selection, Firestorm placement, Pit layering, staying alive for Atrophy stacks.
+Fights: Firestorm zone, Pit of Malice to root (pierces BKB), Atrophy Aura steals damage as enemies die. Dark Rift to relocate team.
+Don't: Dark Rift into 5 heroes with no plan, forget Pit goes through BKB, ignore Atrophy damage steal.
+
+**Undying**
+Goal: Win early teamfights with Tombstone zombies, steal strength with Decay, heal and slow with Soul Rip, Flesh Golem amp.
+Requires: Tombstone placement, Decay stacking, Soul Rip targeting (heals allies, damages enemies), early aggression.
+Fights: Tombstone in good position, Decay spam to steal strength, Soul Rip to heal allies or finish enemies, Flesh Golem for amp.
+Don't: Let Tombstone die immediately, forget Decay steals strength AND does damage, pick for late game.
+
+
+## Soft Support / Position 4
+
+**Bounty Hunter**
+Goal: Track enemies for bonus gold on team kills, scout with Shadow Walk, burst with Jinada and Shuriken.
+Requires: Track uptime on kills, roaming for pickoffs, Jinada harass timing, Shuriken Track bounce.
+Fights: Track everyone before fight for gold bonus, Shuriken bounces between Tracked targets. Shadow Walk to scout.
+Don't: Forget to Track before kills, walk around visible (use Shadow Walk), ignore Track gold for team.
+
+**Dawnbreaker**
+Goal: Global presence with Solar Guardian TP, heal team with Luminosity, stun with Starbreaker hammer slam.
+Requires: Solar Guardian timing to join fights, Starbreaker accuracy (last hit stuns), Luminosity heal upkeep.
+Fights: Solar Guardian into fights from anywhere, Starbreaker (last swing stuns), Luminosity heals allies when you attack.
+Don't: Solar Guardian into 5 heroes alone, miss Starbreaker stun, forget Luminosity requires attacking.
+
+**Dark Willow**
+Goal: Control fights with Bramble Maze root, burst with Shadow Realm attack, teamfight with Bedlam/Terrorize.
+Requires: Bramble placement for roots, Shadow Realm timing, Terrorize to disrupt fights, understanding Bedlam range.
+Fights: Bramble Maze for roots, Cursed Crown delayed stun, Shadow Realm for big attack, Bedlam near targets, Terrorize to fear.
+Don't: Miss Bramble roots, Shadow Realm from too far, Terrorize wrong direction.
+
+**Disruptor**
+Goal: Punish mobility with Glimpse sendback, zone with Kinetic Field, silence with Static Storm, scout with Thunder Strike.
+Requires: Glimpse timing (4 seconds back), Kinetic Field placement around enemies, Static Storm zoning.
+Fights: Glimpse enemy back into team, Kinetic Field to trap them, Static Storm to silence inside. Thunder Strike for vision.
+Don't: Glimpse enemies forward (know where they were 4 seconds ago), Field without catching anyone.
+
+**Earthshaker**
+Goal: Echo Slam teamfight wins (more units = more damage), Fissure stun line, Enchant Totem burst.
+Requires: Blink for Echo Slam, Fissure placement to cut off paths, Enchant Totem as auto reset.
+Fights: Blink into clumped enemies (especially summons/illusions), Echo Slam, Fissure, Totem punch. More units = more echo damage.
+Don't: Echo single targets, Fissure to block your own team, Echo before enemies clump.
+
+**Enigma**
+Goal: Game-winning Black Holes, Malefice single target lockdown, Eidolon push and farm, Midnight Pulse %HP damage.
+Requires: Black Hole patience (wait for blink and BKB), Eidolon micro, Midnight Pulse placement before Black Hole.
+Fights: Midnight Pulse under enemies, Black Hole 2-3+ priority targets. Don't panic Hole. Game-winning ultimate.
+Don't: Black Hole one support, Eidolons die to AoE (don't clump), panic Black Hole.
+
+**Grimstroke**
+Goal: Double-cast spells on linked enemies with Soulbind, Stroke of Fate AoE, Ink Swell stun, Phantom's Embrace silence.
+Requires: Soulbind target selection, Stroke positioning (more distance = more damage), Ink Swell timing.
+Fights: Soulbind two enemies (your team's spells hit both), Phantom's Embrace to silence, Ink Swell ally for stun.
+Don't: Soulbind targets already dead, pop Ink Swell early, forget Phantom latches until dispelled.
+
+**Hoodwink**
+Goal: Kite and burst with Acorn Shot bounces, escape with Scurry, snipe with Sharpshooter, Bushwhack tree stun.
+Requires: Tree awareness for Bushwhack and Scurry, Sharpshooter charge and aim, Acorn bounce prediction.
+Fights: Bushwhack near trees for stun, Acorn Shot bounces, Sharpshooter to finish runners. Scurry through trees for escape.
+Don't: Bushwhack without trees nearby, fully charge Sharpshooter when quick shot would kill.
+
+**Marci**
+Goal: Burst and reposition with Dispose throw, chase with Rebound, Sidekick buff ally, Unleash rapid attacks.
+Requires: Dispose into team, Rebound for initiation or escape, Sidekick on carry, Unleash timing.
+Fights: Rebound off enemy to close gap, Dispose throw them into your team, Sidekick carry for lifesteal, Unleash for DPS.
+Don't: Dispose enemy to safety, Rebound off enemies when you want to escape, forget Sidekick lifesteal.
+
+**Mirana**
+Goal: Global invis with Moonlight Shadow, Sacred Arrow stuns (longer stun with range), Leap escape, Starstorm damage.
+Requires: Arrow accuracy (practice), Moonlight Shadow coordination, Leap timing, Starstorm secondary hit.
+Fights: Arrow for long-range stun (distance = stun duration), Moonlight Shadow to setup ganks or escape, Leap in/out.
+Don't: Miss point-blank arrows (no stun duration), Moonlight Shadow after team already seen.
+
+**Nyx Assassin**
+Goal: Burst int heroes with Mana Burn, stun with Impale, counter spells with Spiked Carapace, scout with Vendetta.
+Requires: Carapace timing (predict enemy spell), Impale accuracy, Mana Burn target selection, Vendetta scouting.
+Fights: Vendetta for invis scout, Impale stun, Mana Burn int heroes, Carapace to reflect spells back.
+Don't: Carapace too late, Mana Burn strength heroes, break Vendetta without purpose.
+
+**Phoenix**
+Goal: Teamfight domination with Supernova egg (stun if survives), Fire Spirits attack slow, Sun Ray %HP damage.
+Requires: Supernova positioning and timing, Fire Spirits on right-clickers, Sun Ray angle management.
+Fights: Dive in, Fire Spirits to slow their attack speed, Sun Ray for %HP damage, Supernova when low (if egg lives = AoE stun).
+Don't: Supernova where it gets destroyed instantly, forget Fire Spirits attack slow is huge.
+
+**Rubick**
+Goal: Steal game-changing spells with Spell Steal, lift with Telekinesis, amp magic with Fade Bolt.
+Requires: Spell Steal priority (know what to steal), Telekinesis setup, positioning to steal the right spell.
+Fights: Position to steal key spells (Black Hole, Ravage, RP), Telekinesis to setup kills, Fade Bolt for damage reduction.
+Don't: Steal bad spells, Telekinesis without throw direction, stand where you'll steal auto-attacks.
+
+**Spirit Breaker**
+Goal: Global presence with Charge of Darkness, Greater Bash procs, Nether Strike gap close, bulldoze through.
+Requires: Charge target selection, team follow-up on charges, Greater Bash uptime, Bulldoze timing.
+Fights: Charge of Darkness from across map, Greater Bash on impact, Nether Strike to continue lockdown. Bulldoze for status resist.
+Don't: Charge without team ready, forget Charge gives vision and is visible to enemy team.
+
+**Tusk**
+Goal: Initiate with Snowball (pulls allies), Ice Shards trap, burst with Walrus Punch crit, Frozen Sigil slow.
+Requires: Snowball ally pickup coordination, Ice Shards to cut off escape, Walrus Punch timing.
+Fights: Snowball with allies inside, Ice Shards to block retreat, Walrus Punch for massive crit. Tag Team to amp damage.
+Don't: Snowball and leave team behind, Shards to block your team, Punch non-priority targets.
+
+**Windranger** (windrunner)
+Goal: Lockdown with Shackleshot latch, burst with Focus Fire, nuke with Powershot, escape with Windrun.
+Requires: Shackle latch angles (unit or tree behind target), Focus Fire target selection, Powershot aim.
+Fights: Shackle for 2-man stun (need something behind target), Focus Fire to melt single target, Windrun for evasion.
+Don't: Miss Shackle latches, Focus Fire the tank, pick into MKB (Windrun countered).
+
+
+## Hard Support / Position 5
+
+**Ancient Apparition**
+Goal: Counter healing globally with Ice Blast shatter, setup with Cold Feet stun, slow with Ice Vortex amp, Chilling Touch harass.
+Requires: Ice Blast aim and timing (on low HP/healing heroes), Cold Feet setup (needs slow or stun first), Ice Vortex amp.
+Fights: Ice Vortex for magic amp, Cold Feet with setup, Ice Blast globally to kill low HP and prevent healing.
+Don't: Ice Blast full HP targets, Cold Feet without setup, forget Ice Vortex magic amp.
+
+**Bane**
+Goal: Single target lockdown god with Fiend's Grip channel, Nightmare setup, Enfeeble debuff, Brain Sap sustain.
+Requires: Fiend's Grip channel protection, Nightmare on right target, Brain Sap as nuke and heal.
+Fights: Nightmare setup, Fiend's Grip priority target (channel must be protected), Brain Sap for damage and sustain.
+Don't: Grip where you get interrupted, Nightmare your carry, waste Grip on support.
+
+**Chen**
+Goal: Early game domination with converted creeps, global heal with Hand of God, send allies home with Divine Favor.
+Requires: Creep micro (multiple units), Hand of God timing, creep ability usage (Centaur stun, Hellbear clap).
+Fights: Creep army with abilities (stuns, purges), Hand of God to heal globally, Divine Favor to save allies.
+Don't: Let creeps die (your power disappears), forget Hand of God exists, convert weak creeps.
+
+**Crystal Maiden**
+Goal: Enable team mana with Arcane Aura global, Frostbite lockdown, Crystal Nova slow, Freezing Field teamfight.
+Requires: Survival for aura uptime, Frostbite on right targets, Freezing Field positioning (Glimmer or BKB).
+Fights: Frostbite to lock targets, Crystal Nova slow, Freezing Field if you can channel safely (use BKB/Glimmer).
+Don't: Freezing Field in obvious spot (gets cancelled), forget you're the squishiest hero, Frostbite the tank.
+
+**Dazzle**
+Goal: Save allies with Shallow Grave (can't die), heal with Shadow Wave, Poison Touch slow, Bad Juju armor shred.
+Requires: Shallow Grave timing (before ally dies), Shadow Wave bounce positioning, Bad Juju cooldown abuse.
+Fights: Shadow Wave for heal and damage, Shallow Grave allies about to die (they literally cannot die), Bad Juju shreds armor.
+Don't: Grave too late, forget Shadow Wave damages and heals, ignore Bad Juju armor reduction.
+
+**Enchantress**
+Goal: Dominate early with Enchant converted creeps, Impetus pure damage scaling with distance, Untouchable attack slow.
+Requires: Creep conversion timing, Impetus kiting (further = more damage), Nature's Attendants heal.
+Fights: Kite with Impetus (further = more damage), Untouchable makes you hard to right-click, converted creeps help.
+Don't: Impetus at melee range (no damage), convert the wrong creep, forget Untouchable.
+
+**Io** (wisp)
+Goal: Enable your carry partner with Tether buffs and Relocate global repositioning, Overcharge amp, Tether regen share.
+Requires: Tether partner coordination, Relocate timing and return awareness, Overcharge toggle management.
+Fights: Tether your carry (share healing, transfer Overcharge), Relocate for ganks or escapes (12 second return).
+Don't: Relocate in without out plan, break Tether by walking wrong way, Overcharge when ally is full.
+
+**Jakiro**
+Goal: Zone fights with Macropyre and Ice Path, push with Liquid Fire DoT, dual breath damage and slow.
+Requires: Ice Path accuracy (it's delayed), Macropyre placement, Liquid Fire building damage.
+Fights: Ice Path stun (predict movement), Macropyre to zone/damage, Dual Breath for slow. Liquid Fire siege.
+Don't: Miss Ice Path, Macropyre where enemies walk out, forget Liquid Fire pushes towers.
+
+**Keeper of the Light** (keeper_of_the_light)
+Goal: Mana sustain for team with Chakra Magic, Illuminate wave clear and damage, Will-O-Wisp teamfight control.
+Requires: Chakra on the right ally (mana hungry carry), Illuminate charge, Will-O-Wisp placement.
+Fights: Chakra your mana-hungry allies, Illuminate from fog, Will-O-Wisp to control fight, Blinding Light to disrupt.
+Don't: Illuminate cancel early, forget Chakra gives cooldown reduction, Will-O-Wisp where it dies instantly.
+
+**Lich**
+Goal: Chain Frost bouncing ultimate, Frost Shield ally protection, Sinister Gaze slow and mana drain, Frost Blast nuke.
+Requires: Chain Frost bounce setup (clumped enemies), Frost Shield on frontliner, Sinister Gaze channel.
+Fights: Frost Shield your initiator, Chain Frost into clumped enemies, Frost Blast to slow, Sinister Gaze to catch.
+Don't: Chain Frost spread out enemies, forget Frost Shield explodes, Sinister Gaze without team.
+
+**Lion**
+Goal: Burst with Finger of Death stacks, Hex for lockdown, Mana Drain sustain, Earth Spike stun.
+Requires: Finger stacks (grows with kills), Hex priority targeting, Earth Spike accuracy.
+Fights: Earth Spike stun, Hex high priority target, Finger of Death to burst. Finger grows stronger with kills.
+Don't: Finger tanky heroes (want squishies for kills), Hex already stunned targets.
+
+**Ogre Magi** (ogre_magi)
+Goal: RNG burst with Multicast, Fireblast stun, Ignite slow DoT, Bloodlust ally buff.
+Requires: Multicast luck, Bloodlust on carry, Fireblast stun chaining, Ignite spread.
+Fights: Fireblast stuns (hope for Multicast), Ignite DoT and slow (can spread), Bloodlust your carry and self.
+Don't: Forget Bloodlust exists (it's huge), single Ignite when you could spread.
+
+**Omniknight**
+Goal: Save allies with Heavenly Grace status resist and HP regen, Hammer of Purity slow, Guardian Angel physical immunity.
+Requires: Heavenly Grace timing on focused ally, Guardian Angel vs physical damage, positioning.
+Fights: Heavenly Grace ally being focused (strong dispel + status resist), Guardian Angel when team is taking physical damage.
+Don't: Guardian Angel against magic damage, forget Heavenly Grace strong dispel.
+
+**Oracle**
+Goal: Keep allies alive with False Promise (delays damage and heals), Purifying Flames heal combo, Fortune's End dispel.
+Requires: False Promise timing, Fate's Edict to enable Purifying Flames heal, Fortune's End dispel.
+Fights: False Promise on ally taking damage (delays it, double heals), Purifying Flames combo (Edict first to heal), Fortune's End to dispel/root.
+Don't: False Promise too late, Purifying Flames allies without Fate's Edict (damages them).
+
+**Shadow Demon**
+Goal: Setup with Disruption (banish + creates illusions), Soul Catcher damage amp, Demonic Purge slow.
+Requires: Disruption timing for saves and setups, Soul Catcher target selection, Demonic Purge on runners.
+Fights: Disruption to save or setup, Soul Catcher on focus target (amps damage), Demonic Purge to slow.
+Don't: Disruption enemies when team is killing them, forget Soul Catcher amps damage significantly.
+
+**Shadow Shaman**
+Goal: Lockdown with Hex and Shackles, push with Mass Serpent Wards, Ether Shock nuke.
+Requires: Shackle channel protection, Mass Serpent Ward placement on towers, Hex chain with Shackles.
+Fights: Hex then Shackle for long lockdown, Mass Serpent Wards for damage and push.
+Don't: Shackle in bad position (you'll die), Mass Serpent Wards where enemies ignore them.
+
+**Snapfire**
+Goal: Stun with Firesnap Cookie jump, slow with Scatterblast, Lil' Shredder attack slow, Gobble Up + spit.
+Requires: Cookie ally coordination (launches ally for stun), Gobble Up target choice, Mortimer Kisses aim.
+Fights: Cookie ally into enemies for stun, Scatterblast slow, Lil' Shredder huge attack slow, Gobble Up and spit ally or eat enemy.
+Don't: Cookie ally into 5 heroes, forget Lil' Shredder attack slow, miss Mortimer Kisses.
+
+**Techies**
+Goal: Area denial with Proximity Mines, Sticky Bomb slow and damage, Blast Off silence and damage, Reactive Tazer.
+Requires: Mine placement in high-traffic areas, Sticky Bomb aim, Blast Off positioning.
+Fights: Sticky Bomb for slow and damage, Blast Off for silence (damages you too), mines for area denial, Reactive Tazer.
+Don't: Obvious mine spots, Blast Off without kill potential.
+
+**Treant Protector** (treant)
+Goal: Global heal with Living Armor on allies and towers, AoE root with Overgrowth, Eyes in the Forest vision.
+Requires: Living Armor global usage (watch ally HP bars), Overgrowth timing, Nature's Grasp usage, Eyes placement.
+Fights: Overgrowth for mass root, Nature's Grasp for roots. Living Armor saves allies globally and heals towers.
+Don't: Forget Living Armor heals towers, Overgrowth one target, ignore Eyes for map control.
+
+**Vengeful Spirit** (vengefulspirit)
+Goal: Save or initiate with Nether Swap, stun with Magic Missile, damage amp aura with Vengeance Aura, armor reduce.
+Requires: Nether Swap decision making (save ally or catch enemy), Wave of Terror scouting, Vengeance Aura positioning.
+Fights: Magic Missile stun, Wave of Terror armor reduction, Nether Swap to save or catch, Vengeance Aura buff.
+Don't: Swap enemy to safety, miss Magic Missile.
+
+**Venomancer**
+Goal: DoT everything with Poison Sting, Venomous Gale slow, Plague Ward vision and push, Poison Nova teamfight damage.
+Requires: Plague Ward placement for vision and push, Poison Nova timing (doesn't kill but brings everyone low), Gale accuracy.
+Fights: Poison Nova entire team (massive DoT but can't kill), Gale for slow, Plague Wards for damage and vision.
+Don't: Poison Nova expecting kills (it can't kill), forget Plague Wards give vision.
+
+**Warlock**
+Goal: Teamfight with Chaotic Offering (stun + golem summon), Fatal Bonds damage share, Shadow Word heal/DoT, Upheaval slow.
+Requires: Chaotic Offering drop location, Fatal Bonds before team damage, Shadow Word target selection.
+Fights: Fatal Bonds enemies together (damage spreads), Chaotic Offering for AoE stun and golem, Shadow Word heal ally or damage enemy.
+Don't: Golem where it dies instantly, forget Fatal Bonds spreads 25% damage.
+
+**Winter Wyvern**
+Goal: Save with Cold Embrace (ally invulnerable to physical), Winter's Curse (enemy's team attacks them), Arctic Burn harass.
+Requires: Cold Embrace timing (magic damage still hits), Winter's Curse on carry (allies attack them).
+Fights: Cold Embrace ally vs physical damage, Winter's Curse enemy carry (their team kills them), Arctic Burn to slow.
+Don't: Cold Embrace ally against magic burst, Winter's Curse the support.
+
+**Witch Doctor**
+Goal: Kill with Death Ward channel, Maledict damage amp, Paralyzing Cask stun bounces, Voodoo Restoration heal.
+Requires: Death Ward positioning and protection, Maledict timing (after burst for extra damage), Cask bounces.
+Fights: Cask for stun bounces, Maledict before/during burst damage, Death Ward from safe position.
+Don't: Death Ward obvious spot, Maledict full HP targets, Cask single targets.
+
+
+## Flex Picks (Multiple Positions)
+
+**Abaddon**
+Goal: Save allies with Aphotic Shield dispel, can't die with Borrowed Time (heals from damage), Mist Coil heal/nuke.
+Requires: Aphotic Shield timing (dispels on cast), Borrowed Time awareness (auto-triggers or manual), Mist Coil targets.
+Fights: Aphotic Shield allies being stunned (instant dispel), Borrowed Time when you're focused (you heal from damage).
+Don't: Aphotic Shield after ally died, forget Borrowed Time can be dispelled, Mist Coil yourself when ally needs it.
+
+**Kez**
+Goal: Burst physical damage dealer with Shodo Sai slash combos, Raptor Dance evasion, Ring Toss repositioning.
+Requires: Combo execution, Raptor Dance timing for evasion frames, Ring Toss for catch or escape.
+Fights: Ring Toss to engage, Shodo Sai slash combos, Raptor Dance to evade, ultimate for burst.
+Don't: Miss Shodo Sai slashes, forget Raptor Dance evasion, Ring Toss into danger.
+
+**Muerta**
+Goal: Ignore physical damage with Pierce the Veil (ethereal + bonus magic damage), Dead Shot ricochet fear, Ofrenda marking.
+Requires: Pierce the Veil timing, Dead Shot geometry for fear bounces, The Calling silence zone.
+Fights: Pierce the Veil to become immune to physical, Dead Shot for ricochet fear, The Calling to silence area.
+Don't: Pierce the Veil against magic damage, miss Dead Shot ricochets.
+
+**Ringmaster**
+Goal: Control fights with Escape Act save, Spotlight initiation/catch, Wheel of Wonder disable, Tame the Beasts whip.
+Requires: Escape Act positioning, Wheel of Wonder timing, Spotlight scouting.
+Fights: Escape Act to reposition allies, Spotlight to catch, Wheel of Wonder for random disable, Whip for fear.
+Don't: Escape Act ally to danger, forget Wheel of Wonder effects.
+
+**Pugna**
+Goal: Win push and magic damage wars with Nether Ward (punishes spellcasting), Life Drain sustain, Decrepify amp, Nether Blast push.
+Requires: Nether Ward placement, Decrepify combo setup, Life Drain channel protection.
+Fights: Nether Ward punishes enemy spell casts, Decrepify amps magic damage (but prevents physical), Life Drain to finish.
+Don't: Decrepify enemy when carry is right-clicking them, Life Drain in danger.
+
+**Riki**
+Goal: Permanent invisibility with Cloak and Dagger, delete backlines with Backstab damage, silence with Smoke Screen.
+Requires: Backstab positioning, Smoke Screen placement, Tricks of the Trade AoE damage, hunting supports.
+Fights: Smoke Screen to silence and blind, Backstab from behind, Tricks of the Trade when surrounded, Blink Strike to chase.
+Don't: Fight into Sentry Wards, forget Smoke Screen silences AND misses, try to manfight carries.
+
+**Clinkz**
+Goal: Burst down targets with Burning Barrage and Searing Arrows, go invisible for pickoffs with Skeleton Walk, scale with Death Pact consumed creep.
+Requires: Skeleton Walk for ganking and escaping, Death Pact timing for bonus HP/damage, Strafe for attack speed, Orchid timing for pickoffs.
+Fights: Skeleton Walk to position, Strafe + Burning Barrage for burst, Searing Arrows for sustained damage. Death Pact big creep for stats.
+Don't: Walk around visible (you're squishy), forget Death Pact before fights, fight without Strafe available.
+
+**Tiny**
+Goal: Burst combo with Avalanche + Toss, massive right-click damage with Tree Grab cleave, take towers fast with Grow.
+Requires: Avalanche-Toss combo (Toss during Avalanche for double damage), Tree Grab uptime, Blink for initiation.
+Fights: Blink in, Avalanche-Toss combo (insane burst), Tree Grab cleave to hit multiple. Grow gives huge damage and armor.
+Don't: Miss Avalanche-Toss combo (Toss during Avalanche), forget Tree Grab has charges, fight without tree.
+
+**Razor**
+Goal: Drain enemy carry's damage with Static Link, force fights around you with Eye of the Storm and Plasma Field.
+Requires: Static Link on the right target and maintaining it, Eye of the Storm uptime, frontline positioning.
+Fights: Link their carry (don't break it), Eye of the Storm on, Plasma Field for AoE damage. You have their damage now.
+Don't: Link the support instead of carry, break Link by walking away, pick into kiting.
+
+**Necrophos** (necrolyte)
+Goal: Win fights of attrition with Heartstopper Aura and Death Pulse sustain, execute with Reaper's Scythe (adds respawn time).
+Requires: Staying alive in fights for Sadist stacks, Scythe timing (want to kill not just damage), frontline items.
+Fights: Stay in the middle, Death Pulse constantly, Heartstopper Aura burns them, Scythe low HP targets for kill + respawn penalty.
+Don't: Scythe tanky heroes at high HP (it's %missing HP damage), pick into burst.

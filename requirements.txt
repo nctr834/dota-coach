@@ -10,3 +10,4 @@ sqlite-utils
 asyncio
 aiohttp
 cloudscraper
+regex
