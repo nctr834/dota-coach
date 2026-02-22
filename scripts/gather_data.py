@@ -33,13 +33,12 @@ def gather_hero_data():
         abilities {
             ability {
             name
+            attributes {
+                name
+                value
+            }
             stat {
-                behavior
-                unitTargetType
-                unitTargetTeam
-                unitDamageType
-                spellImmunity
-                isUltimate
+                dispellable
                 duration
                 hasScepterUpgrade
                 hasShardUpgrade
@@ -48,7 +47,7 @@ def gather_hero_data():
         }
         }
     }
-    }
+    }   
     """
     hero_stats_response = scraper.post(
         "https://api.stratz.com/graphql",
@@ -157,18 +156,10 @@ def gather_pos_data():
         exit(1)
 
 
-def gather_reference_data(matchup_data):
+def gather_item_data():
     query = """
     {
     constants {
-        abilities{
-        id
-        name
-        attributes {
-            name
-            value
-        }
-        }
         items{
         id
         name
@@ -184,57 +175,23 @@ def gather_reference_data(matchup_data):
     }
     }
     """
-    references = scraper.post(
+    items = scraper.post(
         "https://api.stratz.com/graphql",
         headers={"Authorization": f"Bearer {token}"},
         json={"query": query},
     )
 
-    if references.status_code == 200:
-        references = references.json()["data"]["constants"]
-        matchup_data_key_string = ",".join(matchup_data.keys())
-        references = {
-            "abilities": {
-                (
-                    a_wal := (
-                        re.search(
-                            "_".join(ability["name"].split("_")[0:2]),
-                            matchup_data_key_string,
-                        ).group()
-                        if re.search(
-                            "_".join(ability["name"].split("_")[0:2]),
-                            matchup_data_key_string,
-                        )
-                        else re.search(
-                            ability["name"].split("_")[0], matchup_data_key_string
-                        ).group()
-                    )
-                ): {
-                    "abilities": (
-                        {
-                            a["name"]: a
-                            for a in references["abilities"]
-                            if a["name"] is not None
-                            and (
-                                a["name"].split("_")[0] == a_wal
-                                or "_".join(a["name"].split("_")[0:2]) == a_wal
-                            )
-                        }
-                    )
-                }
-                for ability in references["abilities"]
-                if ability["name"] is not None
-                and re.search(ability["name"].split("_")[0], matchup_data_key_string)
-                is not None
-            },
-            "items": {item["name"]: item for item in references["items"]},
-        }
-        print(len(references["abilities"]))
-        Path("data/reference_data.json").open("w").write(json.dumps(references))
-        print(f"Found reference data")
-        return references
+    if items.status_code == 200:
+        items = items.json()["data"]["constants"]["items"]
+
+        items = {item["name"]: item for item in items}
+
+        print(f"{len(items)} (items)")
+        Path("data/item_data.json").open("w").write(json.dumps(items))
+        print(f"Found item data")
+        return items
     else:
-        print(f"References data response: HTTP {references.status_code}")
+        print(f"Items data response: HTTP {items.status_code}")
         return None
 
 
@@ -244,8 +201,8 @@ if __name__ == "__main__":
         matchup_data = gather_matchup_data(
             hero_data
         )  # pass hero_data to avoid potential null matchup
-        # roles = gather_pos_data()
-        references = gather_reference_data(matchup_data)
+        roles = gather_pos_data()
+        items = gather_item_data()
 
     except Exception as e:
         print(f"Error gathering data: {e}")
