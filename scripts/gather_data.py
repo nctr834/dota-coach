@@ -182,10 +182,51 @@ def gather_item_data():
     )
 
     if items.status_code == 200:
+<<<<<<< HEAD
         items = items.json()["data"]["constants"]["items"]
 
         items = {item["name"]: item for item in items}
 
+=======
+        invalid_items = {
+            "item_samurai_tabi",
+            "item_hermes_sandals",
+            "item_witches_switch",
+            "item_aetherial_halo",
+            "item_wraith_pact",
+            "item_cheese",
+            "item_stout_shield",
+            "item_ancient_janggo",
+            "item_tome_of_knowledge",
+            "item_refresher_shard",
+            "item_courier",
+            "item_flying_courier",
+            "item_grandmasters_glaive",
+            "item_specialists_array",
+        }
+        items = {
+            " ".join(item["name"].split("_")[1:]): item
+            for item in items.json()["data"]["constants"]["items"]
+            if not item["name"].endswith("_roshan")
+            if not item["name"].endswith("_necronomicon")
+            if item["name"] not in invalid_items
+            if item["stat"] is not None
+            if item["stat"]["cost"] > 30
+            if item["stat"]["quality"] is not None
+        }
+        rename_items = {
+            "devastator": "parasma",
+            "angels demise": "khanda",
+            "gungir": "gleipnir",
+            "lifesteal": "morbid mask",
+            "sphere": "linkens sphere",
+            "assault": "assault cuirass",
+            "lesser crit": "crystalys",
+            "greater crit": "daedalus",
+            "invis sword": "shadow blade",
+        }
+        items = {rename_items.get(k, k): v for k, v in items.items()}
+>>>>>>> 30f2da9 (condensed transcripts code and outputs + modified item_data structure)
         print(f"{len(items)} (items)")
         Path("data/item_data.json").open("w").write(json.dumps(items))
         print(f"Found item data")

@@ -3,3 +3,5 @@ __pycache__
 analyzer/__pycache__
 analyzer/__pycache__/*
 analyzer/__pycache__/*/*
+backup_transcripts_condensed/*
+data/transcripts_raw/*
