@@ -1,0 +1,122 @@
+[
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "laning_strategy",
+    "matchup_context": "against Meepo",
+    "insight": "Max Q over Static Link for harass and range creep control. Hold enemies on hostage on creeps by pulling aggro before creeps die, then nuke them. Pair with melee support to avoid being run at early. Level passive over Link unless facing heavy committal carries like PA, Slark, or CK.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "With Thunderhead facet, ultimate strikes more often with Eye of the Storm active and hits all units around you instead of limited targets. Excellent for clearing stacks and team fights.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "item_progression",
+    "matchup_context": null,
+    "insight": "Build aura items (Greaves, Crimson Guard, Pipe) that help you farm the map solo while benefiting teammates. Prioritize items that let you play the map independently over pure team fight items. Greaves are cost-effective for sustain-heavy meta.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "item_build_reasoning",
+    "matchup_context": "against Arc Warden and Meepo",
+    "insight": "Buy Crimson Guard over Pipe when Meepo is the primary threat, even if taking 60% magic damage. Meepo with Diffusal is the real kill condition; Crimson prevents Meepo ganks on the map where you spend 90% of the game.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "playstyle",
+    "matchup_context": null,
+    "insight": "Play as an area control farmer. Walk at enemies with your first big item (Mech/Greaves) into mid tower. Your passive plus ultimate create an AoE Blade Mail effect. Don't force fights; let map control and farm lead naturally create advantages.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "item_philosophy",
+    "matchup_context": null,
+    "insight": "When building team fight items, prioritize items that also let you play the map solo (like Glimmer Cape and Force Staff for supports). Buy items good for yourself first; if your team groups, great; if not, you can still farm aggressively.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "map_control",
+    "matchup_context": null,
+    "insight": "After securing Roshan with a large lead, fix all three lanes before committing to high ground. Only take fights outside the enemy base. This forces enemies to either fight outside base or give free farm, making the win guaranteed.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "closing_games",
+    "matchup_context": null,
+    "insight": "Build 3-4 team fight items, then add one item for building damage (like Assault Cuirass). After securing map control and Roshan, cut side waves from inside the base to prevent split push pressure before committing to high ground.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "win_condition",
+    "matchup_context": null,
+    "insight": "Don't force high ground or objectives when ahead. Keep farming the map. Wait for 3-4 items that make you unfightable in team fights. Force enemies to choose between fighting you outside base or sitting in base without farm.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Razor",
+    "role": "offlane",
+    "topic": "ability_priority",
+    "matchup_context": null,
+    "insight": "Static Link has one use: linking heavy committal carries when they jump you (PA, Slark, CK). Otherwise max Q and take passive points for consistent harass and team fight damage.",
+    "source": {
+      "video_id": "vxomHHLNzRc",
+      "title": "This Is Why You Throw Easy Games",
+      "channel": "BSJ"
+    }
+  }
+]

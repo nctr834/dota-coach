@@ -1,0 +1,242 @@
+[
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "lane_pulling",
+    "matchup_context": null,
+    "insight": "Pull small camp at consistent times (2:15, 3:15) to manage wave equilibrium and prevent enemy ganks while maintaining lane presence with your carry.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "trading_mechanics",
+    "matchup_context": null,
+    "insight": "Execute defensive aggression against melee heroes in lane - keep attacking enemies to trade HP when your carry goes for last hits.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Centaur",
+    "role": "offlane",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Prioritize Bracer into Blade Mail as core items. Later transition to Shiva's Guard or Pipe of Insight for survivability, avoiding Vanguard at 20 minutes.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Centaur",
+    "role": "offlane",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "Use Double Edge and Stomp for farming camps efficiently. In fights, execute blink-stun-Blade Mail combo, then disengage and wait for blink cooldown rather than staying in the fight.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Centaur",
+    "role": "offlane",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Farm specific dual camp patterns on the left side of the map. Clear camps without using stun to preserve mana for teamfights.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Bloodseeker",
+    "role": "carry",
+    "topic": "lane_management",
+    "matchup_context": null,
+    "insight": "Constantly push your lane when not under gank threat. Clear the wave as fast as possible and rotate to jungle camps (small camp in river behind tower).",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Bloodseeker",
+    "role": "carry",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "Always use Rupture as the first ability in fights before using other abilities that might interfere. Lead with Rupture to set up kills with teammates.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Bloodseeker",
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Prioritize Black King Bar as a core item to enable aggressive positioning and Rupture usage in fights without fear of silences.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "positioning",
+    "matchup_context": null,
+    "insight": "Avoid overly ballsy positioning - be careful of hook threats from Pudge. Position to arrow enemies into your team's stuns and maintain map awareness.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "Use Moonlight Shadow at the start of every fight without exception. Arrow high-value targets and use it to enable your team's initiation.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Build Solar Crest for team utility, then transition to Greaves, Drums, and Boots of Bearing to support your team's fights.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Check and take runes regularly. Farm the mid wave when your team is not actively fighting, maintaining wave momentum for your team.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "smoke_ganking",
+    "matchup_context": null,
+    "insight": "Execute the smoke gank sequence: push two waves of creeps to advance map position, then smoke from that pushed position to gank elsewhere. Do not blink during smoke to maintain burst damage.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "highground_assault",
+    "matchup_context": null,
+    "insight": "Push three waves of creeps together as a team to advance into highground. Combine heroes and use team utility (Drums, Solar Crest, Greaves) during the assault.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "item_management",
+    "matchup_context": null,
+    "insight": "Always maintain a Teleport Scroll in inventory at all times. Use courier efficiently to deliver items to secret shop and manage inventory space by selling early game items.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "vision_control",
+    "matchup_context": null,
+    "insight": "Place Sentries in enemy triangle and highground areas before highground assaults. Deward enemy Observer Wards before committing to fights in those areas.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "team_fighting",
+    "matchup_context": null,
+    "insight": "Keep your team combined and together during the late game. Avoid disconnecting from the team for extended periods. Coordinate item actives like Drums and Solar Crest.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "rotation_timing",
+    "matchup_context": null,
+    "insight": "Rotate to different map objectives (top, mid, bottom) based on wave position and team positioning. Push waves before rotating to set up the next fight location.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "gank_safety",
+    "matchup_context": null,
+    "insight": "Always execute gank sequences with smoke to maintain safety. Have detection (Dust) ready before engagements. Maintain escape routes and be ready to disengage quickly.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "rune_control",
+    "matchup_context": null,
+    "insight": "Check and secure bounty runes and power runes regularly. Use runes to enable farming or fighting based on game state.",
+    "source": {
+      "video_id": "zazhgkizTrc",
+      "title": "Do Immortal Tactics Work in Herald?",
+      "channel": "BSJ"
+    }
+  }
+]

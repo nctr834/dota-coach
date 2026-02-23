@@ -1,0 +1,278 @@
+[
+  {
+    "hero": "Witch Doctor",
+    "role": "support",
+    "topic": "ability_scaling",
+    "matchup_context": null,
+    "insight": "Level 15 talent +4 seconds Maladict duration gives one extra proc, scaling exponentially to deal 400-500 additional damage per cast when combined with allied damage. Prioritize this talent.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Witch Doctor",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Buy Eul's Scepter early if having a good game. Multiple Eul's can now exist in one game with all instances gaining charges, removing the restriction of having only one per team.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Witch Doctor",
+    "role": "support",
+    "topic": "matchup_advantage",
+    "matchup_context": "against Tidehunter",
+    "insight": "Maladict cannot be dispelled and Death Ward ignores Tidehunter's damage block from Kraken Shell and Crimson Guard. Use these to punish Tidehunter early and end game before level 20 when he becomes unkillable.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Witch Doctor",
+    "role": "support",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Take level 10 talent 200 health along with Voodoo Restoration to increase tankiness in early fights.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Witch Doctor",
+    "role": "support",
+    "topic": "core_strength",
+    "matchup_context": null,
+    "insight": "Win pub games by punishing enemy team clumping with Maladict, Paralyzing Cask bounces, and Death Ward damage combo. Focus on this damage output rather than relying on Voodoo Restoration healing.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Winter Wyvern",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Combine Holy Locket with level 10 talent +25 HP/s on Cold Embrace to create massive healing. Holy Locket grants target 10% heal amplification, stacking with Cold Embrace's existing amplification.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Winter Wyvern",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Buy Shard to split push independently by using Cold Embrace on creeps then timing with Splinter Blast for wave clear, allowing farm in passive games.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Winter Wyvern",
+    "role": "support",
+    "topic": "facet_choice",
+    "matchup_context": null,
+    "insight": "Take Recursive Facet to lean into Winter's Curse ultimate damage, which is a core source of pub strength through punishing bad positioning.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dazzle",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Build Guardian Greaves from Arcane Boots as your primary dispel item since it's now cheaper and solves silence problems. Avoid building Lotus Orb as it requires full buildup from scratch.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dazzle",
+    "role": "support",
+    "topic": "defensive_play",
+    "matchup_context": null,
+    "insight": "Skip defensive items for yourself and rush Blink Dagger instead. Use Nothyl Projection from range before blinking in, keeping your main hero safe in the backline.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dazzle",
+    "role": "support",
+    "topic": "ability_combo",
+    "matchup_context": null,
+    "insight": "When carry is low from Shallow Grave, stack heals by using Holy Locket, Guardian Greaves, Shadow Wave, and Nothyl Projection together for massive healing to win fights.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dazzle",
+    "role": "support",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "With Poison Bloom facet, max Poison Touch immediately, then Shadow Wave. Without it, take one point Poison Touch, max Shadow Wave, then get Shallow Grave.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Build casual Urn early if having a good game for extra damage, then transition to Mekansm into Guardian Greaves which is now cheaper and offers dispel.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "Moonlight Shadow cooldown reduced by 20 seconds, allowing more frequent aggressive and defensive usage throughout the game.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "contingency_play",
+    "matchup_context": "when cores are weak",
+    "insight": "Transition to core Mirana build (Eblade, Starstorm Facet) to scale and carry when your team's cores are underperforming. Use 200 damage meteors from Starstorm with Eblade burst.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Standard build: take Sacred Arrow only for first blood attempts, then Leap for trading, max Startstorm, get Arrow later. Arrow unlocks roaming phase.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "support",
+    "topic": "ability_rework",
+    "matchup_context": null,
+    "insight": "Avalanche is now a status-resistance-immune stun that cannot be BKB'd through mid-cast. No longer need to cast Avalanche and Toss simultaneously, effectively doubling stun time by casting sequentially.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "support",
+    "topic": "ability_combo",
+    "matchup_context": null,
+    "insight": "Cast Avalanche first (1.5s stun), then Toss at the end (1.25s flight time stun) for sequential stuns totaling 2.75 seconds. Previously required simultaneous cast to prevent BKB usage.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Rush Blink Dagger after early boots (Arcane Boots or Tranquil Boots + Soul Ring). This enables Avalanche-Toss initiation for positioning-based kills.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "support",
+    "topic": "late_game_scaling",
+    "matchup_context": null,
+    "insight": "Support Tiny shares same build path as core Tiny (Crash Landing talent). When support job is complete, pivot to core items (Eblade, Black King Bar, Shiva's Guard) using same talenting.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "patch_meta",
+    "matchup_context": null,
+    "insight": "Healing supports are strong in patch 7.40 because Tangos no longer share effectively with teammates, incentivizing cores to buy their own regen and making support healing more valuable.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "pub_strategy",
+    "matchup_context": null,
+    "insight": "Prioritize heroes that punish common pub mistakes: bad positioning (Witch Doctor, Winter Wyvern), bad prioritization (Dazzle), and out-of-position targets (Tiny). These have consistent pub value.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "initiation",
+    "matchup_context": null,
+    "insight": "Initiation is commonly lacking in pubs where players build pure damage. Supports like Tiny with Blink Dagger plus Avalanche-Toss can provide the initiation teams need.",
+    "source": {
+      "video_id": "qg1CKA7fHn8",
+      "title": "Try these supports in 7.40",
+      "channel": "ZQuixotix"
+    }
+  }
+]

@@ -1,0 +1,218 @@
+[
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "hero_selection",
+    "matchup_context": "against Arena-heavy kill composition",
+    "insight": "Pick heroes with built-in survivability against the enemy's primary kill method. Prefer heroes with BKB, mobility (Morphling, Faceless Void, Phantom Lancer), or escape mechanics over Luna when facing Arena-focused lineups.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "laning_item_build",
+    "matchup_context": "against Mars offlane",
+    "insight": "Build Quelling Blade early against tree-reliant offlaners (Mars, Hoodwink). Use it to cut trees for vision and safe farm paths to camps, leveraging Luna's high night vision.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "skill_build_priority",
+    "matchup_context": "in safe lane farming",
+    "insight": "Max Glaives before taking additional Beam points when you don't need the nuke for defense. Only take second point Beam when absolutely necessary. Max Glaives enables efficient jungle farming.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "map_control_farming",
+    "matchup_context": null,
+    "insight": "When the lane is won, transition to pushing waves and jungling neutrals. Use single pulls to reset lane equilibrium, then farm large camps safely. Pull camps guarantee safe farm at mid-game stages.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "skill_progression",
+    "matchup_context": null,
+    "insight": "Prioritize Glaives for farming efficiency in the early game. Take Eclipse and max Beam only after establishing safe farm patterns, not for early fight participation.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "defensive_positioning",
+    "matchup_context": "against mobile gankers (Leshrac)",
+    "insight": "Without escape mechanics or BKB, Luna is vulnerable to ganks even when expecting them. Build survivability items (Manta, BKB) before engaging. Use Manta illusions to split push and avoid direct confrontations until adequately itemized.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "item_build_understanding",
+    "matchup_context": null,
+    "insight": "Understand the specific purpose of each item before building it. Manta + Mask of Madness = waveclear and jungle farming tools, not fighting items. Add Satanic/Butterfly for manfighting. BKB first = survival tool to escape ganks, not a fight initiator.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "mid_game_itemization",
+    "matchup_context": "against gank-heavy teams",
+    "insight": "Build BKB after Manta primarily as a survivability tool to farm safely on the map, not to initiate fights. Your agency comes from forcing enemy responses to wave pressure while you farm.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "split_push_strategy",
+    "matchup_context": null,
+    "insight": "Send Manta illusions to push waves while you farm the opposite side of the map. This creates pressure and forces enemy rotations. Use these rotations as windows to push other lanes or farm safely.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "wave_management",
+    "matchup_context": "against superior teamfight composition",
+    "insight": "When outmatched in fights, abandon teamfighting and focus on wave cutting. Cut enemy waves with Manta illusions while farming your own jungle. Force enemies to respond to map pressure rather than engage your team.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "late_game_item_build",
+    "matchup_context": "against point-blank range heroes",
+    "insight": "Swift Blink + Silver Edge enables evasive skirmishes and positional advantage. Build Butterfly for manfighting scenarios instead. Match your items to your intended fight approach.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Luna",
+    "role": "carry",
+    "topic": "ancient_farming",
+    "matchup_context": null,
+    "insight": "Luna's W (Glaives) provides damage resistance and AOE damage, allowing you to stack and farm Ancient stacks earlier than most carries. Stack them to half HP, then farm cleanly with Mask of Madness.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "solo_carrying_philosophy",
+    "matchup_context": null,
+    "insight": "Solo carrying doesn't come from 1v9 farm maximization. It comes from maximizing your agency by balancing farm efficiency with fight readiness. Be the playmaker by forcing enemy responses.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "gank_awareness",
+    "matchup_context": null,
+    "insight": "Track enemy movements from minimap and note dangerous missing heroes. If two or more enemies are missing and you have no escape, retreat to safer farm locations. Don't overcommit on greedy jungle positions.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "tp_timing",
+    "matchup_context": null,
+    "insight": "TP to fights immediately when they break out, even if you're farming. Secure kills or objectives during enemy fights. Always look to advance on the map when enemies are committed elsewhere.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "fight_readiness",
+    "matchup_context": null,
+    "insight": "Don't take fights just because you completed a key item. First understand what that item enables you to do. Early BKB = survival to farm, not initiation. Only commit to fights when your full item state supports it.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "communication_importance",
+    "matchup_context": null,
+    "insight": "Communication is essential in Dota. Without it, teammates cannot capitalize on opportunities or respond to threats. Use hero positioning and timing to signal intent when verbal communication fails.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "networth_advantage",
+    "matchup_context": null,
+    "insight": "Significant networth advantage eventually translates to map control and victory. Prioritize staying alive and farming efficiently over chasing kills that don't translate to objectives.",
+    "source": {
+      "video_id": "X4cenSDQX7U",
+      "title": "I tested smurfing with 3 restrictions",
+      "channel": "BSJ"
+    }
+  }
+]

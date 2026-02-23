@@ -1,0 +1,170 @@
+[
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "core_synergy",
+    "matchup_context": null,
+    "insight": "Identify which core synergizes best with your hero's abilities. For Mirana, follow the core that benefits most from your arrow and buffs (e.g., OD with Drums and Solar Crest). Build items dynamically around core needs rather than following preset patterns.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "map_control_when_ahead",
+    "matchup_context": "when up by 5k gold or more",
+    "insight": "Stop farming jungle camps and focus on controlling objectives. Push the map on opponents by securing runes (2min, 17-20min windows), Wisdoms (7min, 21min), and Tormentors (20min). Avoid overfarming multiple camps when ahead\u2014close out the game instead.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "wave_farming_priority",
+    "matchup_context": null,
+    "insight": "Your primary farming responsibility is preventing waves from going unfarmed on your side of the map. Only farm jungle camps if waves are already being managed. After winning fights, check all lanes for unfarmed waves before farming elsewhere.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "smoke_usage",
+    "matchup_context": null,
+    "insight": "Always keep one smoke in inventory. Use smokes to connect heroes in the same area and create pressure. Two smoke types: gank smokes (2-3 heroes target enemy carry) and team fight smokes (coordinate 4-5 heroes to fight together). Trust awkward map feelings as signals to smoke.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "smoke_communication",
+    "matchup_context": null,
+    "insight": "Communicate smoke plans to teammates clearly. Ping the target and state readiness (e.g., 'Smoke Earthshaker, ping Wraith King' or 'Hey Bloodseeker, be ready to fight'). This allows teammates to prepare abilities and items for the coordinated play.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "objective_timing",
+    "matchup_context": null,
+    "insight": "After winning fights or taking objectives, immediately look for the next objective to chain. At any game moment, you should know exactly where each lane is pushing and adjust urgency accordingly\u2014skip jungle camps if lanes need immediate attention.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "sense_of_urgency",
+    "matchup_context": null,
+    "insight": "Match your sense of urgency to lane states. If a lane is pushing in dangerously, run there directly or TP instead of farming jungle camps en route. Farming slow camps while lanes are critical signals low urgency and poor map awareness.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "high_ground_push",
+    "matchup_context": "when taking high ground with a lead",
+    "insight": "Push in two lanes before committing to high ground assault. Exception: high split-push or stun-weak lineups (Anti-Mage, Nature's Prophet). Assign one hero to cut the third lane while the team groups. All three lanes pushed in forces safer high ground timing.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "item_builds_when_ahead",
+    "matchup_context": "when winning by significant gold",
+    "insight": "Buy defensive items (Lotus Orb, Horse Stavis, Greaves, Solar Crest) when ahead. The enemy can only come back by killing you, so survivability items prevent throwbacks. Avoid pure aggressive items when you have a large lead.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "item_builds_when_behind",
+    "matchup_context": "when losing or even in gold",
+    "insight": "Buy aggressive/utility items (Blink, Brown Boots) when behind. You need pickoff potential on valuable targets to come back. Focus on kill-securing items rather than survivability.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "pressure_creation",
+    "matchup_context": null,
+    "insight": "If your team doesn't create pressure through kills, objectives, or threat, enemies will create it instead. Playing passively while farming gives opponents map control. Pressure forces opponents to react rather than execute their plans.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "team_communication",
+    "matchup_context": null,
+    "insight": "Have critical discussions before or after games, not during. During games, use pings and quick callouts. Before game starts, ask your core what items/abilities strengthen them and what role you'll play. This prevents reactionary callouts and reduces team tension.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mirana",
+    "role": "support",
+    "topic": "item_itemization_by_matchup",
+    "matchup_context": "against Clinks/Morph/Necro with passive Wraith King",
+    "insight": "When your team's engage is passive, play around active cores with enabling items. For Clinks, build Aura of Silence (Aos) to amplify his damage and duel threat. Avoid forcing smokes to passive allies\u2014instead enable cores creating natural pressure.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "avoiding_game_length",
+    "matchup_context": "when ahead",
+    "insight": "Games drag long from two mistakes: overextension or over-passivity. When ahead, maintain aggressive objective pressure (smoke ganks, pushing, coordinated fights) rather than passive farming to prevent 60+ minute games.",
+    "source": {
+      "video_id": "phSQ1-PMKlw",
+      "title": "If You Are Lost as a Support, Watch This",
+      "channel": "BSJ"
+    }
+  }
+]

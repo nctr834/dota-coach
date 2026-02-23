@@ -1,0 +1,110 @@
+[
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": "against Gyrocopter and Skywrath Mage",
+    "insight": "Skip Bottle early on Tinker support. Instead, buy stat items (Null Talisman components) and a stick. Bottle has low value before level 6 since you can't reliably refill charges without griefing your mid laner. Purchase Bottle after reaching level 6 when teleport is available.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "laning_strategy",
+    "matchup_context": "against Gyrocopter and Skywrath Mage",
+    "insight": "Prioritize Laser over Defense Matrix in the early lane. Use Laser to harass enemies attempting last hits. Gyrocopter has zero armor early, so right-clicking combined with Laser pressure is effective. Buy one Salve to sustain through trades and win the lane through attrition.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "laning_strategy",
+    "matchup_context": "against Gyrocopter and Skywrath Mage",
+    "insight": "Keep the enemy creep wave pushed out of the tower to deny the enemy safe lane farm and give your offlaner breathing room. You have sufficient health to tank some creep damage while managing wave position.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Build Arcane Boots early as support Tinker for mana sustain. Follow with Soul Ring and Kaya to enable consistent farming and teamfight presence. This provides better scaling and game control than greedy items like Midas.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "After reaching level 6, farm dead map spaces that your cores cannot efficiently reach before respawns. Jungle while teammates are in lane, stack camps, and push sidelanes only when cores won't arrive before respawns. Avoid stealing farm directly from your cores' farming patterns.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tinker",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Avoid rushing Midas on support Tinker. It provides only creep kill gold and XP without enabling early teamfights or map control. Standard greedy support builds with Arcanes, Bottle, and Kaya offer better balance of farming and fight participation.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "team_communication",
+    "matchup_context": null,
+    "insight": "Do not flame or trash talk teammates, even if they perform poorly. Flaming lowers team morale and reduces win probability. If playing a greedy support style due to low confidence in cores, remain positive and communicate that the payoff will come later in the game.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "gameplay_philosophy",
+    "matchup_context": null,
+    "insight": "When playing greedy supports due to distrust in teammates, focus on execution and learning farm routing rather than blaming cores for being underfarmed. You are responsible for your farming choices\u2014do not steal core farm then claim they underperformed.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "teamfight_participation",
+    "matchup_context": null,
+    "insight": "Global mobility supports (Tinker, Nature's Prophet, Dawn Breaker) should balance farming with consistent fight participation. Do not AFK farm for 30 minutes even if scaling greedily. Show up to fights regularly to deal meaningful damage and set up kills for cores.",
+    "source": {
+      "video_id": "MfgEONGk_sA",
+      "title": "\"I would lose if I played like a support\" | WFIIA #29",
+      "channel": "ZQuixotix"
+    }
+  }
+]

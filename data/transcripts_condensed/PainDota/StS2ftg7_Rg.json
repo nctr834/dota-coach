@@ -1,0 +1,158 @@
+[
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Skip Meld entirely and max Refraction instead. Meld nerfs make it inefficient for farming, and Refraction at higher levels enables faster wave clear with Psi Blades doing 80% damage instead of 70%.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Build Boots \u2192 Sage's Mask \u2192 Treads \u2192 Falcon Blade \u2192 Desolator. Falcon Blade's mana regen allows permanent Refraction uptime via tread switching, offsetting recent nerfs to base stats and Meld damage.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "item_progression",
+    "matchup_context": null,
+    "insight": "Prioritize Falcon Blade over Basilius despite higher cost. The mana regen lets you spam Refraction constantly without clarity bottles, improving sustainability and farm speed more than armor aura would.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templer Assassin",
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Use Psi Blades to farm large camps at level 4. Push wave to lane, then rotate to jungle camps while respawn timer ticks. Repeat wave \u2192 large camp \u2192 medium camp \u2192 small camp pattern.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "farming_efficiency",
+    "matchup_context": null,
+    "insight": "Prioritize camps by gold, not ritual order: creep waves > ancient > large camp > small camp > medium camp. Calculate travel time between camps. Ignore waves if 3+ large camps can be cleared in same time window.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "trap_usage",
+    "matchup_context": null,
+    "insight": "Use Psi Blades traps to aggro creep camps toward you, reducing walk distance between last hits. Also use traps for precise camp stacking without entering full camp range.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "farming_tool",
+    "matchup_context": null,
+    "insight": "Buy Quelling Blade to cut trees and reposition between camps faster. Small movement savings compound across the minute and meaningfully increase creeps per minute.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "map_movement",
+    "matchup_context": null,
+    "insight": "Use river and terrain to path between camps efficiently. Abuse terrain movement speed bonuses (water, elevation) to reduce travel time between rotations.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "game_timing",
+    "matchup_context": null,
+    "insight": "Farm greedily until Blink Dagger. Hitting Blink 3-4 minutes earlier significantly increases online time for fights. Consistent 270+ CS at 20 minutes enables 16k+ networth for mid-game impact.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "laning_phase",
+    "matchup_context": null,
+    "insight": "Prioritize safety and sustain over harassment. Max Refraction for passive farming. Abuse Refraction duration (17s) and cooldown (14s) to maintain shield uptime while pushing waves constantly.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "farming_mentality",
+    "matchup_context": null,
+    "insight": "Don't follow rigid farming patterns. Instead, calculate available time each minute and fit maximum farm into that window. Adjust routes dynamically based on wave timing and camp availability.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "wave_management",
+    "matchup_context": null,
+    "insight": "Don't be enslaved to creep waves. If farming 3 jungle camps takes same time as one wave but yields more gold, skip the wave. Only farm lanes when timing prevents better jungle rotations.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "gpm_focus",
+    "matchup_context": null,
+    "insight": "Gold per minute matters more than gold per game. Focus on consistent farm per minute rather than occasional large kills. Consistent 270+ CS at 20 minutes scales better than kill-heavy play.",
+    "source": {
+      "video_id": "StS2ftg7_Rg",
+      "title": "How I\u2019m getting 300 LH in 20 mins with this New Farming Method",
+      "channel": "PainDota"
+    }
+  }
+]

@@ -1,0 +1,386 @@
+[
+  {
+    "hero": "Huskar",
+    "role": "mid",
+    "topic": "item_build",
+    "matchup_context": "against Spirit Vessel",
+    "insight": "Cauterized facet provides one free dispel, allowing you to skip early Black King Bar and rush damage items like Sange and Yasha or Dragon Lance instead of building around Spirit Vessel dispel.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Huskar",
+    "role": "mid",
+    "topic": "draft_safety",
+    "matchup_context": null,
+    "insight": "Can be safely picked early or late in drafts as a counterpick to individual heroes. Its flexibility across safe lane, mid, and offlane makes it a first-phase ban priority in pro play.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Ember Spirit",
+    "role": "mid",
+    "topic": "laning_recovery",
+    "matchup_context": "in losing matchups",
+    "insight": "If you lose lane, reach level 6 and use Remnant and Searing Chains to make plays on side lanes. Chain Gang facet provides roots for initiation while Flame Guard provides damage and utility to recover from poor laning.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Ember Spirit",
+    "role": "mid",
+    "topic": "teamfight_role",
+    "matchup_context": null,
+    "insight": "Function as a fight starter by scouting with Remnant, initiating with Slight of Fist, and rooting enemies to bait responses before your team engages.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Storm Spirit",
+    "role": "mid",
+    "topic": "item_build",
+    "matchup_context": "when needing early dispel",
+    "insight": "Build Guardian Greaves for early dispel against roots and silences instead of rushing Black King Bar. Combines mana sustain for team and yourself while costing similar to Arcane Boots into Eul's Scepter.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "mid",
+    "topic": "crowd_control",
+    "matchup_context": null,
+    "insight": "Avalanche is now a single ground stun unaffected by status resistance. You can now Avalanche then Toss separately for guaranteed crowd control instead of having to overlap spells for value.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "As position 4, if lane is bad, creep drag and stack. Once you get Blink Dagger, you have superior initiation compared to previous versions due to extra stun time from Avalanche changes.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": null,
+    "topic": "draft_flexibility",
+    "matchup_context": null,
+    "insight": "Can flex between mid and position 4 support, opening up draft options. If carry heroes are banned/unavailable, pick Tiny mid; if mid is covered, play Tiny 4 instead.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Timbersaw",
+    "role": "mid",
+    "topic": "matchup_dynamics",
+    "matchup_context": "against ranged heroes",
+    "insight": "In mid lane without many trees, you cannot crush ranged heroes with Whirling Death. You'll just trade farm. Timbersaw is stronger in offlane where more trees exist and more melee tanky strength heroes congregate.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Puck",
+    "role": "mid",
+    "topic": "item_build_nerf",
+    "matchup_context": null,
+    "insight": "Curveball can no longer dodge tower damage for free regen. This removes a consistent safe regen source in bad matchups, making the hero less safe to pick than before.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Void Spirit",
+    "role": "mid",
+    "topic": "ganking_defense",
+    "matchup_context": "against early ganks",
+    "insight": "Dissimilate is available from early levels to dodge gang attempts from Tusk and Spear Breaker. You can assimilate, enemies run to tower, then you turn with Remnant to pull them back in.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Queen of Pain",
+    "role": "mid",
+    "topic": "playstyle",
+    "matchup_context": null,
+    "insight": "Play as a bully damage dealer, not a control initiator. Get Dagger or Scream of Pain leveled and active at level 6, then contribute your own damage. Cannot force engagements without real crowd control unlike Spirit Brothers.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dragonite",
+    "role": "mid",
+    "topic": "scaling",
+    "matchup_context": null,
+    "insight": "Gets level 6 early or sooner due to better animations allowing denies. Corrosive Haze provides negative armor for physical damage carries like Clinkx and Ursa.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Dragonite",
+    "role": "mid",
+    "topic": "pressure",
+    "matchup_context": null,
+    "insight": "If enemy mid leaves lane to gank, threaten tower with Corrosive Haze (green facet). Negative armor synergizes with multiple teammates, making you a dual playmaker and enabler.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Invoker",
+    "role": "mid",
+    "topic": "farming_priority",
+    "matchup_context": null,
+    "insight": "Stay farm-focused early with Midas into Aghanim's Scepter. Your side lanes must provide stuns so you can constantly Sun Strike. Eventually farm enough to get Cataclysm, which wins fights with pure damage.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Invoker",
+    "role": "mid",
+    "topic": "item_flexibility",
+    "matchup_context": null,
+    "insight": "Some players skip Midas and go straight to Aghanim's Scepter or Aeon Disk instead, gaining more utility. This is viable if you want to come online faster than standard Midas builds.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Sand King",
+    "role": "mid",
+    "topic": "fallback_option",
+    "matchup_context": null,
+    "insight": "Safe pick if better mids are banned. Worst case, Sandstorm the lane, jungle farm, get Blink for early teamfight initiation. No longer S-tier but still viable.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Leshrac",
+    "role": "mid",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Misanthropy got nerfed, so skip the blink damage-focused build. Use Chronoptic Nourishment facet instead with Guardian Greaves to group with team and take towers faster since Diabolic Edict works on buildings again.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Earth Spirit",
+    "role": "mid",
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Innate provides bonus attack damage per unused Remnant (2.5% each). This helps last-hitting significantly compared to before.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Earth Spirit",
+    "role": "mid",
+    "topic": "playmaking",
+    "matchup_context": null,
+    "insight": "Fastest Spirit Brother - can roam before level 6 with Roll. Geomagnetic Grip now works on allies without items, allowing saves. Still second-choice to Tiny in both mid and position 4.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Slardar",
+    "role": "mid",
+    "topic": "synergy",
+    "matchup_context": null,
+    "insight": "Good versus melee heroes. Corrosive Haze provides negative armor that synergizes with physical damage carries. Common first-phase response when Clinkx is picked.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Viper",
+    "role": "mid",
+    "topic": "matchup_advantage",
+    "matchup_context": "against passive abilities",
+    "insight": "Corrosive Bath break disables passives. Counters Huskar's Reactive Armor, Tiny's bonuses, Dragonite's bonuses. Strong against melee heroes like Ember Spirit.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Monkey King",
+    "role": "mid",
+    "topic": "pick_timing",
+    "matchup_context": "against melee matchups",
+    "insight": "Pick late after seeing what enemy mid is. Good into melee heroes but weak to ranged heroes like Queen of Pain, Timber, Storm Spirit, Huskar, Viper, and Slardar.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Pango",
+    "role": "mid",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "New build skips W and maxes Q and E for negative armor via Swashbuckle, then adds Diffusal. Barrier from W is now safer to use out of ultimate with lower cooldown, making the hero potentially stronger despite nerfs.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Nature's Prophet",
+    "role": "mid",
+    "topic": "pick_timing",
+    "matchup_context": null,
+    "insight": "No longer safe first-pick. Pick later after confirming good matchup and rotation game. Flexible to carry, mid, or support but mid and carry are best positions.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "mid",
+    "topic": "meta_overview",
+    "matchup_context": null,
+    "insight": "Current meta favors mobile mid heroes who can make early plays because carries require constant pressure. Jump-in, jump-out playstyles counter burst-heavy or sustained-damage carries.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "mid",
+    "topic": "carry_meta_influence",
+    "matchup_context": "against current carry pool",
+    "insight": "Mobile mids with gap closers counter Clinkx (need to burst or escape Skeletons), Ursa (prevent Enrage), Wind Ranger (avoid Focus Fire), Sven (waste Transform), Troll Warlord (waste ultimate), Medusa (pop Refraction), and Morphling (chase and break Refraction).",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "mid",
+    "topic": "pub_performance",
+    "matchup_context": "in archon and lower brackets",
+    "insight": "High-skill playmaking mids (Ember, Puck, Storm, Invoker) have sub-50% pub winrates because players don't execute early active playstyle. Win with simple heroes (Zeus, Viper) or scaling carries in mid lane.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Necrophos",
+    "role": "mid",
+    "topic": "pub_strength",
+    "matchup_context": null,
+    "insight": "Weak laner not picked at pro level, but pub players don't punish it. Good scaling and infinite-damage scaling means you outscale opponents. Players overcommit to Necro with Ghost Shroud and don't buy Nullifier.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Outworld Devourer",
+    "role": "mid",
+    "topic": "pub_strength",
+    "matchup_context": null,
+    "insight": "Lane-winning hero. Pub players don't play around Astral Imprisonment correctly, often overcommitting. Combine Astral with Essence Devourer shield to burst enemies. Pros manage this; pubs do not.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "mid",
+    "topic": "skill_progression",
+    "matchup_context": null,
+    "insight": "Learning playmaking mids is valuable across all MMR brackets. Early initiation and playmaking skills are universally valuable and carry you through ranks faster than simple heroes.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "mid",
+    "topic": "hero_learning_strategy",
+    "matchup_context": null,
+    "insight": "Either pick simple heroes with clear win conditions or commit to learning one meta mid deeply. Spam the hero to learn its execution and become the player making things happen for your team.",
+    "source": {
+      "video_id": "tzDcTsPvVc0",
+      "title": "Mid Tier List | Dota 2 7.40b",
+      "channel": "ZQuixotix"
+    }
+  }
+]

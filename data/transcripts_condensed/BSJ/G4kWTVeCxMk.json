@@ -1,0 +1,278 @@
+[
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "draft_analysis",
+    "matchup_context": null,
+    "insight": "When drafting, prioritize three core components: stuns, damage, and objective-taking. Identify gaps in your team's lineup and pick heroes that fill the most critical deficiency.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Double mango starting build on SF provides extra mana sustain in lane and health regen with patch 7.40 changes. Falcon Blade is core early because SF relies heavily on mana for laning and farming while being squishy.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "laning_strategy",
+    "matchup_context": null,
+    "insight": "Ranged damage dealers want their support in lane frequently. Play aggressively together to protect each other with spells and attacks, especially against kill lanes.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "laning_strategy",
+    "matchup_context": null,
+    "insight": "When your support is stack pulling, play defensively as a bodyguard for the pull camp rather than contesting enemy CS. This prevents unnecessary damage while maintaining your lane advantage.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "ability_leveling",
+    "matchup_context": null,
+    "insight": "On SF carry, take early points in stats rather than multiple early levels of minus armor, as additional minus armor aggressively shoves the lane and disrupts lane equilibrium.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "positioning",
+    "matchup_context": null,
+    "insight": "As a ranged carry, position yourself based on support proximity. Play defensively when your support roams, then play aggressively when they return to coordinate kills.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "mid_game_awareness",
+    "matchup_context": null,
+    "insight": "Use 'ever-expanding circles' map awareness: when enemies go missing, they can be anywhere within a radius determined by how long they've been off-map. Scan in suspected directions to verify gank threats.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "gank_evasion",
+    "matchup_context": null,
+    "insight": "Use scan to check the direction enemies went when missing as a group. Assume 90% of the time aggressive enemy positioning is real, not a bluff, and TP away to safety.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Adjust farming patterns based on enemy information: farm forwards when you have visibility on enemy positions, farm backwards when you lack information. This reduces gank deaths significantly.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": "against burst damage and control",
+    "insight": "Prioritize 2-3 survivability items when ahead before building pure damage items. Buy Manta against heroes with heavy single-target damage and spells (Phoenix, Death Prophet, Shadow Shaman).",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": "against Ursa",
+    "insight": "Against Ursa that's behind, skip Hurricane Pike and go Butterfly for damage instead. Avoid Hurricane Pike against heroes that are hard to kite (those with pull or gap-close abilities).",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "teamfight_initiation",
+    "matchup_context": null,
+    "insight": "When strong with items, don't half-commit to fights. Get your full team together via smoke gank before engaging, rather than casually walking into tower and expecting to win.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "objective_priority",
+    "matchup_context": null,
+    "insight": "After kills, prioritize taking towers and natural objectives over forcing high ground. Check all lanes before committing to take another tier 2 to avoid losing map pressure.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "high_ground_tactics",
+    "matchup_context": null,
+    "insight": "Avoid taking high ground without a clear advantage. Only commit to high ground when enemies are dead, lanes are pushed, and your team can walk in safely. Instead, kill enemies caught on the map.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "game_closing",
+    "matchup_context": null,
+    "insight": "When ahead, communicate item timings to your team to prevent unnecessary fights. Say 'I'm farming X item, then we go' rather than appearing inactive while building survivability.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": "when winning",
+    "insight": "Build survivability items first (BKB, Manta) to enable damage output, then add damage items (Daedalus). General rule: 2-3 survivability items when ahead, then damage-focused items.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": "late game",
+    "insight": "Boots of Travel 2 helps you connect with scattered teammates. Satanic provides sustain against multi-source burst damage like Ursa and Death Prophet ultimates.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "enemy_itemization",
+    "matchup_context": null,
+    "insight": "If enemy carry builds only pure damage items (Basher, MKB, Blink) without survivability, play around their damage and avoid them. They can't itemize to kill you effectively without defensive items.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "team_coordination",
+    "matchup_context": null,
+    "insight": "Monitor teammate positioning when ahead. If they're separated (support top, mid hero elsewhere), wait patiently for them to naturally group rather than forcing a disadvantageous fight.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": "carry",
+    "topic": "farming_speed",
+    "matchup_context": null,
+    "insight": "Manta illusions clear waves effectively. Use them to maintain lane pressure while roaming or grouping with team for fights, allowing you to farm waves while absent.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "pick_stage",
+    "matchup_context": null,
+    "insight": "Ranged damage dealers are more reliable at outputting damage since opponent positioning matters less. Prefer ranged carries in games with mobile or controlling enemies.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "roshan_control",
+    "matchup_context": null,
+    "insight": "Take Roshan after winning fights when you have Aegis advantage. Use the Aegis timing window aggressively to pressure objectives while having a safety net.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "mmr_progression",
+    "matchup_context": null,
+    "insight": "The difference between 4-6k and Immortal is not farming speed but game adjustments: responding to map information, avoiding rigid patterns, and timing your aggression based on hero availability.",
+    "source": {
+      "video_id": "G4kWTVeCxMk",
+      "title": "I Smurfed in 5k to Show the Difference",
+      "channel": "BSJ"
+    }
+  }
+]

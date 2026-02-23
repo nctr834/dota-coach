@@ -1,0 +1,314 @@
+[
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "facet_selection",
+    "matchup_context": null,
+    "insight": "Always take the Agility/Movement Speed facet. It provides stacking agility and movement speed without damage taken, enabling fast farming and strong laning despite lacking mobility spells.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "early_item_build",
+    "matchup_context": null,
+    "insight": "Rush Treads immediately without Quelling Blade, Wraith Band, or Tangos. The hero already has 69 damage at level 1 with just Magic Wand and Branches, making these items wasteful. Extra damage enables superior last-hitting and denying.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "boots_choice",
+    "matchup_context": null,
+    "insight": "Buy Treads over Phase Boots. Treads provide attack speed which benefits Omnislash and farming, plus passive movement speed that exceeds Phase Boot mobility. Phase Boots only useful if stomping lane with Blade Fury.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "core_item_build",
+    "matchup_context": null,
+    "insight": "Build Treads into Battle Fury, not Maelstrom. Battle Fury is 1,600 gold cheaper, the buildup (Perseverance) sustains mana and HP, and cleave from crits works better than Maelstrom. Can achieve 260 last-hits by 20 minutes.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "item_progression",
+    "matchup_context": null,
+    "insight": "After Battle Fury, buy Windy Wyvern for movement speed scaling. The 10% bonus stacks with additional movement speed sources, reaching 450+ movement speed for efficient farming.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build_decision",
+    "matchup_context": null,
+    "insight": "Only invest one point in Blade Fury early. Max Blade Dance and Healing Ward instead for scaling and sustain. Take additional stats over Blade Fury points\u2014Blade Fury is purely a laning tool with no late-game DPS value.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build_conditional",
+    "matchup_context": "against tanky melee heroes or when support has insufficient burst",
+    "insight": "Skip Blade Fury if the enemy cannot be killed with it (e.g., vs Nightstalker/Tiny). Prioritize one point in Healing Ward by level 2 to maintain lane health, then max Blade Dance for farm scaling.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build_conditional",
+    "matchup_context": "against high magical damage (e.g., Earth Shaker)",
+    "insight": "Invest in stat upgrades over Blade Fury to overcome poor strength gain and low base HP pool. Healing Ward also scales with stats, making this build more efficient.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build_conditional",
+    "matchup_context": "against low magic damage threats",
+    "insight": "Can invest 3-4 points in Blade Fury if stomping the lane. Cleave interacts better with Battle Fury crits than other damage sources. Cristales invests more points, but prioritizing Blade Dance maximizes farming.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "sustain_items",
+    "matchup_context": "against magical burst damage",
+    "insight": "Buy Raindrop as a third-item component when bursted by magical damage in lane (e.g., vs Puck). This prevents early deaths that guarantee loss of farm advantage.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "mid_game_itemization",
+    "matchup_context": "against disables or single-target lockdown",
+    "insight": "Buy Manta Style when enemies have silence or other dispellable debuffs (e.g., Track). Provides necessary mobility and illusion damage scaling.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "mid_game_itemization",
+    "matchup_context": "when dispels are not critical",
+    "insight": "Consider Sange and Yasha instead of Manta for faster farming. Grants higher movement speed percentage and status resistance, while skipping unnecessary dispel utility.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "core_late_game_items",
+    "matchup_context": null,
+    "insight": "Always buy Butterfly after Manta. Provides massive attack speed scaling with already-low base attack time, enabling 100-0 kills on supports with Omnislash. Significantly faster farm and damage than Assault Cuirass.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "situational_items",
+    "matchup_context": "against Evasion or defensive items",
+    "insight": "Buy Nullifier against heroes with defensive options (Ghost Scepter, Evasion). Patch removed BKB immunity interactions; Nullifier now guarantees Omnislash kills with no counterplay.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "late_game_items",
+    "matchup_context": null,
+    "insight": "Build Abyssal Blade after Blink Dagger for an extra Omnislash effect. Provides guaranteed stun during Omnislash allowing 100-0 support kills even with Glimmer Cape.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "talent_selection",
+    "matchup_context": null,
+    "insight": "At level 10, take +4% Dualist Damage. Adds spell amplification to Omnislash and applies during attacks. At level 15, take +1% Healing Ward Heal. At level 20, take +2 Healing Ward Hits to Destroy.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "healing_ward_usage",
+    "matchup_context": null,
+    "insight": "Healing Ward is the most valuable ability. Level 2 doubles healing output compared to level 1. Two-point investments significantly reduce cooldown and sustain requirement in lane.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Start farming side camps at level 5 with maxed Blade Fury. Push the lane, use Blade Fury to secure side camps, then return to push again. This cycle enables rapid Battle Fury completion.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "laning_abuse",
+    "matchup_context": null,
+    "insight": "Abuse Juggernaut's extremely low base attack time. Deny creeps at incredible speed compared to other heroes, securing superior last-hits and denies without Quelling Blade.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "laning_positioning",
+    "matchup_context": null,
+    "insight": "Use facet movement speed stacks to position aggressively in lane without taking damage. Lose stacks only when hit\u2014maintain them to constantly gap-close for last-hits and denies.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "teamfight_timing",
+    "matchup_context": null,
+    "insight": "Only join fights with Omnislash available. Between cooldowns, farm or position defensively. Check whether your Omnislash can secure kills before committing\u2014if enemies are spread without lock-down, wait for Omnislash refresh.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "teamfight_targeting",
+    "matchup_context": null,
+    "insight": "Target cores with Omnislash, not supports. Cores rarely buy defensive items (Ghost Scepter, Glimmer, Evasion). One Omnislash into right-clicks typically eliminates them with no counterplay.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "teamfight_spell_dodge",
+    "matchup_context": "against single-target disables",
+    "insight": "Use Blade Fury to dodge lockdown spells while Omnislash cools down. Position backwards slightly to avoid follow-up damage while waiting for cooldown reset, then re-engage.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "counter_matchups",
+    "matchup_context": null,
+    "insight": "Struggle against heroes with single-target burst damage and catch potential: Earth Shaker, Legion Commander, Shadow Shaman, Lion, Spirit Breaker, Beastmaster. These heroes lock you down before Omnislash can activate.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "counter_play",
+    "matchup_context": "against Legion Commander or single-target duelists",
+    "insight": "Build Manta into Butterfly instead of rushing other items. Dispel and evasion prevent duel/burst lockdown. Adjust playstyle to farm safer when countered, use game knowledge to minimize risk.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "core_weakness",
+    "matchup_context": null,
+    "insight": "Primary weakness is dying in lane due to poor strength gain and low base HP. Buy Raindrops defensively, level Healing Ward to level 2 early when facing magical burst, prioritize survival over early kills.",
+    "source": {
+      "video_id": "Icp8TxAwQAk",
+      "title": "The Only Juggernaut Guide You\u2019ll Need (Broken AF)",
+      "channel": "PainDota"
+    }
+  }
+]

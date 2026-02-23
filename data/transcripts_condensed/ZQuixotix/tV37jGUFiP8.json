@@ -1,0 +1,541 @@
+[
+  {
+    "hero": "Largo",
+    "role": null,
+    "topic": "ability_mechanics",
+    "matchup_context": null,
+    "insight": "Song ultimate requires pressing ability keys each second to maintain buff effects (Q for spell damage, W for speed boost, E for heal). Missing a second doesn't penalize you, just prevents that buff. You can't use other abilities during song but can use items. Toggle song on/off during fights to alternate between buffing and casting.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Build items that provide buffs since Largo's innate increases buff durations on self and allies by 10% per level. Aghanim's Shard is core to extend Song mana cost reduction and apply buffs to allies while gaining them yourself (e.g., Glimmer Cape affects both you and ally).",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "laning",
+    "matchup_context": "with strong damage dealers",
+    "insight": "Pair with heroes like Centaur or Dark Seer who provide utility and damage. Frog Stomp is AoE for farming/pushing after fights, while single-target ability is easier to use solo. Max Q then Frog Stomp to come online stronger in mid-game.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "map_changes",
+    "matchup_context": null,
+    "insight": "Flag bearer creeps now provide 4% magic resistance per upgrade (every 7.5 minutes starting from 7:30). Combined with Pipe, this makes pushing high ground easier against nuke-heavy teams as creeps survive longer.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "objective_control",
+    "matchup_context": null,
+    "insight": "Banner radius increases significantly with Roshan upgrades (3rd and 4th). Plant banner further from base so enemies must step out to destroy it, creating kill opportunities.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "late_game_defense",
+    "matchup_context": null,
+    "insight": "Tier 4 towers gain bonus armor based on remaining barracks (24 base + 4 per barracks). Winning teams that throw are now more protected, but losing teams can still end the game if they secure mega creeps.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "early_game_economy",
+    "matchup_context": null,
+    "insight": "First blood and early kills are less punishing. Old formula rewarded multi-hero kills more; new formula reduces gold for 5v2 scenarios while slightly buffing solo kills. Early leads are still valuable but less snowbally.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "farming_patterns",
+    "matchup_context": null,
+    "insight": "Melee lane creeps now scale in value over time. Jungling is less efficient than before as hard camps became medium camps. Winning teams can more easily shut down enemies by forcing them to farm dangerous lanes instead of safe jungle.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "item_mechanics",
+    "matchup_context": null,
+    "insight": "Twin Gates mana cost reduced from 75 to 30, and mana is refunded if you cancel before using them. This dramatically reduces the penalty for misclicks or changing your mind.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "objective_control",
+    "matchup_context": null,
+    "insight": "Wisdom Shrine has been reworked with low ground for attackers and high ground for defenders. Capture is now riskier as defenders can approach from multiple high-ground angles unseen. Warding with specific spots (cliff observer wards) can help.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "map_control",
+    "matchup_context": null,
+    "insight": "New slip-and-slide paths in bases (bottom Radiant, top Dire) allow defenders to flank sieging enemies from unexpected angles, making high-ground holds more defensible.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "map_control",
+    "matchup_context": null,
+    "insight": "Watchers repositioned: Mid lane gank paths are safer. Coming from certain angles no longer requires smoke if you path correctly around new Watcher positions, reducing reliance on smoke ganks.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "courier_mechanics",
+    "matchup_context": null,
+    "insight": "Couriers no longer have movement speed decrease when attacked, making them harder to kill. However, they respawn more frequently, so repeated attempts are feasible.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "vision_mechanics",
+    "matchup_context": null,
+    "insight": "Illusions have reduced vision, limiting free scouting benefits. Still useful but less impactful than before.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Iron Branches cost increased (inflation), disrupting exact 600-gold starting builds. Adjust early item planning accordingly.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Salve and Tango sharing reduced to half value. Tangos are now half value when shared, so core players must buy their own to get full efficiency. Supports should not buy tangos for cores.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Smoke can be used directly from backpack without swapping. Quality of life improvement; still swap if you prefer, but backpack use is more efficient.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Crimson Guard is no longer dispelable, making it harder to counter with Nullifier. Strong against illusion heroes.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Diffusal Blade no longer affects illusions. Removed to allow future rework. Illusion heroes like Naga and Terrorblade can adapt as they weren't core diffusal builders historically.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "against defensive supports",
+    "insight": "Disperser now provides aggressive purge on enemies. Use it when only one buff needs dispelling (e.g., Glimmer Cape). Use Nullifier for multiple debuffs (Glimmer + Ult + Force Staff). Cores now have itemization choice.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Guardian Greaves is now the primary instant dispel item for supports. Easy buildup from Arcane Boots and Mech, costs only 4300 gold for recipe. Better than Lotus Orb as a first dispel item.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Eblade reverted to pure stat item for nuking. No longer a natural support save item. Supports should use Guardian Greaves instead for dispels.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Hand of Midas now only provides gold bonus, not experience. Lower cooldown. Acknowledge it's purely a farming item; don't rationalize it as experience greed.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Heaven's Halberd is only dispelable by strong dispel (not Manta). Still pierced by Black King Bar. Applies disarm to both melee and ranged for 3 seconds. More viable now.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Vanguard now builds into Heaven's Halberd and Crimson Guard. Both items were buffed, making Vanguard and physical damage builds more attractive.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Holy Locket provides heal amplification before charges are consumed. Build Perseverance first for regen. Consider if first-iteming Holy Locket is worth versus getting other healing items first.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "against magic damage",
+    "insight": "Radiance and Shivas no longer do bonus damage to illusions and don't provide team burn. Worse against non-Black King Bar teams but better against Black King Bar carriers.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Urn of Shadows can now be stacked infinitely on the same team (previously competed with Spirit Vessel). Multiple heroes can each build Urn to trigger their own effects without fighting over charges.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "zoo/summon heroes",
+    "insight": "New neutral item Shield works on player-controlled units. Best for Beastmaster, Broodmother, Treant. Provides physical damage barrier.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Weighted Dice appears weak mathematically. Damage variance (5-10) and creep bounty variance (10-20) don't provide meaningful gold/damage increases. Likely needs buffing.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "New neutral item with evasion support survivability. Another option provides magic damage reduction but hurts versus physical. Situational items requiring careful timing.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Helm of the Dominator nerfed, Vanguard upgraded. Shift zoo heroes slightly away from Helm toward Vanguard/Heaven's Halberd builds.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Chen",
+    "role": "support",
+    "topic": "neutral_creep_changes",
+    "matchup_context": null,
+    "insight": "Satyr Mindstealer mana burn reduced. No longer as oppressive in early game. Still problematic but requires more repeated burns to pressure Chen's mana.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Doom",
+    "role": "offlane",
+    "topic": "neutral_creep_changes",
+    "matchup_context": null,
+    "insight": "Satyr Mindstealer mana burn reduced, making Doom less vulnerable to mana pressure when using it.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Axe",
+    "role": "offlane",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Lost armor scaling; spin damage changed from physical to pure. Early game better against high-armor heroes, late game worse overall. Return to Vanguard/Heaven's Halberd builds instead of Helm/armor stacking.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Bloodseeker",
+    "role": "core",
+    "topic": "itemization",
+    "matchup_context": null,
+    "insight": "Aghanim's Shard doesn't consume item slot. Build early items (Wraith Band, Falcon Blade, Mage Slayer) and delay slot conflicts. Percent HP pure damage attacks scale better late game with shard.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Brewmaster",
+    "role": "offlane",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Void stance and void brewing removed from main kit. Lost facets. Innate gains status resistance. Other brewlings buffed. Rework is heavy; needs time to discover new builds. Aghanim's Shard with max HP heal and status resistance may enable support Brewmaster.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Centaur Warrunner",
+    "role": "offlane",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Hoof Stomp cooldown increased, duration reduced. Still top tier but less oppressive. Adjust engagement timing.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Clinkz",
+    "role": "carry",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Tar Bomb removed. Searing Arrows return (no creep aggro). Lost facets. New innate adds armor-piercing based on attack count. Laning stronger with right-click harass, but unclear if new armor-piercing innate compensates for tar bomb utility loss. Test new skeleton-focused playstyle.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Clockwerk",
+    "role": "offlane",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Jetpack control improved but Overclocking reduced to three casts (was four). Expanded Armature facet appears bugged or undocumented\u2014heroes can escape with one Power Cog. Do not play Clockwerk until bug is confirmed/fixed.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Earth Spirit",
+    "role": null,
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Lost facets; gained bonus attack damage per unused Geomagnetic Grip charge. Better for laning. Geomagnetic Grip now targets allies by default. Heavily reworked; needs testing to determine optimal role (support vs core).",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Jakiro",
+    "role": "support",
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Only received talent changes. Dual Breath and Liquid Fire unchanged. Stable hero in patch chaos. Level one Liquid Fire, level two Liquid Frost, then Dual Breath for consistent lane wins.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Kez",
+    "role": "carry",
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Base attack time improved; attack speed from abilities like Falcon Rush reduced. Complex changes due to interacting abilities. Requires testing to evaluate net impact.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Leshrac",
+    "role": null,
+    "topic": "ability_changes",
+    "matchup_context": null,
+    "insight": "Diabolic Edict damage spread over additional 1.5 seconds. Still good but less oneshot potential. Blink-Kaya builds less optimal now.",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Lone Druid",
+    "role": "carry",
+    "topic": "ability_changes",
+    "matchup_context": "",
+    "source": {
+      "video_id": "tV37jGUFiP8",
+      "title": "Hero Reworks & Frog Bard | 7.40 Patch Analysis",
+      "channel": "ZQuixotix"
+    }
+  }
+]

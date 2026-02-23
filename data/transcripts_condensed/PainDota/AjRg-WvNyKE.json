@@ -1,0 +1,218 @@
+[
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "laning_strategy",
+    "matchup_context": "against Pango and Enchantress with magical burst",
+    "insight": "Prioritize last-hitting over aggressive plays in lanes where kill potential is low. Build early stat items (Quelling Blade, Tangos) to survive burst damage. Skip early boots if ganks are unlikely; invest in farm acceleration instead.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "wave_management",
+    "matchup_context": null,
+    "insight": "Aggro creeps into tower when facing large incoming waves to prevent lane push and maintain safe farming position. This preserves your position without losing gold on the wave.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "map_reading",
+    "matchup_context": "when team is behind",
+    "insight": "Play around enemy pressure points by farming opposite sides of the map. If enemies pressure one lane, farm another. Maintain awareness of missing heroes\u2014don't farm without information on high-impact rotations like Sand King blink.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build",
+    "matchup_context": "when cornucopia dies early",
+    "insight": "Invest early points in Healing Ward over Blade Dance if you need to transition to jungle farming. Delay Omnislash if farming safety is more critical than fighting.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "against heavy magical burst and defensive items",
+    "insight": "Prioritize Scotty over Nullifier when facing burst damage you can't tank. Scotty's extra stats directly saved Juggernaut's life in critical fights. Don't hold buyback if itemization makes you unkillable.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "against Ghost Scepter and Outworld Staff",
+    "insight": "Swift Slash is essential to bait out Outworld Staff before committing Omnislash. Without it, Omnislash becomes unreliable. Buy Swift Dagger early to enable Omnislash usage in fights.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "itemization",
+    "matchup_context": "against multiple defensive items and kite",
+    "insight": "Blade Fury becomes irrelevant for damage late-game; prioritize survival and utility items instead. Battle Fury is core for sustain and cleave, not damage output.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_usage",
+    "matchup_context": "when enemy team has burst stuns",
+    "insight": "Blade Fury is primarily for disengaging, not engaging. Using it aggressively will result in feeding. Only use Omnislash after confirming enemy defensive cooldowns are unavailable.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": "when losing map control",
+    "insight": "After losing lane tower, farm safely around that location until forced out. Don't over-extend for distant waves without map information. Use dominated creeps from supports to access jungle camps safely.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "decision_making",
+    "matchup_context": "against enemy smoke ganks",
+    "insight": "Understand which enemy heroes provide surprise kill threat. Until those heroes show on map (e.g., Sand King Blink), you have relative safety to farm. Play conservatively only against confirmed threats.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "wave_management",
+    "matchup_context": "when your tower is taken",
+    "insight": "Pull large camp repeatedly after enemy takes your tower to deny incoming waves and prevent carry from farming safely. This forces the carry to lose waves or be pushed into dangerous farming positions.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "positioning",
+    "matchup_context": "when protecting your carry against high-threat enemies",
+    "insight": "Position behind your carry to enable saves and protect them from burst. Your presence alone deters aggressive plays from the enemy if you're close enough to intervene.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "objective_control",
+    "matchup_context": "when behind in game state",
+    "insight": "Control map vision and outposts strategically. Denying enemy buyback points and vision around objectives forces them into less efficient positioning for Roshan and pushes.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Phoenix",
+    "role": "offlane",
+    "topic": "matchup_impact",
+    "matchup_context": "against Snapfire",
+    "insight": "Phoenix's Supernova is vulnerable to Snapfire's Mortar Barrage. This hero combination struggles to provide map impact when Snapfire maxes Lil' Shredder defensively.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Clockwerk",
+    "role": "offlane",
+    "topic": "matchup_impact",
+    "matchup_context": "against Pango",
+    "insight": "Clockwerk's Cogs are easily removed by Pango's Swashbuckle, limiting initiation potential and making this offlane pick ineffective against mobile heroes.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "decision_making",
+    "matchup_context": "when behind significantly",
+    "insight": "Avoid forced fights when your team lacks items. Instead, farm to close gold gaps while dodging enemy pressure on the map. Only fight when the enemy gives clear openings or makes positioning mistakes.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "team_coordination",
+    "matchup_context": "when defending high ground",
+    "insight": "When defending with limited resources, don't all show on one side of the map. Instead, show selectively to stall while other cores farm opposite sides. This prevents the enemy from taking all objectives simultaneously.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "objective_prioritization",
+    "matchup_context": "mid-game against balanced enemies",
+    "insight": "Tormentor becomes less valuable later in the game. Prioritize Roshan and map control over Tormentor once the game reaches mid-game phases. Conceding Tormentor for farm or positioning can be correct.",
+    "source": {
+      "video_id": "AjRg-WvNyKE",
+      "title": "There is so much to learn from Satanic's Insane Juggernaut Performance",
+      "channel": "PainDota"
+    }
+  }
+]

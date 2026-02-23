@@ -1,0 +1,350 @@
+[
+  {
+    "hero": "Brewmaster",
+    "role": null,
+    "topic": "item_build",
+    "matchup_context": "late game high ground defense",
+    "insight": "Aghanim's Scepter provides massive power spike in first 8 seconds of ultimate, allowing you to shred buildings and take high ground in late game.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Clinker",
+    "role": null,
+    "topic": "hero_rework",
+    "matchup_context": null,
+    "insight": "Clinker was reworked to regain Searing Arrows. With buffs to base HP, Strafe attack speed (retroactively on skeletons), and Searing Arrows damage, the hero's win rate should improve significantly as players optimize play.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Drow Ranger",
+    "role": "carry",
+    "topic": "laning",
+    "matchup_context": "against melee heroes",
+    "insight": "Range advantage makes her naturally resistant to harassment. Viable carry pick in patch with reduced healing and sustain items available.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Faceless Void",
+    "role": "carry",
+    "topic": "stat_changes",
+    "matchup_context": null,
+    "insight": "3 agility gain and half armor increase benefits Time Walk survivability and heal/sustain effectiveness. Don't underestimate cumulative stat changes.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Huskar",
+    "role": null,
+    "topic": "sustain",
+    "matchup_context": null,
+    "insight": "Flagbearer creep aura no longer affects heroes (was giving 180 HP over laning stage). This significantly nerfs sustain-reliant heroes in side lanes.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "meta_trend",
+    "matchup_context": null,
+    "insight": "Healing support heroes have massive stock increase due to removal of flagbearer aura and reduced healing item sharing. Healing supports enable carry and offlane hero pools.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Jakiro",
+    "role": "support",
+    "topic": "laning",
+    "matchup_context": "early game",
+    "insight": "Liquid Fire and Liquid Frost were overpowered at level 1 (33-25% less damage on nerfs). Was dominant trump card support for laning phase.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Built-in sustain through Healing Ward made him reliable melee Battle Fury builder. Recent nerfs target this sustain advantage.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Ursa",
+    "role": "carry",
+    "topic": "lane_strategy",
+    "matchup_context": null,
+    "insight": "Ursa has massive sustain issues and requires a healing support to function. Pair with Warlock, Dazzle, or other healing supports to unlock carry pool.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Kez",
+    "role": null,
+    "topic": "ability_nerf",
+    "matchup_context": "building damage",
+    "insight": "Falcon Rush no longer works on buildings after Parkinson Vision utilized Elacrity + Falcon Rush for fast building destruction at Dream League.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Kunka",
+    "role": null,
+    "topic": "hero_viability",
+    "matchup_context": null,
+    "insight": "Despite low win rate, Kunka is genuinely strong but underutilized due to high skill floor. Players need to learn optimal play patterns similar to Io.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Aghanim's Scepter is not viable core build because ultimate is disabled by silence and stuns, losing AoE damage in actual fights. Largo works only as support.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Lone Druid",
+    "role": null,
+    "topic": "gold_mechanics",
+    "matchup_context": null,
+    "insight": "Bear now worth less gold in laning stage and more later. This fixes the stupid imbalance where bear was worth too much early and too little late.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Mars",
+    "role": null,
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Mars struggles in lane because he relies on Soul Ring without built-in sustain. Heroes with sustain or abilities reducing damage are better in this patch.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Morphling",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Morphling abuses sustain with high stats. Early sustain items synergize well. Can go Vlads right-click build or max Adaptive Strike with Factory Rush.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Pangolier",
+    "role": null,
+    "topic": "patch_balance",
+    "matchup_context": null,
+    "insight": "Massive buffs despite being meta for 2 years: cast range and distance on Swashbuckle, Swashbuckle damage, Shield Crash cooldown, Rolling Thunder duration/damage/magic resistance, base stats.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Phantom Lancer",
+    "role": "carry",
+    "topic": "leveling_strategy",
+    "matchup_context": null,
+    "insight": "Try 1-1-1 stats build into Treads Yasha. Illusions hit harder with stats, duplicate faster with level 10 talent. Enables reliable CS in lane.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Primal Beast",
+    "role": null,
+    "topic": "ability_nerf",
+    "matchup_context": "mid game",
+    "insight": "Basic dispel moved from level 15 to level 20 is huge nerf. Previously solved mid-game problems. One of the biggest nerfs of the patch.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Shadow Fiend",
+    "role": null,
+    "topic": "damage",
+    "matchup_context": "late game",
+    "insight": "Extra 6 souls late game effectively. Buffs non-magic SF builds while nerfing magic SF, making the hero random in terms of build optimization.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Slark",
+    "role": null,
+    "topic": "ability_buff",
+    "matchup_context": null,
+    "insight": "Saltwater Shiv cooldown reduced to 10 seconds with 12 second duration allows stacking at level 1. Can stack up to 9 HP regen by hitting repeatedly. Potential mid or safe lane dominator with phase boots.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Spectre",
+    "role": "carry",
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Buffed base agility and agility gain. Try Factory on her with Shadow Step. Relies on stats for mana/health to stay on map in lane. Potential lane dominator.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Tidehunter",
+    "role": null,
+    "topic": "counter_strategy",
+    "matchup_context": null,
+    "insight": "Level 20 talent on Anchor Smash triggering on passive is overpowered even with 50% damage reduction. Must have Break (Monkey King Bar, Silver Edge, etc.) to counter.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Timbersaw",
+    "role": null,
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Aghanim's Scepter radius on Timber Chain nerfed significantly from 36 to 18 AoE (roughly halved accounting for area calculation). Still strong hero overall.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Tiny",
+    "role": null,
+    "topic": "ability_buff",
+    "matchup_context": "teamfight",
+    "insight": "Avalanche is now status effect on ground, can't be BKBed or blocked by items. Enables chain stuns on Puck, Lifestealer, Juggernaut. Massively strengthens hero as nuker.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Treant Protector",
+    "role": "support",
+    "topic": "laning",
+    "matchup_context": null,
+    "insight": "Buffed base armor on strength hero with heal. Nature's Guise cooldown reduced (no mana cost). Living Armor buffed. Excellent lane-securing support emerging in meta.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Troll Warlord",
+    "role": null,
+    "topic": "quality_of_life",
+    "matchup_context": "silence",
+    "insight": "No longer disabled by silence when toggling stances. Big buff because you don't get stuck in bad form during fights with silences.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Ursa",
+    "role": "carry",
+    "topic": "talent_changes",
+    "matchup_context": null,
+    "insight": "Level 15 talent Enraged status resistance increased to 75%. Level 20 talents more underwhelming. Prioritize Earthshock radius over Fury Swipes damage depending on game.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "lane_dominance",
+    "matchup_context": null,
+    "insight": "Heroes good at trading HP with enemy supports are strongest this patch. Warlock, Shadow Shaman, and Treant Protector are best lane-securing supports.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Wind Ranger",
+    "role": "carry",
+    "topic": "laning",
+    "matchup_context": "against melee offlaners",
+    "insight": "Range advantage and base damage buffs make her extremely unlane-able for offlaners. Pick her off-lane if available. Can max Powershot/Killshot or Shackle/Tangled depending on matchup.",
+    "source": {
+      "video_id": "8DjLeCZi8gI",
+      "title": "Christmas Patch Meta Update",
+      "channel": "BSJ"
+    }
+  }
+]

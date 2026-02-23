@@ -1,0 +1,242 @@
+[
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "early_itemization",
+    "matchup_context": "against heavy spell damage lineups",
+    "insight": "Buy Magic Wand instead of Wraith Band against spell-heavy lineups. Wand generates charges from enemy spells and provides better sustain than armor when facing pure magical damage.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "laning_fundamentals",
+    "matchup_context": null,
+    "insight": "Keep creep equilibrium by only last-hitting when creeps reach low HP. Stay behind your tower to avoid aggro if you can't secure last hits safely. Pushing the wave early gives enemies map control and zoning power.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Prioritize healing/sustain spells over utility at level 2. Maximize your main damage spell first. Only take defensive abilities when you face heavy harassment.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Max Healing Ward before crit. Healing Ward sustain is more valuable than raw damage in most laning scenarios. Take two points in Blade Fury by level 3.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "laning_fundamentals",
+    "matchup_context": null,
+    "insight": "Do not push the enemy tower in lane. This removes the wave equilibrium and prevents you from farming safely. Only push specific waves when using pull camps.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "cs_targets",
+    "matchup_context": null,
+    "insight": "Target 60-80 last hits by 10 minutes and 200 last hits by 20 minutes regardless of bracket or hero. This is the baseline farming requirement for all carries.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "game_phases",
+    "matchup_context": null,
+    "insight": "Divide carry gameplay into phases: Minutes 0-20 = farming phase, join fights only if you have ultimate and correct items. Minutes 20+ = objective phase, prioritize Roshan and Tormentor control.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "map_control",
+    "matchup_context": "when leading by large margin",
+    "insight": "Do not high-ground siege without Aegis and Banner or when enemies can execute wave-clear. Instead, farm their side of the map, cut wave lanes, and deny enemy farming space. Force them into base rather than forcing fights.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "objective_timing",
+    "matchup_context": null,
+    "insight": "Take Roshan between minutes 15-20 when ahead. After Aegis, immediately farm towards Tormentor at minute 20. Only then begin taking map control and T2 towers.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "fight_participation",
+    "matchup_context": null,
+    "insight": "Join fights last, not first. Let other heroes engage and use abilities before entering. This ensures enemies waste their disable chain and you clean up with full resources.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "fight_participation",
+    "matchup_context": "before 20 minutes",
+    "insight": "Only join early game fights if: 1) You have your ultimate available, 2) You have correct items for the stage, 3) The fight location is favorable. Otherwise, continue farming.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "item_prioritization",
+    "matchup_context": "Juggernaut specifically",
+    "insight": "Prioritize Mael/Maelstrom early for farm acceleration. Manta is only necessary if it addresses a specific threat (silence from Puck). Otherwise, farm faster with Maelstrom and delay Manta.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "positioning",
+    "matchup_context": "post-20 minutes",
+    "insight": "Farm near your team's general area rather than following them into bad fights. This allows you to TP into fights last while maintaining farm efficiency. Do not deep push if your team refuses objective plays.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "wave_management",
+    "matchup_context": "when ahead mid-game",
+    "insight": "Cut enemy waves from their side of the map rather than pushing toward their base. Use Manta to split-push one lane while you farm another. This denies enemy resources while you maintain farm.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "high_ground_siege",
+    "matchup_context": null,
+    "insight": "Never high-ground siege without Aegis and Banner or if enemies have wave-clear and fortification. Wait for second Aegis+Banner to guarantee tower destruction. Enemies will fortify and clear waves otherwise.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "map_awareness",
+    "matchup_context": null,
+    "insight": "Watch enemy heroes' cooldowns and rotations. If Ursa or another core is missing, do not contest dangerous jungle areas. Retreat to safer farming patterns until their cooldowns are wasted.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Juggernaut",
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": "after taking tier 1 tower",
+    "insight": "Pull small camps repeatedly to deny enemy offlaner and control wave. Use Healing Ward to sustain while pulling. Do not farm tier 2 directly, pull nearby camps instead.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "mana_management",
+    "matchup_context": "mid-game farming",
+    "insight": "Buy Clarity potions to sustain mana during farming. This allows you to use farming spells repeatedly without backing. Essential when using spells like Blade Fury.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "decision_making",
+    "matchup_context": null,
+    "insight": "Always calculate risk vs. reward. Fighting without Aegis on enemy high ground has extreme risk and minimal reward. Fighting on your side of the map or when ahead in resources has high reward with managed risk.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "team_coordination",
+    "matchup_context": "when team refuses to play correctly",
+    "insight": "Do not follow your team into bad plays. Execute the correct gameplan solo: farm, get timings, take objectives. Your superior items and positioning will eventually give you winning fights even if team makes mistakes.",
+    "source": {
+      "video_id": "ZYXlP0I8ox4",
+      "title": "10k Coach Explains How to 1v9 in 3k",
+      "channel": "PainDota"
+    }
+  }
+]

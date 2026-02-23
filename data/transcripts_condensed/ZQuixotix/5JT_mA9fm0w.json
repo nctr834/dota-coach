@@ -1,0 +1,218 @@
+[
+  {
+    "hero": null,
+    "role": null,
+    "topic": "hero_pool_development",
+    "matchup_context": null,
+    "insight": "Start with a small hero pool of 3-5 heroes. Expand gradually as you master each hero rather than touching numerous heroes simultaneously.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "blind_pick_category",
+    "matchup_context": null,
+    "insight": "Create a 'blind pick ballers' category of heroes you can confidently play into any matchup without information. These should be safe, self-sufficient heroes or ones you've spammed enough to know how to handle bad matchups.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "hero_pool_necessity",
+    "matchup_context": null,
+    "insight": "Support players need to rely on blind pick heroes ~90% of the time since enemy cores often don't show picks early. Build a strong stable of comfortable supports.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "core",
+    "topic": "safe_scaling_heroes",
+    "matchup_context": null,
+    "insight": "Pick heroes like Luna and Gyrocopter as blind picks. They scale safely into most matchups and can jungle quickly if lane is bad, ensuring you have something productive to do every game.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "initiation_category",
+    "matchup_context": null,
+    "insight": "Every player should have an initiation hero category. This is the most common draft gap across all roles and often determines if your team can execute plays.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "core",
+    "topic": "team_draft_responsibility",
+    "matchup_context": null,
+    "insight": "Core players must check if their team has stuns and initiation. If not, pick a carry with a stun even if it's not ideal rather than stacking five farming heroes.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "flexible_support_selection",
+    "matchup_context": "when core performance is uncertain",
+    "insight": "Pick supports that can both enable good cores and scale independently. Avoid pure save heroes like Oracle if your core is unreliable; pick heroes like Earthshaker or Lion instead.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "laning_strength",
+    "matchup_context": "against scaling carries",
+    "insight": "When your carry is weak in lane (Spectre, Medusa), default to picking strong laning supports who win the lane for your carry.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "free_win_category",
+    "matchup_context": null,
+    "insight": "Create a 'free win' category of heroes you've spammed 50+ games on and achieved 50%+ win rate. Pull these out when you identify good matchups and want to maximize win probability.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "hero_pool_accuracy",
+    "matchup_context": null,
+    "insight": "Don't overestimate your hero pool. Only include heroes you're actively playing or learning. One random game on a hero you haven't played in years will likely be a loss with minimal learning value.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "draft_screen_discipline",
+    "matchup_context": null,
+    "insight": "Don't tempt yourself with heroes not on your draft screen. Play fun heroes in unranked. In ranked, stick to heroes you're winning or actively learning on.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "support_weakness_mitigation",
+    "matchup_context": "with poor support",
+    "insight": "Don't pick carries weak in lane that require good support for 10 minutes. Pick carries that can jungle efficiently by level 3-4 so you aren't dependent on support quality.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "lane_independence",
+    "matchup_context": "with weak position four",
+    "insight": "Pick offlane heroes that can solo the lane or jungle early if your position four is unreliable. Prioritize tank/aura heroes to provide what your damage-heavy team lacks.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": "offlane",
+    "topic": "carry_counter_picks",
+    "matchup_context": "against scaling carries",
+    "insight": "Build a category of carry counters like Enigma, Dark Seer, and Beastmaster. These create free wins against common carry picks like Spectre, Illusion heroes, and melee carries even without last pick information.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "meta_adaptation",
+    "matchup_context": null,
+    "insight": "Study high pick rate heroes on Dotaabuff for your bracket. Plan your responses: how to play against them and how to enable them if allies pick them.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "spammed_hero_ban_risk",
+    "matchup_context": null,
+    "insight": "If you spam a single hero, expect it to be banned ~50% of the time. Build a secondary hero pool in your role to maintain flexibility.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "meta_win_rates",
+    "matchup_context": null,
+    "insight": "Don't prioritize global meta win rates when building your pool. How well you understand a hero matters more than its general win rate until Immortal rank.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "hero_spam_learning",
+    "matchup_context": null,
+    "insight": "When hero spamming to learn, a 50% win rate is acceptable since you're building game knowledge. Once heroes reach your free win category, they should have 50%+ win rate.",
+    "source": {
+      "video_id": "5JT_mA9fm0w",
+      "title": "You NEED these heroes for climbing",
+      "channel": "ZQuixotix"
+    }
+  }
+]

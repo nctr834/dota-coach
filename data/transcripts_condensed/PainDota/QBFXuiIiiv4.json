@@ -1,0 +1,266 @@
+[
+  {
+    "hero": "Ember Spirit",
+    "role": "mid",
+    "topic": "laning_against_ranged",
+    "matchup_context": "against Templar Assassin",
+    "insight": "Respect TA's refraction charges in lane. Without it, she cannot trade effectively. Avoid walking into positions where she can chain damage with multiple refraction hits.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Skip Tangos early and get Sage's Mask instead to spam Refraction. This is more efficient than healing charges when your support can provide additional healing.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "laning_positioning",
+    "matchup_context": "against Centaur + Jakiro",
+    "insight": "Stand back from the rune area to maintain vision. If enemy approaches, you have time to retreat. Never contest runes against Centaur as he will stun you.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "last_hitting",
+    "matchup_context": null,
+    "insight": "Identify creep balance: when you have more creeps than opponent, you can safely trade. Only engage enemies when they're in awkward positions relative to the wave.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "cs_priority",
+    "matchup_context": null,
+    "insight": "Never miss last hits while pushing the wave. If hitting an enemy means missing creeps, don't do it. Farming efficiency takes priority over harass.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "map_control",
+    "matchup_context": null,
+    "insight": "After pushing wave, farm hidden camps to deny enemy vision. Route through areas without ward coverage to avoid predictability.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "refraction_management",
+    "matchup_context": null,
+    "insight": "Use Refraction proactively before engagements, not reactively. Always have a charge ready for escape. Losing charges to poor positioning is a critical mistake.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "farming_technique",
+    "matchup_context": null,
+    "insight": "Change trajectory of Psi Blades after launching to save time. Align with creeps first minimally, then reposition mid-attack to farm faster.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "item_progression",
+    "matchup_context": null,
+    "insight": "Prioritize Desolator early for damage. Get mobility items like Blink and Tumbler for positioning. In late game, add BKB when enemies deal heavy magical damage.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "ability_priority",
+    "matchup_context": null,
+    "insight": "Always use Refraction off cooldown in mid-game to maintain charges. Only hold it for critical moments when you need escape guarantees.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "trap_placement",
+    "matchup_context": null,
+    "insight": "Place traps to cut enemy jungle rotation and farm camps. Put traps on high ground entrances before advancing to prevent ganks.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "target_priority",
+    "matchup_context": "against Centaur + Spectre",
+    "insight": "Avoid hitting Centaur and Spectre as they burn through Refraction quickly. Focus isolated soft supports like Jakiro when possible.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "item_usage",
+    "matchup_context": null,
+    "insight": "Use Tumbler actively for free repositioning during fights. Use Blink Dagger to burst isolated targets and escape before backup arrives.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "decision_making",
+    "matchup_context": null,
+    "insight": "Identify 2-3 second windows where you can attack isolated enemies. Know when enemies rotate so you stop fighting and escape before they arrive.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "late_game_positioning",
+    "matchup_context": "against magic damage heavy teams",
+    "insight": "Stay near supports for healing. Use Pike and BKB to create space. Reposition continuously to avoid being focused. Always have an escape ready.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "mid",
+    "topic": "stat_selection",
+    "matchup_context": null,
+    "insight": "Always prioritize movement speed over damage in neutral item selection. Movement speed saves you from ganks and lets you farm more efficiently.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Warlock",
+    "role": "support",
+    "topic": "lane_support",
+    "matchup_context": "supporting Templar Assassin",
+    "insight": "Stay with TA to heal her after trades. Your healing enables her to spam Refraction and harass safely without needing Tangos.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Legion Commander",
+    "role": "carry",
+    "topic": "dueling_targets",
+    "matchup_context": null,
+    "insight": "Duel isolated enemies to secure kills for your team. In late game with BKB, duel the most threatening enemy (like Spectre) to disable and burst them.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "core",
+    "topic": "team_coordination",
+    "matchup_context": null,
+    "insight": "Use voice comms to call for objectives. If your team won't commit to a target objective, don't abandon them to farm alone - stay grouped to prevent picks.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "positioning_in_fights",
+    "matchup_context": null,
+    "insight": "Always maintain maximum range from enemies. Don't walk into unnecessary damage. Use mobility items to kite and escape rather than standing and fighting.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "vision_and_rotations",
+    "matchup_context": null,
+    "insight": "Farm areas without enemy vision to avoid getting caught. Always check minimap for missing enemies before leaving safe areas.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "comeback_mechanics",
+    "matchup_context": null,
+    "insight": "Focus on securing mega creeps and high ground to force game end. Don't let enemies have time to farm back into the game.",
+    "source": {
+      "video_id": "QBFXuiIiiv4",
+      "title": "Do 11k Tactics Work in 2K MMR?",
+      "channel": "PainDota"
+    }
+  }
+]

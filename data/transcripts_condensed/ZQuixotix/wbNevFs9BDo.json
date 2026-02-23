@@ -1,0 +1,134 @@
+[
+  {
+    "hero": null,
+    "role": null,
+    "topic": "hero_spam_efficiency",
+    "matchup_context": null,
+    "insight": "Limiting your hero pool to 3 heroes reduces matchup learning from 870 games to 87 games, allowing you to repeat matchups and test different item builds against the same opponents.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "hero_mastery",
+    "matchup_context": null,
+    "insight": "Develop automatic knowledge of your hero: starting item optimization, last-hitting ability at different levels, mana costs of abilities, chase distance with auto-attacks, and which enemies you can kill. This frees mental resources for macro play.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "limit_testing",
+    "matchup_context": null,
+    "insight": "Deliberately push your hero's limits by attempting risky plays (tower dives, aggressive trades) to learn exact damage thresholds and cooldown windows. Short-term losses from failed attempts teach you when outplays are actually possible.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "playing_from_behind",
+    "matchup_context": null,
+    "insight": "Learn how to recover when losing: identify whether your hero needs to AFK farm, force fights, or itemize differently. Converting losing games is where most MMR gains come from, not winning even games.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "mmr_scaling",
+    "matchup_context": null,
+    "insight": "Hero spamming yields approximately 500-1000 MMR gains. Beyond that, you must learn Dota fundamentals and macro concepts to climb further.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "macro_fundamentals",
+    "matchup_context": null,
+    "insight": "Master map awareness, enemy position tracking, warding patterns, timing windows (stacks, power runes, Roshan), and team fight windows. These decisions separate high-level play from mechanical knowledge.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "context_decision_making",
+    "matchup_context": null,
+    "insight": "Stop playing mechanically and ask: Should I take this last hit, or is a teamfight coming? Should I chase this hero, or am I overcommitting? Build decisions based on what your team can accomplish, not just what your hero wants.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "skill_progression",
+    "matchup_context": null,
+    "insight": "Hyperfocus on improving one skill area (map awareness, laning, positioning) for 20 games while autopiloting other aspects. Accept temporary drops in other areas as you progress one skill ceiling at a time.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "pattern_recognition",
+    "matchup_context": null,
+    "insight": "High-level play requires synthesizing multiple past experiences to make accurate decisions in unique situations. Great players pull from various hero and role experiences to find the closest correct answer.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "mmr_fluctuation",
+    "matchup_context": null,
+    "insight": "Intentionally climbing with a broken patch hero or in higher MMR games exposes weaknesses you don't see at your current bracket. Falling back down after learning these lessons makes you a better player overall.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": null,
+    "role": null,
+    "topic": "improvement_methodology",
+    "matchup_context": null,
+    "insight": "Focus on improvement as the primary goal, not wins. Losing a game while improving a specific skill is a win. When your skill level exceeds your peers, winning happens naturally.",
+    "source": {
+      "video_id": "wbNevFs9BDo",
+      "title": "Why hero spamming works",
+      "channel": "ZQuixotix"
+    }
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "item_synergy",
+    "matchup_context": null,
+    "insight": "Buy utility items with duration-based buffs like Solar Crest, Drums, Pipe, Crimson Guard, and Greaves. Largo's innate extends buff duration by 10-20%, making these items exceptionally valuable.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_usage",
+    "matchup_context": "laning phase",
+    "insight": "Max Catchy Lick first for dispel utility. Use it to remove enemy buffs like Ursa's Overpower and debuffs from allies, while securing ranged creeps. Provides 40-100 health restoration to Largo when dispelling.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "laning_strategy",
+    "matchup_context": null,
+    "insight": "Level Catchy Lick at level 1 about 80% of the time. Pair it with Frog Stomp at level 2 for synergy: place Frog Stomp behind retreating enemies, then Catchy Lick them back into the stomp range to win trades.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "wave_clear",
+    "matchup_context": null,
+    "insight": "Frog Stomp clears creep waves from 800 range. With level 10 talent increasing damage from 455 to 560, it one-shots creep waves even with Croak of Genius buffs. Play off-lane to farm waves, then return to buff teammates.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_prioritization",
+    "matchup_context": null,
+    "insight": "Take 2 points in Catchy Lick and Frog Stomp by level 4. Delay Croak of Genius until level 8 since percent damage reverb is only valuable once teammates have significant spell damage. Max Frog Stomp after level 4.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "shard_value",
+    "matchup_context": null,
+    "insight": "Buy Aghanim's Shard when running single-target buff items like Glimmer Cape, Solar Crest, Lotus Orb, or Linken's Sphere. Shard applies buffs to both target and Largo, doubling item value with extended duration from innate.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "talent_selection",
+    "matchup_context": null,
+    "insight": "At level 10, take +105 Frog Stomp damage talent 95% of the time to maintain one-shot wave clear. At level 20, take +10 Grooven armor aura talent (99% of the time) for team-wide armor equivalent to Assault Cuirass.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "talent_selection",
+    "matchup_context": "against damage-over-time heroes",
+    "insight": "At level 15, take +1.5% max HP per second damage talent with Croak of Genius if team has DoT heroes like Guap or Zeus. Refreshing DoT damage repeatedly stacks the max health percentage effect.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "mana_management",
+    "matchup_context": null,
+    "insight": "Prioritize mana boots and mana-providing items since ultimate requires continuous mana to apply buffs. As long as Largo has mana, he can apply limitless buffs to teammates with the guitar hero ultimate.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ultimate_mechanics",
+    "matchup_context": null,
+    "insight": "Toggle ultimate to access three buffs: offensive (magic damage + spell amp), utility (move speed + slow resistance), and healing. Rapidly press the buff hotkey each second to continuously reapply. Small timing window prevents accidental cancellation.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "item_build_diversity",
+    "matchup_context": null,
+    "insight": "Build either AoE auras (Drums, Greaves, Crimson, Holy Locket) or single-target buffs (Glimmer, Solar Crest with Shard). Choose based on what's more impactful each game rather than fixed itemization.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "positioning",
+    "matchup_context": null,
+    "insight": "Use Blink Dagger and Ether Lens for positioning to apply ultimate buffs safely without getting caught. Items like Octarine Core reduce ultimate cooldowns, allowing more frequent buff applications.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "matchup_advantage",
+    "matchup_context": "against buff-reliant enemies",
+    "insight": "Catchy Lick's basic dispel is extremely effective in laning against heroes relying on buff-based defense. Dispel Orchid and similar items later in the game to save teammates.",
+    "source": {
+      "video_id": "ZvCuuW3BvtM",
+      "title": "How Largo Actually Works",
+      "channel": "BSJ"
+    }
+  }
+]

@@ -182,12 +182,10 @@ def gather_item_data():
     )
 
     if items.status_code == 200:
-<<<<<<< HEAD
         items = items.json()["data"]["constants"]["items"]
 
         items = {item["name"]: item for item in items}
 
-=======
         invalid_items = {
             "item_samurai_tabi",
             "item_hermes_sandals",
@@ -226,7 +224,6 @@ def gather_item_data():
             "invis sword": "shadow blade",
         }
         items = {rename_items.get(k, k): v for k, v in items.items()}
->>>>>>> 30f2da9 (condensed transcripts code and outputs + modified item_data structure)
         print(f"{len(items)} (items)")
         Path("data/item_data.json").open("w").write(json.dumps(items))
         print(f"Found item data")

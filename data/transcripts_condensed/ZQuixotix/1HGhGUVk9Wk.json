@@ -1,0 +1,457 @@
+[
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "role_selection",
+    "matchup_context": null,
+    "insight": "Play support Largo (position 4 or 5). Offlane and mid Largo are not recommended.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "laning_strategy",
+    "matchup_context": null,
+    "insight": "Largo is a mediocre laner. Prioritize using bonus regen and good base stats to win early trades. Perform better with aggressive lane partners like Ursa or Centaur; struggle when covering passive carries like Spectre.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_usage",
+    "matchup_context": null,
+    "insight": "Use Catchy Lick and Frog Stomp to enable your own auto-attacks during early trades, similar to Ogre Magi. Catchy Lick is most valuable against self-buffing enemies (dispel + nuke + regen). Avoid pulling allies away from their targets.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "leveling_priority",
+    "matchup_context": null,
+    "insight": "Prioritize reaching level 6 quickly to access your songs, where Largo's power spike occurs.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ultimate_ability",
+    "matchup_context": null,
+    "insight": "Island Elixir effectively counters Radiance damage. Level 1 provides ~45 effective heal per second (accounting for magic resistance), matching Radiance's ~42 DPS. Late game with armor stacking, level 3 Island Elixir can heal 200-400 per second.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "song_usage",
+    "matchup_context": null,
+    "insight": "Play songs near grouped teammates to maximize value. Island Elixir is best in extended fights. Attack buff (Bullbelly Blitz) is worth using with 2+ heroes early game; otherwise just auto-attack if team is full health.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_scaling",
+    "matchup_context": null,
+    "insight": "Max Catchy Lick first, not Frog Stomp. Catchy Lick has 7-second cooldown and provides consistent value through pull, nuke, and regen. Frog Stomp is unreliable in fights and better for passive farming games.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "consumable_efficiency",
+    "matchup_context": null,
+    "insight": "Buy Salves over Tangos early. Salves provide more effective healing with Encore talent (40 HP vs 35 HP at level 1). Use Mangoes over Clarities to stay in lane during critical early game trading phase.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "early_itemization",
+    "matchup_context": null,
+    "insight": "Recommended starting items: Tango, Blood Grenade, branches, stick, sentry. If weak lane, buy a second sentry immediately to unblock camp. Arcane Boots are the core first item for mana and team support.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "smoke_gank",
+    "matchup_context": null,
+    "insight": "Use smokes yourself to benefit from Encore talent. At level 1, smoke lasts ~49.5 seconds (vs normal 45). At max level, coordinate mid-game smokes for minute-long gank windows.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "mid_game_power",
+    "matchup_context": null,
+    "insight": "Mid-game (levels 6-14) is Largo's strongest phase. Level 1 Croak of Genius at level 6 provides 15% mana cost reduction and damage reverb (roughly 30% spell amp equivalent). Coordinate with active heroes for kills at minute 6 onwards.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "song_pairing",
+    "matchup_context": null,
+    "insight": "Croak of Genius works best with spellcasters. Bullbelly Blitz provides 20-40% magic damage bonus and bypasses armor, making it excellent with right-click heroes and mixed damage dealers. Ideal: one hero benefiting from each song.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_max_order",
+    "matchup_context": "farming versus fighting",
+    "insight": "Max Frog Stomp first only in passive games where you're farming and delaying tower pushes. Max Catchy Lick first for fighting-focused games due to lower cooldown and consistent pull value.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Core items: Arcane Boots, Glimmer Cape or Solar Crest, Lotus Orb (extra dispel with shard synergy), Aghanim's Scepter (late game, enables two songs). Guardian Greaves for quick dispel needs. Holy Locket only if heavy healing is required.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "talent_selection",
+    "matchup_context": null,
+    "insight": "Level 10: take Frog Stomp damage for farming flexibility (safer choice). Level 15: take the right talent (applies on items) to stack damage reverb effects, especially with Urn of Shadows and Blood Grenade. Level 20/25: situational; Aghanim's at 25 is strong late.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "neutral_items",
+    "matchup_context": null,
+    "insight": "Tier 2: Mana Draft is best for mana pool. Tier 1: Cobalt Cup for utility. Poliwog Charm benefits from shard but is rare to obtain. Most neutrals benefit from Encore mana regen buff.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "urn_of_shadows",
+    "matchup_context": null,
+    "insight": "Urn is strong early if winning. With level 15 talent, Urn stacks become 8+13 seconds (21 total) of damage reverb. Pairs excellently with shard for multi-hero stacking. Blood Grenade from starting items also applies (10 seconds total with talent).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "spell_amplification",
+    "matchup_context": null,
+    "insight": "Croak of Genius break-even point: roughly 3 spells/item uses OR 9 song beats per cast. Use this to decide whether to cast Croak Genius based on expected spell rotations.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "song_rhythm_mechanics",
+    "matchup_context": null,
+    "insight": "You have a 0.2 second leeway (0.8-1.2 seconds) to press song beats. Can press early to get clutch heals 1 second faster. After first press, rhythm resets to 1-second intervals. This trick doesn't work for Bullbelly Blitz and Hot Feet Hustle (1-second fixed duration).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "bullbelly_blitz_optimization",
+    "matchup_context": null,
+    "insight": "Cast Bullbelly Blitz, immediately turn it off, then cast Catchy Lick to spell-amp the nuke. For Frog Stomp, cast it first then play the song to buff remaining bounces (miss first bounce either way).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "hot_feet_hustle_mana_efficiency",
+    "matchup_context": null,
+    "insight": "Playing Hot Feet Hustle every second provides permanent speed but high mana cost. Play every 2 seconds for 1.2-second uptime with 0.8-second downtime to save mana. Use during map rotations or after death.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "grooving_stacks_preservation",
+    "matchup_context": null,
+    "insight": "To preserve Grooving stacks without constant mana drain: Play song, press one beat, turn off song. Restart before expiration. Uses ~20% mana of constant playing. Only use when safe (not in combat).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "catchy_lick_trading",
+    "matchup_context": null,
+    "insight": "Largo has excellent base stats (68 damage, ~700 HP, 4 armor). Most heroes lose straight-up trades. Commit to fights, use Catchy Lick to pull running enemies for more auto-attacks. Don't be afraid to man-up early.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "frog_stomp_mechanics",
+    "matchup_context": null,
+    "insight": "Level 1 Frog Stomp deals only 35 damage per bounce. It's a bait ability\u2014enemies panic and run into your team. Requires 6 seconds of continuous standing for 7 bounces; hard to achieve on mobile heroes. Most value from pulling enemies in with Catchy Lick then stomping.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "fight_positioning",
+    "matchup_context": null,
+    "insight": "Position where you can buff both frontline and backline allies with your song. Use Catchy Lick to pull enemies toward your team or save teammates. Don't get caught out of position trying to reach mobile heroes like Void Spirit.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "croak_genius_timing",
+    "matchup_context": null,
+    "insight": "Level 1 Croak Genius lasts only 12 seconds; apply shortly before expected fights to avoid buff expiration. Level 3 is 30-second duration on 25-second cooldown (permanent uptime possible). Prioritize on spellcaster heroes.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "healing_vs_damage_buff",
+    "matchup_context": "late game",
+    "insight": "Late game: prioritize Bullbelly Blitz on active carries over Island Elixir on entire team. Position near carry to maximize damage buff value rather than with initiators.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "catchy_lick_regen_talent",
+    "matchup_context": null,
+    "insight": "Level 10 right talent: Catchy Lick provides 13 HP regen per second (32.5 with shard) whenever you dispel something. Stacks twice if you dispel different targets. Pick this talent if enemies have many dispellable effects (Venomancer, debuffs).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "favorable_matchups",
+    "matchup_context": null,
+    "insight": "Largo counters: slow heroes (Spectre, PL, Tinker), heroes with long-duration buffs to dispel (Abaddon, Ion Shell), extended fight heroes (Pugna, Venomancer), and heroes with removable debuffs (Silencer). Good with spellcasting carries (Queen of Pain, Storm Spirit, Muerta, Wind Ranger).",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "unfavorable_matchups",
+    "matchup_context": null,
+    "insight": "Largo struggles against: burst-damage heroes (Sven, Lina), song-disruptors (Faceless Void chrono), super mobile carries (Anti-Mage with mana burn), cleave heroes (Magnus), and anti-heal (Doom, Ancient Apparition). Avoid passive carries like Medusa.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "lane_partner_selection",
+    "matchup_context": null,
+    "insight": "Best lane partners: aggressive heroes that benefit from both Croak Genius (spellcasters) and Bullbelly Blitz (right-clickers). Ideal: Drow Ranger, Wind Ranger. Avoid passive carries like Medusa. One hero per song type is acceptable.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "camp_blocking",
+    "matchup_context": null,
+    "insight": "Block enemy pull camps with sentries early. If lane is weak, buy 2-3 sentries to control the map and unblock your own camp for carries.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "roaming_priority",
+    "matchup_context": null,
+    "insight": "Position 4 Largo should roam early (after first strong trade in lane). Position 5 stays longer to babysit carry. Stack camps and secure power runes to accelerate level 6 spike.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "power_rune_control",
+    "matchup_context": null,
+    "insight": "Use Catchy Lick to dispel runes from enemies before they bottle them. Stand on high ground (Radiant) or safe spot (Dire) to threaten dispel without overcommitting.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "ability_combo",
+    "matchup_context": null,
+    "insight": "Early game combo: Pull with Catchy Lick \u2192 Frog Stomp slow \u2192 auto-attacks. Mid-game: Croak Genius on spellcaster \u2192 coordinate gank. Late game: Bullbelly Blitz on carry \u2192 enable damage with song while healing with Island Elixir in extended fights.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "shard_itemization",
+    "matchup_context": null,
+    "insight": "Don't rush shard. It only benefits Croak Genius and Catchy Lick regen. Buy 1-2 items first (Solar Crest, Lotus, Glimmer), then shard for synergy. Shard extends cooldown durations via Encore, making it more valuable late game.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "soul_ring_timing",
+    "matchup_context": null,
+    "insight": "Soul Ring is mana-efficient (essentially free with Island Elixir healing). Delay it if urgent items needed (Solar Crest, dispel). Buy early only if doing passive Frog Stomp farming, otherwise mid-late game as mana supplement.",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  },
+  {
+    "hero": "Largo",
+    "role": "support",
+    "topic": "force_staff_utility",
+    "matchmap_context": "",
+    "source": {
+      "video_id": "1HGhGUVk9Wk",
+      "title": "How to actually play Largo support",
+      "channel": "ZQuixotix"
+    }
+  }
+]

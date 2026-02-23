@@ -1,0 +1,230 @@
+[
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "matchup_analysis",
+    "matchup_context": "against Anti-Mage, Ember Spirit, Pugna, Monkey King, Earth Shaker",
+    "insight": "TA is good versus Anti-Mage early due to better timers, but Anti-Mage scales better mid-to-late with Butterfly and Abyssal Blade. Bad matchup into Ember Spirit due to Chains and Flame Guard harass. Bad into Pugna. Decent into Monkey King and Earth Shaker.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "early_itemization",
+    "matchup_context": null,
+    "insight": "Buy Quelling Blade over early branches for tree cutting to create efficient jungle pathing. Prioritize Boots + Sage's Mask over Tangos to sustain via Refraction spam instead of healing items.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "skill_build",
+    "matchup_context": null,
+    "insight": "Use 4-0-4 Refraction/Traps/Meld build regardless of lane matchup to ensure reliable farming speed. Avoid early Meld even if you can kill enemies, as it hampers farming acceleration.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "laning_creep_control",
+    "matchup_context": null,
+    "insight": "When enemy uses wave blocking (e.g., Earth Shaker Fissure), immediately aggro enemy creeps on your range creep to drag the wave and reset push. Prolong the aggro duration to keep enemy creeps alive longer and maintain lane control.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "item_build",
+    "matchup_context": null,
+    "insight": "Rush Desolator before Lance because Lance is valued for attack range, not stats. With Blink Dagger providing range, Desolator comes online 1-1.5 minutes earlier and provides more farm acceleration through increased damage.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "farming_pattern",
+    "matchup_context": null,
+    "insight": "Stack jungle camps with traps rather than loading them to instantly stack on timer. Use trap placement to scout if enemies will contest camps. Always aggro creeps or use traps to minimize wasted movement time between camps.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "map_pressure",
+    "matchup_context": null,
+    "insight": "Prioritize taking enemy towers when uncontested, especially offlaners tier 1. This reduces enemy farm options and opens jungle access. Ignore creep waves if tower is available to take\u2014waves can bait you into poor farming patterns.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "farming_efficiency",
+    "matchup_context": null,
+    "insight": "After taking tier 1 towers, farm triangle camps and stack ancients with traps. Pull creep waves back toward you to ensure reliable wave income. Avoid deep jungle positioning if waves won't reach you naturally.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "blink_dagger_power_spike",
+    "matchup_context": null,
+    "insight": "Blink Dagger at level 15-16 is a major power spike enabling both farming acceleration and impactful ganks. Use Blink to create map pressure and secure kills while maintaining farm efficiency\u2014don't just join fights, be selective.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "post_20_minute_objectives",
+    "matchup_context": null,
+    "insight": "After minute 20, shift focus entirely to objective play. Prioritize Tormentor control and Roshan to close out games. Play toward objectives rather than randomly farming\u2014adapt farming location based on next objective location.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "high_ground_safety",
+    "matchup_context": null,
+    "insight": "When far ahead, avoid forcing high ground without kills. Control enemies on low ground instead, lock them out of map farming, and only go high ground after securing kills to eliminate threat.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "counter_items",
+    "matchup_context": "against Ghost Scepter and Decrepify",
+    "insight": "Nullifier is often a bait item. Instead, buy Blink to jump enemies during stuns (e.g., Earth Shaker Fissure) before they can activate defenses. At level 25 with Bash talent, 1-second Meld bash duration is enough to kill targets before they press Decrepify.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "late_game_itemization",
+    "matchup_context": "against Anti-Mage with Butterfly",
+    "insight": "Buy Monkey King Bar (MKB) before Butterfly to counter enemy Butterfly evasion. This allows cleaner one-shot opportunities with Bash procs even if target has evasion.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "trap_usage_advanced",
+    "matchup_context": null,
+    "insight": "Place traps on obvious ward spots to kill enemy supports trying to deward. Use trap placement to gather map information about enemy positioning and decide if it's safe to farm nearby.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "mentality",
+    "matchup_context": null,
+    "insight": "Mentality is more important than mechanical skill. Don't give up when teammates pick sub-optimal heroes. Focus on playing your best and exploiting enemy mistakes\u2014treat all opponents as potentially beatable regardless of perceived game difficulty.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "positioning_decision_making",
+    "matchup_context": null,
+    "insight": "When unsure if a play is safe, don't force it. Accept risk-free farming alternatives. If teammates play risky positions, don't join them to avoid feeding\u2014adjust accordingly and maintain your advantage.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "throw_prevention",
+    "matchup_context": "when ahead",
+    "insight": "When significantly ahead, prioritize not dying over farming. One death can swing the game. Avoid cocky positioning and high ground without kills. Play conservatively near enemy vision and only engage in favorable 5v5 situations.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "team_coordination",
+    "matchup_context": null,
+    "insight": "Don't force objectives solo if teammates aren't grouped. Coordinate farm locations with team position to avoid scenarios where some teammates feed while you're isolated elsewhere on the map.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "support",
+    "topic": "wave_pulling",
+    "matchup_context": null,
+    "insight": "After taking enemy tier 1 tower, pull the next creep wave back toward your side to ensure your carry gets an extra wave rather than losing it to distance.",
+    "source": {
+      "video_id": "ZlSBPd9tEd0",
+      "title": "How to solo carry games with bad draft and griefers",
+      "channel": "PainDota"
+    }
+  }
+]

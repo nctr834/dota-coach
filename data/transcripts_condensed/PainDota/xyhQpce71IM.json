@@ -1,0 +1,242 @@
+[
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "starting_items",
+    "matchup_context": "against aggressive heroes like Sky and Marci",
+    "insight": "Always buy tangos in starting build when facing aggressive lane opponents. Most high-level players skip tangos to maintain item efficiency, but tangos provide crucial regen when facing early pressure.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "laning_strategy",
+    "matchup_context": "against heroes with significant damage advantage",
+    "insight": "Play defensively and maintain distance when opponent has 20+ more damage. Focus on surviving rather than securing every last hit. Accept creep losses and use tower aggro manipulation to deny rather than trading damage.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "lane_abandonment",
+    "matchup_context": "when losing all three lanes",
+    "insight": "Leave lane early if roaming supports make it untenable. Transition to jungle farming to maintain economy. The goal is zero deaths and steady farm accumulation rather than contesting a lost lane.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "vision_control",
+    "matchup_context": null,
+    "insight": "Buy your own Observer Ward as TA even when support exists. Vision prevents overextension and allows you to identify gank windows. Place wards in positions where enemies are likely to gank you from.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "trap_usage",
+    "matchup_context": "against mobile heroes like Marci and Dragon Knight",
+    "insight": "Use Psionic Traps defensively to bait enemies and create escape routes. Place traps before moving to dangerous areas so you have reaction time to escape if enemies approach.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "map_awareness",
+    "matchup_context": "when playing from behind",
+    "insight": "Constantly scan and watch minimap to identify missing enemies. Only move to creep waves when you have vision confirming enemy positions elsewhere. Give up waves rather than die to off-map threats.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "item_timing",
+    "matchup_context": null,
+    "insight": "Blink Dagger is TA's most important item. Rush it as your core first item after basic damage items. Blink allows you to react to ganks and escape before enemies close the gap.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "defensive_itemization",
+    "matchup_context": "against stun-heavy lineups",
+    "insight": "Buy Black King Bar over other defensive items if enemies have crucial stuns (Dragon Knight blink stun). Lincoln Sphere prevents stuns that would otherwise lock you in place for burst damage.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "fight_positioning",
+    "matchup_context": "against Marci",
+    "insight": "Never blink in without knowing Marci's position. Marci is your primary threat and can burst you instantly if she jumps. Wait for her to use Rebound on teammates before engaging.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "blink_usage",
+    "matchup_context": null,
+    "insight": "Use Blink reactively to escape threats rather than proactively to engage. Only blink in after key enemy abilities are used. Holding Blink for escape is more valuable than using it for damage.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "wave_management",
+    "matchup_context": "when unable to defend towers",
+    "insight": "After losing tier one towers, farm only when you have confirmed enemy position elsewhere on map. Understand that waves spawn at specific timer windows (10:40, 20:40, etc.) and position accordingly.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "objective_timing",
+    "matchup_context": null,
+    "insight": "Before minute 20, only contest runes and minor objectives. After minute 20, transition to playing for major objectives like Roshan. Don't force fights in unfavorable terrain early.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "cs_priority_vs_survival",
+    "matchup_context": null,
+    "insight": "Prioritize zero deaths over perfect CS when behind. Farming 10 creeps then dying is worse than farming zero creeps and surviving. Each death extends enemy advantage significantly.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "armor_piercing_itemization",
+    "matchup_context": "against heavily armored lineups",
+    "insight": "Build Desolator before Daedalus if enemies itemize heavy armor (40+). Desolator's armor reduction is more valuable than critical strike against highly armored targets.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "late_game_itemization",
+    "matchup_context": null,
+    "insight": "Build Butterfly for attack speed and damage instead of defensive items once significantly ahead. When you have 20k+ networth lead, prioritize DPS over survivability to close game faster.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "high_ground_defense",
+    "matchup_context": null,
+    "insight": "Never fight on enemy high ground when behind. Force fights in neutral terrain where you have vision advantage. Wait for objectives like Roshan or Banner of the Skies before attempting high ground assault.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "gank_evasion",
+    "matchup_context": "against coordinated smoke ganks",
+    "insight": "After identifying enemy gank patterns, place defensive traps and buy Sentry Wards to deward. Move along non-standard paths to avoid predicted gank positions. Use TP defensively when you see multiple enemies moving toward you.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "sentry_ward_usage",
+    "matchup_context": "when ganked from unexpected angles",
+    "insight": "Buy your own Sentry Wards after identifying enemy ward placements from successful ganks. Place sentries in predicted gank routes to neutralize enemy vision and control your farming spaces.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": "Templar Assassin",
+    "role": "carry",
+    "topic": "patience_in_fights",
+    "matchup_context": null,
+    "insight": "Wait for key enemy cooldowns before engaging. Don't use Blink or Pike aggressively when facing multiple threats. The patience to farm instead of forcing fights is more valuable than trying to secure kills.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "comeback_mechanics",
+    "matchup_context": "when losing all lanes early",
+    "insight": "Games are winnable from extreme deficits if you achieve zero deaths and maintain steady farm. Enemy overconfidence from kills often leads to predictable gank attempts that can be exploited through map awareness.",
+    "source": {
+      "video_id": "xyhQpce71IM",
+      "title": "How to Carry after LOSING your Lane",
+      "channel": "PainDota"
+    }
+  }
+]

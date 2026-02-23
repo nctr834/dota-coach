@@ -1,0 +1,86 @@
+[
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "item_timing_for_fights",
+    "matchup_context": null,
+    "insight": "Only participate in fights once you have the core items that enable your hero to fight effectively. For example, Templar Assassin needs Blink Dagger to have catch and mobility; Faceless Void needs Chronosphere; Ursa needs Blink to avoid kiting.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "map_positioning_during_teamfights",
+    "matchup_context": null,
+    "insight": "When your team is grouping up somewhere on the map (indicated by multiple heroes in one location), expect a fight to happen. Farm closer to that location rather than the opposite side to be able to join fights quickly.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "farming_near_fights",
+    "matchup_context": null,
+    "insight": "When your team is fighting near an objective, farm the nearby camps instead of going all the way back to the base. This keeps you close enough to join the fight if needed while maintaining your gold income.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "wave_cutting_vs_base_return",
+    "matchup_context": null,
+    "insight": "Cut enemy waves from safer positions near your team instead of teleporting all the way back to base. This prevents your team from taking unnecessary fights 4v5 while you're away.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "teamfight_positioning",
+    "matchup_context": null,
+    "insight": "Be the last person to engage in fights, not the first. Let your team initiate or absorb spells first, then clean up with your superior items and damage. This prevents you from being the primary target and wasting your items' defensive values on your teammates' mistakes.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "map_awareness_while_farming",
+    "matchup_context": null,
+    "insight": "Constantly watch the minimap and camera for enemy movement and spell usage while farming. This information allows you to make better decisions about when and where to join fights.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  },
+  {
+    "hero": null,
+    "role": "carry",
+    "topic": "farming_vs_impact_balance",
+    "matchup_context": null,
+    "insight": "The key to winning as a carry is balancing high farming numbers with game impact. High net worth means nothing if you're not present for fights where your hero can secure victories. Maintain farm while positioning to join key fights.",
+    "source": {
+      "video_id": "TDK_YA_Rd6M",
+      "title": "Fix this and you will turn into a smurf (90%+ Winrate)",
+      "channel": "PainDota"
+    }
+  }
+]
