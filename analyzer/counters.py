@@ -1,8 +1,5 @@
 import json
 
-hero_data = None
-matchup_data = None
-
 with open("data/hero_data.json", "r") as f:
     hero_data = json.load(f)
 with open("data/matchup_data.json", "r") as f:
@@ -62,8 +59,3 @@ def get_synergy_score(hero, ally, matchup_data):
     ally_base = hero_sums_with[ally][0] / hero_sums_with[ally][1]
     expected = (hero_base + ally_base) / 2
     return 100 * (with_wr - expected)
-
-
-if __name__ == "__main__":
-    print("Counter score:", get_counter_score("shadow shaman", "phoenix", matchup_data))
-    print("Counter score:", get_counter_score("phoenix", "shadow shaman", matchup_data))

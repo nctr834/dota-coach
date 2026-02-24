@@ -6,6 +6,7 @@ with open("data/hero_data.json", "r") as f:
 with open("data/matchup_data.json", "r") as f:
     matchup_data = json.load(f)
 
+
 total_matches = sum(matchup_data[hero]["matchCountVs"] for hero in matchup_data)
 avg_matches = total_matches / len(matchup_data)
 hero_sums_vs = {
@@ -31,6 +32,13 @@ hero_sums_with = {
 }
 
 
+class Hero:
+    def __init__(self, name, id, score):
+        self.name = name
+        self.id = id
+        self.score = score
+
+
 def rank_picks(
     team,
     enemy_team,
@@ -42,6 +50,9 @@ def rank_picks(
         scores[hero] = evaluate_hero(hero, team, enemy_team, pos, pos_dict)
 
     ranked_scores = list(reversed(sorted(scores.items(), key=lambda x: x[1])))[:5]
+    ranked_scores = [
+        Hero(hero, matchup_data[hero]["heroId"], score) for hero, score in ranked_scores
+    ]
     return ranked_scores
 
 
@@ -58,10 +69,10 @@ def evaluate_hero(hero, team, enemy_team, pos, pos_dict, bypass_check=False):
         - 0.5
     )
     for ally in team.values():
-        score += get_synergy_score(hero, ally, matchup_data)
+        score += get_synergy_score(hero, ally.name, matchup_data)
     for enemy in enemy_team.values():
-        score += get_counter_score(hero, enemy, matchup_data) - get_counter_score(
-            enemy, hero, matchup_data
+        score += get_counter_score(hero, enemy.name, matchup_data) - get_counter_score(
+            enemy.name, hero, matchup_data
         )
     return score
 
@@ -84,7 +95,7 @@ def score_teams(team, enemy_team):
 
     for hero in team_list:
         radiant_score += evaluate_hero(
-            hero,
+            hero.name,
             team,
             enemy_team,
             "",
@@ -93,7 +104,7 @@ def score_teams(team, enemy_team):
         )
     for hero in enemy_list:
         dire_score += evaluate_hero(
-            hero,
+            hero.name,
             enemy_team,
             team,
             "",

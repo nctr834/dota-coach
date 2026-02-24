@@ -42,6 +42,7 @@ def gather_hero_data():
                 duration
                 hasScepterUpgrade
                 hasShardUpgrade
+                isGrantedByShard
             }
             }
         }
@@ -49,20 +50,43 @@ def gather_hero_data():
     }
     }   
     """
-    hero_stats_response = scraper.post(
+    hero_data_response = scraper.post(
         "https://api.stratz.com/graphql",
         headers={"Authorization": f"Bearer {token}"},
         json={"query": query},
     )
-    if hero_stats_response.status_code == 200:
-        hero_stats = hero_stats_response.json()
-        hero_stats = {
-            hero["id"]: hero for hero in hero_stats["data"]["constants"]["heroes"]
+    if hero_data_response.status_code == 200:
+        hero_data = hero_data_response.json()
+        hero_data = {
+            hero["id"]: hero for hero in hero_data["data"]["constants"]["heroes"]
         }
-        Path("data/hero_data.json").open("w").write(json.dumps(hero_stats))
-        return hero_stats
+        for hero_id, hero in hero_data.items():
+            abilities = {}
+            for ability in hero["abilities"]:
+                attributes = []
+                if not ability["ability"]["attributes"]:  # generic_hidden
+                    continue
+                for attribute in ability["ability"]["attributes"]:
+                    if (
+                        attribute["value"] == ""
+                        and "scepter" not in attribute["name"]
+                        and "shard" not in attribute["name"]
+                    ):
+                        continue
+                    attributes.append(attribute)
+                ability["ability"]["attributes"] = attributes
+                ability_name = ability["ability"]["name"]
+                short_name = (
+                    ability_name.replace(hero["shortName"] + "_", "")
+                    .replace("_", " ")
+                    .title()
+                )
+                abilities[short_name] = ability
+            hero_data[hero_id]["abilities"] = abilities
+        Path("data/hero_data.json").open("w").write(json.dumps(hero_data))
+        return hero_data
     else:
-        print(f"Heroes data response: HTTP {hero_stats_response.status_code}")
+        print(f"Heroes data response: HTTP {hero_data_response.status_code}")
         return None
 
 
@@ -183,9 +207,7 @@ def gather_item_data():
 
     if items.status_code == 200:
         items = items.json()["data"]["constants"]["items"]
-
         items = {item["name"]: item for item in items}
-
         invalid_items = {
             "item_samurai_tabi",
             "item_hermes_sandals",
@@ -203,8 +225,8 @@ def gather_item_data():
             "item_specialists_array",
         }
         items = {
-            " ".join(item["name"].split("_")[1:]): item
-            for item in items.json()["data"]["constants"]["items"]
+            " ".join(item["name"].split("_")[1:]).title(): item
+            for item in items.values()
             if not item["name"].endswith("_roshan")
             if not item["name"].endswith("_necronomicon")
             if item["name"] not in invalid_items
@@ -213,15 +235,15 @@ def gather_item_data():
             if item["stat"]["quality"] is not None
         }
         rename_items = {
-            "devastator": "parasma",
-            "angels demise": "khanda",
-            "gungir": "gleipnir",
-            "lifesteal": "morbid mask",
-            "sphere": "linkens sphere",
-            "assault": "assault cuirass",
-            "lesser crit": "crystalys",
-            "greater crit": "daedalus",
-            "invis sword": "shadow blade",
+            "Devastator": "Parasma",
+            "Angels Demise": "Khanda",
+            "Gungir": "Gleipnir",
+            "Lifesteal": "Morbid Mask",
+            "Sphere": "Linkens Sphere",
+            "Assault": "Assault Cuirass",
+            "Lesser Crit": "Crystalys",
+            "Greater Crit": "Daedalus",
+            "Invis Sword": "Shadow Blade",
         }
         items = {rename_items.get(k, k): v for k, v in items.items()}
         print(f"{len(items)} (items)")

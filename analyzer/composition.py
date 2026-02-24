@@ -1,6 +1,8 @@
 import json
 from evaluator import rank_picks, score_teams
 
+with open("data/matchup_data.json", "r") as f:
+    matchup_data = json.load(f)
 with open("data/role_data_POSITION_1.json", "r") as f:
     pos1_data = json.load(f)
 with open("data/role_data_POSITION_2.json", "r") as f:
@@ -21,34 +23,25 @@ pos_dict = {
 
 
 def get_input(team, enemy_team, side, i, hero=None, role=None):
-    print(f"\n{side} pick - {i + 1} | current picks: {team}")
-    while role is None:
-        try:
-            role = int(input("enter role to pick: "))
-            suggestions = rank_picks(team, enemy_team, f"POSITION_{role}", pos_dict)
-            print(f"suggestions: {suggestions}")
-        except (KeyError, ValueError):
-            role = None
-    while hero is None:
-        try:
-            hero = int(input("enter hero to pick (index): "))
-            team[role] = suggestions[hero][0]
-        except (IndexError, ValueError):
-            hero = None
-    print(f"{side} pick - {i + 1} | current picks: {team}")
+    # print(f"\n{side} pick - {i + 1} | current picks: {team}")
+    suggestions = rank_picks(team, enemy_team, f"POSITION_{role}", pos_dict)
+    # print(f"suggestions: {suggestions}")
+    hero = 0
+    team[role] = suggestions[hero]
+    # print(f"{side} pick - {i + 1} | current picks: {team}")
 
 
 def compose():
     radiant = {}
     dire = {}
     for i in range(5):
-        get_input(radiant, dire, "radiant", i, hero=None, role=None)
-        get_input(dire, radiant, "dire", i, hero=None, role=None)
-    print(f"\nradiant: {radiant}\ndire: {dire}")
+        get_input(radiant, dire, "radiant", i, hero=None, role=i + 1)
+        get_input(dire, radiant, "dire", i, hero=None, role=i + 1)
     radiant_score, dire_score, delta = score_teams(radiant, dire)
-    print(f"radiant_score: {radiant_score}\ndire_score: {dire_score}")
-    print(f"delta: {delta}")
+    return radiant, dire, radiant_score, dire_score, delta
 
 
-if __name__ == "__main__":
-    compose()
+radiant, dire, radiant_score, dire_score, delta = compose()
+print(f"\nradiant: {radiant}\ndire: {dire}")
+print(f"radiant_score: {radiant_score}\ndire_score: {dire_score}")
+print(f"delta: {delta}")
