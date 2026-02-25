@@ -30,9 +30,23 @@ def gather_hero_data():
         id
         displayName
         shortName
+        roles {
+            roleId
+        }
+        stats {
+        attackType
+        primaryAttributeEnum
+        startingArmor
+        moveSpeed
+        attackRange
+        attackRate
+        visionDaytimeRange
+        visionNighttimeRange
+        }
         abilities {
             ability {
             name
+            id
             attributes {
                 name
                 value

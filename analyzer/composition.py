@@ -42,6 +42,8 @@ def compose():
 
 
 radiant, dire, radiant_score, dire_score, delta = compose()
-print(f"\nradiant: {radiant}\ndire: {dire}")
+print(
+    f"\nradiant: { {x[0]: x[1].name for x in radiant.items()} }\ndire: { {x[0]: x[1].name for x in dire.items()} }"
+)
 print(f"radiant_score: {radiant_score}\ndire_score: {dire_score}")
 print(f"delta: {delta}")

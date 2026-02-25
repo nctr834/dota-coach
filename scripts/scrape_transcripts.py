@@ -22,6 +22,7 @@ channels = {
     "ZQuixotix": "https://www.youtube.com/@ZQuixotix",
 }
 
+# Rotating Residential Proxy required for youtube-transcript-api (webshare used)
 for channel_name, url in channels.items():
     output_dir = Path(f"data/transcripts/{channel_name}")
     output_dir.mkdir(parents=True, exist_ok=True)
