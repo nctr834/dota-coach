@@ -3,8 +3,8 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
 
-# OpenDota API provides easier access to build data it seems
-def get_dota2protracker_page(hero):
+# OpenDota API provides easier access to build data it seems.. using this for performance testing
+def get_dota2protracker_page(hero, include_meta=False, include_off_meta=False):
     url = f"https://dota2protracker.com/hero/{hero}"
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
@@ -39,12 +39,14 @@ def get_dota2protracker_page(hero):
                 "Neutral Items"
             )[0]
         }
-        content["hero-meta"] = get_content_after_click(
-            "hero-tab-meta", "hero-meta-analysis"
-        ).split("against\nCarry\nMeta")[0]
-        content["hero-off-meta"] = "".join(
-            get_content_after_click("hero-tab-offmeta", "hero-off-meta").split(
-                "Off-Meta Score"
-            )[0:2]
-        )
+        if include_meta:
+            content["hero-meta"] = get_content_after_click(
+                "hero-tab-meta", "hero-meta-analysis"
+            ).split("against\nCarry\nMeta")[0]
+        if include_off_meta:
+            content["hero-off-meta"] = "".join(
+                get_content_after_click("hero-tab-offmeta", "hero-off-meta").split(
+                    "Off-Meta Score"
+                )[0:2]
+            )
         return content

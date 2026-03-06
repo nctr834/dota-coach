@@ -1,11 +1,10 @@
 import json
 import os
-from re import search
-import regex as re
 from enum import Enum
 from pathlib import Path
 from dotenv import load_dotenv
 import cloudscraper
+from requests import get, request
 
 load_dotenv()
 token = os.getenv("STRATZ_API_KEY")
@@ -13,6 +12,49 @@ scraper = cloudscraper.create_scraper()
 
 # Create data directory if it doesn't exist
 Path("data").mkdir(exist_ok=True)
+ignore = {
+    "hero_data": False,
+    "matchup_data": False,
+    "pos_data": False,
+    "item_data": False,
+    "aghs_data": False,
+    "patch_data": False,
+}
+try:
+    with open("data/hero_data.json", "r") as f:
+        hero_data = json.load(f)
+except:
+    ignore["hero_data"] = False
+
+try:
+    with open("data/matchup_data.json", "r") as f:
+        matchup_data = json.load(f)
+except:
+    ignore["matchup_data"] = False
+
+try:
+    with open("data/pos_data.json", "r") as f:
+        pos_data = json.load(f)
+except:
+    ignore["pos_data"] = False
+
+try:
+    with open("data/item_data.json", "r") as f:
+        item_data = json.load(f)
+except:
+    ignore["item_data"] = False
+
+try:
+    with open("data/aghs_data.json", "r") as f:
+        aghs_data = json.load(f)
+except:
+    ignore["aghs_data"] = False
+
+try:
+    with open("data/patch_data.json", "r") as f:
+        patch_data = json.load(f)
+except:
+    ignore["patch_data"] = False
 
 
 class Rank(Enum):
@@ -23,6 +65,8 @@ class Rank(Enum):
 
 
 def gather_hero_data():
+    if ignore["hero_data"]:
+        return
     query = """
     {
     constants {
@@ -64,47 +108,61 @@ def gather_hero_data():
     }
     }   
     """
-    hero_data_response = scraper.post(
+    response = scraper.post(
         "https://api.stratz.com/graphql",
         headers={"Authorization": f"Bearer {token}"},
         json={"query": query},
     )
-    if hero_data_response.status_code == 200:
-        hero_data = hero_data_response.json()
+    if response.status_code == 200:
+        hero_data = response.json()
         hero_data = {
             hero["id"]: hero for hero in hero_data["data"]["constants"]["heroes"]
         }
-        for hero_id, hero in hero_data.items():
-            abilities = {}
-            for ability in hero["abilities"]:
-                attributes = []
-                if not ability["ability"]["attributes"]:  # generic_hidden
+        for hero in hero_data.values():
+            abilities = []
+            for a in hero["abilities"]:
+                ability = a["ability"]
+                attributes = ability["attributes"]
+                attribute_list = []
+                if not attributes:
                     continue
-                for attribute in ability["ability"]["attributes"]:
+                for attribute in attributes:
                     if (
                         attribute["value"] == ""
                         and "scepter" not in attribute["name"]
                         and "shard" not in attribute["name"]
                     ):
                         continue
-                    attributes.append(attribute)
-                ability["ability"]["attributes"] = attributes
-                ability_name = ability["ability"]["name"]
-                short_name = (
+                    attribute["name"] = attribute["name"].replace("_", " ").title()
+                    attribute_list.append(attribute)
+                attributes = attribute_list
+                ability_name = ability["name"]
+                display_name = (
                     ability_name.replace(hero["shortName"] + "_", "")
                     .replace("_", " ")
                     .title()
                 )
-                abilities[short_name] = ability
-            hero_data[hero_id]["abilities"] = abilities
+                ability["displayName"] = display_name
+                abilities.append(ability)
+            hero_data[hero["id"]]["abilities"] = abilities
+            hero["id"] = str(hero["id"])
+        hero_displayName_to_id = {
+            hero["displayName"]: hero_id for hero_id, hero in hero_data.items()
+        }
         Path("data/hero_data.json").open("w").write(json.dumps(hero_data))
-        return hero_data
+        Path("frontend/src/data/hero_data.json").open("w").write(json.dumps(hero_data))
+        Path("data/hero_displayName_to_id.json").open("w").write(
+            json.dumps(hero_displayName_to_id)
+        )
+        print(f"Hero data gathered ({len(hero_data)} heroes)")
     else:
-        print(f"Heroes data response: HTTP {hero_data_response.status_code}")
+        print(f"Heroes data response: HTTP {response.status_code}")
         return None
 
 
-def gather_matchup_data(hero_data):
+def gather_matchup_data():
+    if ignore["matchup_data"]:
+        return
     choice = Rank.DIVINE_IMMORTAL
     query = f"""
     {{
@@ -130,71 +188,77 @@ def gather_matchup_data(hero_data):
         }}
     }}
     """
-    matchup_data = scraper.post(
+    response = scraper.post(
         "https://api.stratz.com/graphql",
         headers={"Authorization": f"Bearer {token}"},
         json={"query": query},
     )
-    if matchup_data.status_code == 200:
-        matchup_data = matchup_data.json()["data"]["heroStats"]["matchUp"][1:]
+    if response.status_code == 200:
+        matchup_data = response.json()["data"]["heroStats"]["matchUp"][1:]
         matchup_data = {
-            hero_data[m["heroId"]]["shortName"].lower(): {
-                "heroId": m["heroId"],
-                "matchCountVs": m["matchCountVs"],
-                "matchCountWith": m["matchCountWith"],
-                "vs": {
-                    hero_data[r["heroId2"]]["shortName"].lower(): r for r in m["vs"]
-                },
-                "with": {
-                    hero_data[r["heroId2"]]["shortName"].lower(): r for r in m["with"]
-                },
+            h["heroId"]: {
+                "vs": {mu["heroId2"]: mu for mu in h["vs"]},
+                "with": {mu["heroId2"]: mu for mu in h["with"]},
+                "matchCountVs": h["matchCountVs"],
+                "matchCountWith": h["matchCountWith"],
             }
-            for m in matchup_data
-            if m["heroId"] in hero_data
+            for h in matchup_data
+            if str(h["heroId"]) in hero_data.keys()
         }
         Path("data/matchup_data.json").open("w").write(json.dumps(matchup_data))
         print(
             f"Found hero and matchup data\nConsistency check: heroes: {len(hero_data)} | matchups: {len(matchup_data)}"
         )
-        return matchup_data
     else:
-        print(f"Matchup data response: HTTP {matchup_data.status_code}")
+        print(f"Matchup data response: HTTP {response.status_code}")
         return None
 
 
 def gather_pos_data():
+    if ignore["pos_data"]:
+        return
     choice = Rank.DIVINE_IMMORTAL
-    positions = ["POSITION_1", "POSITION_2", "POSITION_3", "POSITION_4", "POSITION_5"]
     try:
-        for p in positions:
-            query = f"""
-            {{
-            heroStats {{
-                stats(bracketBasicIds: [{choice.value}], positionIds: [{p}]) {{
-                heroId
-                matchCount
-                }}
+        query = f"""
+        {{
+        heroStats {{
+            stats(bracketBasicIds: [{choice.value}], positionIds: [POSITION_1, POSITION_2, POSITION_3, POSITION_4, POSITION_5], groupByPosition: true) {{
+            heroId
+            position
+            winCount
+            matchCount
             }}
-            }}
-            """
-            roles = scraper.post(
-                "https://api.stratz.com/graphql",
-                headers={"Authorization": f"Bearer {token}"},
-                json={"query": query},
-            )
-            roles = roles.json()["data"]["heroStats"]["stats"]
-            roles = {role["heroId"]: role["matchCount"] for role in roles}
-            for id in hero_data:
-                if id not in roles:
-                    roles[id] = 0
-            Path(f"data/role_data_{p}.json").open("w").write(json.dumps(roles))
-            print(f"Found role data for {p}, roles: {len(roles)}")
+        }}
+        }}
+        """
+        response = scraper.post(
+            "https://api.stratz.com/graphql",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"query": query},
+        )
+        response = response.json()["data"]["heroStats"]["stats"]
+        roles = {1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+        i = 0
+        while i < len(response):
+            roles[int(response[i]["position"][-1])][response[i]["heroId"]] = response[i]
+            i += 1
+        heroes = set(
+            list(roles[1].keys())
+            + list(roles[2].keys())
+            + list(roles[3].keys())
+            + list(roles[4].keys())
+            + list(roles[5].keys())
+        )
+        Path(f"data/pos_data.json").open("w").write(json.dumps(roles))
+        print(f"Found role data, heroes: {len(heroes)}")
     except Exception as e:
         print(f"Error gathering role data: {e}")
         exit(1)
 
 
 def gather_item_data():
+    if ignore["item_data"]:
+        return
     query = """
     {
     constants {
@@ -213,14 +277,14 @@ def gather_item_data():
     }
     }
     """
-    items = scraper.post(
+    response = scraper.post(
         "https://api.stratz.com/graphql",
         headers={"Authorization": f"Bearer {token}"},
         json={"query": query},
     )
 
-    if items.status_code == 200:
-        items = items.json()["data"]["constants"]["items"]
+    if response.status_code == 200:
+        items = response.json()["data"]["constants"]["items"]
         items = {item["name"]: item for item in items}
         invalid_items = {
             "item_samurai_tabi",
@@ -238,16 +302,6 @@ def gather_item_data():
             "item_grandmasters_glaive",
             "item_specialists_array",
         }
-        items = {
-            " ".join(item["name"].split("_")[1:]).title(): item
-            for item in items.values()
-            if not item["name"].endswith("_roshan")
-            if not item["name"].endswith("_necronomicon")
-            if item["name"] not in invalid_items
-            if item["stat"] is not None
-            if item["stat"]["cost"] > 30
-            if item["stat"]["quality"] is not None
-        }
         rename_items = {
             "Devastator": "Parasma",
             "Angels Demise": "Khanda",
@@ -258,26 +312,132 @@ def gather_item_data():
             "Lesser Crit": "Crystalys",
             "Greater Crit": "Daedalus",
             "Invis Sword": "Shadow Blade",
+            "Bfury": "Battle Fury",
         }
-        items = {rename_items.get(k, k): v for k, v in items.items()}
-        print(f"{len(items)} (items)")
-        Path("data/item_data.json").open("w").write(json.dumps(items))
+        item_data = {}
+        for item in items.values():
+            if (
+                not item["name"].endswith("_roshan")
+                and not item["name"].endswith("_necronomicon")
+                and item["name"] not in invalid_items
+                and item["stat"] is not None
+                and item["stat"]["cost"] > 30
+                and item["stat"]["quality"] is not None
+            ):
+                item_data[item["name"]] = item
+                display_name = " ".join(item["name"].split("_")[1:]).title()
+                item_data[item["name"]]["displayName"] = rename_items.get(
+                    display_name, display_name
+                )
+        item_displayName_to_name = {
+            item["displayName"]: item["name"] for item in item_data.values()
+        }
+        print(f"{len(item_data)} (items)")
+        Path("data/item_data.json").open("w").write(json.dumps(item_data))
+        Path("data/item_displayName_to_name.json").open("w").write(
+            json.dumps(item_displayName_to_name)
+        )
         print(f"Found item data")
-        return items
     else:
-        print(f"Items data response: HTTP {items.status_code}")
+        print(f"Items data response: HTTP {response.status_code}")
         return None
 
 
-if __name__ == "__main__":
-    try:
-        hero_data = gather_hero_data()
-        matchup_data = gather_matchup_data(
-            hero_data
-        )  # pass hero_data to avoid potential null matchup
-        roles = gather_pos_data()
-        items = gather_item_data()
+def gather_aghs_data():
+    if ignore["aghs_data"]:
+        return
+    url = "https://api.opendota.com/api/constants/aghs_desc"
+    response = get(url)
+    aghs_data = {}
+    for hero in response.json():
+        hero["hero_name"] = hero_data[str(hero["hero_id"])]["displayName"]
+        aghs_data[hero["hero_id"]] = hero
 
-    except Exception as e:
-        print(f"Error gathering data: {e}")
-        exit(1)
+    print(f"Aghs data gathered: {len(aghs_data)}")
+    with open("data/aghs_data.json", "w") as f:
+        json.dump(aghs_data, f)
+
+
+def gather_patch_data():
+    if ignore["patch_data"]:
+        return
+    url = "https://raw.githubusercontent.com/dotabuff/d2vpkr/refs/heads/master/dota/resource/localization/patchnotes/patchnotes_english.txt"
+    response = get(url).text.split("\n")[2:-1]
+    GENERAL = "General"
+    HEROES = "heroes"
+    ABILITIES = "abilities"
+    ITEMS = "items"
+    hero_keys = set([hero["shortName"] for hero in hero_data.values()])
+    item_keys = set([item["name"] for item in item_data.values()])
+    ability_keys = set(
+        ability["name"] for hero in hero_data.values() for ability in hero["abilities"]
+    )
+    patch_cutoff = "7_38"
+    flag = False
+    patch_data_dict = {
+        GENERAL: {},
+        HEROES: {
+            hero["shortName"]: {
+                ABILITIES: {ability["name"]: {} for ability in hero["abilities"]},
+                "hero": {},
+            }
+            for hero in hero_data.values()
+        },
+        ITEMS: {item["name"]: {} for item in item_data.values()},
+    }
+
+    def check(path, patch):
+        idx = path
+        if patch not in idx:
+            idx[patch] = ""
+        idx[patch] += f"{pair[1]} "
+
+    for line in response:
+        l = line.strip().replace('"', "")
+        if not flag and l.startswith(f"DOTA_Patch_{patch_cutoff}"):
+            flag = True
+        if flag:
+            pair = l.split("\t\t")
+            subject = pair[0]
+            if subject[-1].isdigit():
+                pair[0] = "_".join(subject.split("_")[:-1])
+            info = pair[0].replace("DOTA_Patch_", "").split("_")
+            j = 2
+            patch = ".".join(info[:2])
+            key = ""
+            hero_name = ""
+            while j < len(info):
+                key += f"{info[j]}"
+                if key[0] == "_":
+                    key = key[1:]
+                if not hero_name and key in hero_keys:
+                    heroes = patch_data_dict[HEROES][key]["hero"]
+                    if patch not in heroes:
+                        heroes[patch] = ""
+                    if j == len(info) - 1:
+                        heroes[patch] += f"{pair[1]} "
+                    if not hero_name:
+                        hero_name = key
+                        key = ""
+                elif GENERAL in key:
+                    general = patch_data_dict[GENERAL]
+                    check(general, patch)
+                elif key in item_keys:
+                    items = patch_data_dict[ITEMS][key]
+                    check(items, patch)
+                elif hero_name and key in ability_keys:
+                    abilities = patch_data_dict[HEROES][hero_name][ABILITIES][key]
+                    check(abilities, patch)
+                key += "_"
+                j += 1
+    print("Patch notes gathered")
+    with open("data/patch_data.json", "w") as f:
+        json.dump(patch_data_dict, f)
+
+
+gather_hero_data()
+gather_matchup_data()
+gather_pos_data()
+gather_item_data()
+gather_aghs_data()
+gather_patch_data()

@@ -1,0 +1,1579 @@
+{
+  "items": {
+    "Abyssal Blade": {
+      "cost": 6250,
+      "buildsFrom": "Basher + Sange",
+      "provides": "+35 damage, +26 str, 25% bash chance (melee only), 1.2s bash, active 1.6s stun that pierces spell immunity",
+      "buyWhen": "you need BKB-piercing lockdown, you're a melee core, enemy has slippery heroes (Storm, Ember, AM, Void Spirit), you need to cancel TPs through BKB",
+      "skipWhen": "you're ranged (10% bash is awful), you need damage more than control, enemy team isn't mobile, you can't close the gap to use the active",
+      "patchNotes": "7.39: Health Regen Amplification , Lifesteal Amplification , and Spell Lifesteal Amplification are now replaced by Health Restoration Manipulation , combining all three into one mechanic. As such, Abyssal Blade now also amplifies Spell Lifesteal . Reduced amplification value from 25% to 20%."
+    },
+    "Aeon Disk": {
+      "cost": 3000,
+      "buildsFrom": "Energy Booster + Vitality Booster",
+      "provides": "+250 HP, +300 mana, passive that triggers at 70% HP dealing no damage for 2.5s with 75% status resist, 105-165s CD based on hero level",
+      "buyWhen": "you're a squishy support getting jumped, enemy has instant burst (Tiny combo, PA crit), you keep dying before using spells, you're Medusa/Storm and need to survive initiation",
+      "skipWhen": "enemy has DoT-heavy damage (Veno, Jakiro) that triggers it early, you need offensive items instead, game is going late and CD becomes too long",
+      "patchNotes": "7.39e: Combo Breaker now goes on a 6-second cooldown after being assembled for the first time."
+    },
+    "Aether Lens": {
+      "cost": 2275,
+      "buildsFrom": "Energy Booster + Void Stone",
+      "provides": "+300 mana, +2.5 mana regen, +225 cast range",
+      "buyWhen": "you're a position 4/5 caster who needs range to stay alive, you're building toward Octarine, you play Pudge/Mirana/Bane and range matters a lot",
+      "skipWhen": "you're a core who doesn't benefit from range, you need survivability more than range, your hero has huge cast range already",
+      "patchNotes": "7.40: No longer builds into Ethereal Blade ."
+    },
+    "Aghanims Shard": {
+      "cost": 1400,
+      "buildsFrom": "purchased from shop at 15 min+",
+      "provides": "hero-specific ability upgrade or new ability",
+      "buyWhen": "your shard upgrade is strong for the game (check hero-specific value), you hit 15 min and have gold to spare, the upgrade changes how you play fights",
+      "skipWhen": "your shard upgrade is weak or situational, you need core items first, the upgrade doesn't help against the enemy lineup"
+    },
+    "Arcane Blink": {
+      "cost": 6800,
+      "buildsFrom": "Blink Dagger + Mystic Staff",
+      "provides": "+25 int, 1400 blink range (vs 1200 normal), instant 250 HP and 100 mana restore on arrival",
+      "buyWhen": "you're an int caster who already wants Blink (Puck, QoP, Sand King), you have mana-hungry combos, the extra 200 range matters for initiations",
+      "skipWhen": "you need the gold elsewhere, you don't care about the int (str/agi heroes), base Blink is sufficient for your purposes",
+      "patchNotes": "7.39: Arcane Blink no longer clamps its distance to 4/5 of max distance when targeted beyond the max distance."
+    },
+    "Arcane Boots": {
+      "cost": 1400,
+      "buildsFrom": "Boots of Speed + Energy Booster",
+      "provides": "+45 MS, +250 mana, active restores 175 mana in AoE",
+      "buyWhen": "you're a mana-hungry support or offlaner, your team benefits from mana restore, you're building toward Guardian Greaves or disassemble for Aether Lens",
+      "skipWhen": "you're a carry who needs attack speed (Treads better), you don't have mana issues, you'd rather have Phase or Tranquils"
+    },
+    "Armlet": {
+      "cost": 2500,
+      "buildsFrom": "Helm of Iron Will + Gloves of Haste + Blades of Attack",
+      "provides": "+6 armor, +25 AS, +15 damage, +5 HP regen, toggle for +35 damage +25 str +4 armor (drains 45 HP/s)",
+      "buyWhen": "you're a melee str carry (CK, WK, Huskar, Lifestealer), you can toggle well, you have lifesteal or regen to sustain it",
+      "skipWhen": "you're bad at toggling, you're ranged, you don't have sustain, enemy has DoTs that make toggling dangerous (Venomancer)",
+      "patchNotes": "7.39: CHANGED  shop category from Weapons to Armor . | 7.40: MOVED TIER  from TIER 5  to TIER 3 .; Relentless No longer grants 10% status resistance for each enemy within the radius. Changed radius from a fixed 600 to match the wielder's attack range. Reduced max slow resistance from 100% to 50%. Reduced slow resistance loss per nearby enemy from 20% to 10%."
+    },
+    "Armlet of Mordiggian": {
+      "cost": 2500,
+      "buildsFrom": "Helm of Iron Will + Gloves of Haste + Blades of Attack",
+      "provides": "+6 armor, +25 AS, +15 damage, +5 HP regen, toggle for +35 damage +25 str +4 armor (drains 45 HP/s)",
+      "buyWhen": "you're a melee str carry (CK, WK, Huskar, Lifestealer), you can toggle well, you have lifesteal or regen to sustain it",
+      "skipWhen": "you're bad at toggling, you're ranged, you don't have sustain, enemy has DoTs that make toggling dangerous (Venomancer)"
+    },
+    "Assault Cuirass": {
+      "cost": 5125,
+      "buildsFrom": "Hyperstone + Platemail + Recipe",
+      "provides": "+10 armor, +30 AS, aura +30 AS and +5 armor to allies, -5 armor to enemies",
+      "buyWhen": "your team lacks armor, you're against heavy physical damage, you're a carry or offlaner who can build it, someone needs to get it and you're the best candidate",
+      "skipWhen": "someone else is building it (doesn't stack), you desperately need other stats, enemy is mostly magic damage"
+    },
+    "Basher": {
+      "cost": 2875,
+      "buildsFrom": "Javelin + Skull Basher Recipe",
+      "provides": "+25 damage, 25% bash chance (melee) / 10% (ranged), 1.2s stun on bash",
+      "buyWhen": "you're a melee carry building toward Abyssal Blade, you need lockdown on mobile heroes, you attack fast enough to proc it",
+      "skipWhen": "you're ranged (10% is unreliable), you already have reliable lockdown, you need damage more than stun chance",
+      "patchNotes": "7.40: Purge can no longer be cast on invulnerable units."
+    },
+    "Battle Fury": {
+      "cost": 3900,
+      "buildsFrom": "Perseverance + Claymore + Broadsword",
+      "provides": "+50 damage, +7.5 HP regen, +2.75 mana regen, 60% cleave",
+      "buyWhen": "you're a melee carry who wants to flash farm (AM, Jugg, PA), enemy has illusion heroes (PL, Naga), you want to accelerate into late game",
+      "skipWhen": "you're ranged, you need to fight early, you're behind and need immediate impact, you're a hero who farms with spells anyway"
+    },
+    "Belt Of Strength": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+6 str",
+      "buyWhen": "you're building Power Treads or Sange",
+      "skipWhen": "you don't need the component"
+    },
+    "Bfury": {
+      "cost": 3900,
+      "buildsFrom": "Perseverance + Claymore + Broadsword",
+      "provides": "+50 damage, +7.5 HP regen, +2.75 mana regen, 60% cleave",
+      "buyWhen": "you're a melee carry who wants to flash farm (AM, Jugg, PA), enemy has illusion heroes (PL, Naga), you want to accelerate into late game",
+      "skipWhen": "you're ranged, you need to fight early, you're behind and need immediate impact, you're a hero who farms with spells anyway"
+    },
+    "Black King Bar": {
+      "cost": 4050,
+      "buildsFrom": "Ogre Axe + Mithril Hammer + Recipe",
+      "provides": "+24 damage, +10 str, active spell immunity (9/8/7/6s based on uses)",
+      "buyWhen": "you're a core who needs to hit people without being disabled, enemy has tons of disables or magic damage, you're getting kited or bursted in fights",
+      "skipWhen": "enemy damage is mostly physical and right-clicks, your hero doesn't care about spells (Lifestealer has built-in), you can avoid spells with mobility or you're a pos 5 who won't get this much gold"
+    },
+    "Blade Mail": {
+      "cost": 2300,
+      "buildsFrom": "Broadsword + Chainmail + Robe of the Magi",
+      "provides": "+6 armor, +15 damage, passive 15% damage return, active 85% damage return for 5.5s",
+      "buyWhen": "you're getting focused, you're a tanky initiator (Axe, Legion, Centaur), enemy has high-damage heroes who will kill themselves (PA, Ursa)",
+      "skipWhen": "enemy can disengage easily, enemy has lifesteal to heal through it, you're too squishy to survive the initial burst anyway",
+      "patchNotes": "7.39c: Reduced armor bonus from 7 to 6. | 7.39d: Reduced attack damage bonus from 18 to 15.; Damage Return (Passive) Reduced base damage from 20 to 10. Reduced attack damage as damage from 20% to 15%."
+    },
+    "Blade Of Alacrity": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+10 agi",
+      "buyWhen": "you're building Diffusal Blade or Aghanim's Scepter",
+      "skipWhen": "you don't need the component"
+    },
+    "Blades Of Attack": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+9 damage",
+      "buyWhen": "you're building Phase Boots, Armlet, or Crystalys",
+      "skipWhen": "you don't need the component"
+    },
+    "Blight Stone": {
+      "cost": 300,
+      "buildsFrom": "purchased from shop",
+      "provides": "attacks reduce enemy armor by 2 for 5s",
+      "buyWhen": "you want cheap early armor reduction for trading in lane, building toward Medallion or Desolator",
+      "skipWhen": "you don't trade attacks in lane, the armor reduction isn't impactful"
+    },
+    "Blink": {
+      "cost": 2250,
+      "buildsFrom": "none (basic item)",
+      "provides": "1200 range instant teleport (960 if you overshoot), 3s CD on taking damage",
+      "buyWhen": "you need initiation (Axe, Tidehunter, Enigma, Sand King), you need escape as a support, positioning wins fights for your hero",
+      "skipWhen": "you have built-in mobility that's sufficient, you're a right-clicker who needs damage items, enemy has lots of DoTs that disable it",
+      "patchNotes": "7.39: Hobble Health Regen Manipulation , Lifesteal Manipulation , and Spell Lifesteal Manipulation are now replaced by Health Restoration Manipulation , combining all three into one mechanic. Reduction value remains 40%. No longer applies heal reduction ."
+    },
+    "Blink Dagger": {
+      "cost": 2250,
+      "buildsFrom": "none (basic item)",
+      "provides": "1200 range instant teleport (960 if you overshoot), 3s CD on taking damage",
+      "buyWhen": "you need initiation (Axe, Tidehunter, Enigma, Sand King), you need escape as a support, positioning wins fights for your hero",
+      "skipWhen": "you have built-in mobility that's sufficient, you're a right-clicker who needs damage items, enemy has lots of DoTs that disable it"
+    },
+    "Blitz Knuckles": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+35 AS",
+      "buyWhen": "you're building Witch Blade or Monkey King Bar",
+      "skipWhen": "you don't need the component"
+    },
+    "Blood Grenade": {
+      "cost": 50,
+      "buildsFrom": "purchased from shop",
+      "provides": "throw for AoE 50 DPS + 15% slow + prevents blink for 5s in 300 radius",
+      "buyWhen": "you want to stop blink initiators, cheap way to cancel blink during chases, good against mobile heroes",
+      "skipWhen": "enemy doesn't rely on Blink Dagger, you need other consumables more"
+    },
+    "Bloodstone": {
+      "cost": 4350,
+      "buildsFrom": "Soul Booster + Voodoo Mask",
+      "provides": "+450 HP, +450 mana, +3 mana regen, 25% spell lifesteal, active 3x spell lifesteal for 5s",
+      "buyWhen": "you're a spell-spamming core (Storm, Leshrac, Timbersaw), you need sustain in fights through spell lifesteal",
+      "skipWhen": "you don't spam spells enough to benefit, you need defensive items, you can't survive to cast multiple spells",
+      "patchNotes": "7.39: CREATED | 7.39b: Blood Invocation No longer affects active attack modifier . Reduced AoE bonus from 15% to 12%. | 7.40: MOVED TIER  from TIER 4  to TIER 5 .; Increased Blood Invocation AoE bonus from 12% to 15%."
+    },
+    "Bloodthorn": {
+      "cost": 6625,
+      "buildsFrom": "Orchid + Crystalys + Recipe",
+      "provides": "+10 damage, +95 AS, +10 int, +6.5 HP regen, +3.25 mana regen, 40% crit chance, active 5s silence that makes all attacks crit for 60% bonus damage and applies 35% spell amp debuff",
+      "buyWhen": "you started Orchid and want to scale it, enemy has key spell-dependent heroes (Storm, Puck), you're Clinkz/QoP/NP and want damage + control",
+      "skipWhen": "enemy has Manta/BKB/Lotus/Euls to dispel it, you need other items more, you can't afford to upgrade your Orchid right now"
+    },
+    "Boots": {
+      "cost": 500,
+      "buildsFrom": "purchased from shop",
+      "provides": "+15 MS",
+      "buyWhen": "first purchase in almost every game, builds into all boot upgrades",
+      "skipWhen": "never skip boots",
+      "patchNotes": "7.39: Reduced Greater Demonic Summoning duration from 75 to 65.; Necronomicon Warrior Reduced health from 1800 to 1600. Changed attack damage type from Default to Runty.; Necronomicon Archer Reduced health from 1800 to 1300. Changed attack damage type from Default to Pierce. | 7.40: Boots of Bearing now requires Ring of Tarrasque ( 1700 ) to build, instead of a Recipe ( 1700 ) (total cost remains at 4225 ).; Increased health regen bonus from 15 to 18."
+    },
+    "Boots Of Bearing": {
+      "cost": 4225,
+      "buildsFrom": "Tranquil Boots + Drum of Endurance + Recipe",
+      "provides": "+65 MS, +8 str, +8 int, +18 HP regen, active 6s aura giving +15% MS and +50% AS to allies",
+      "buyWhen": "you're a position 4/5 who finished Tranquils + Drums and want to upgrade, your team benefits heavily from the MS/AS boost, you're pushing as 5",
+      "skipWhen": "you're a core (waste of slot), you'd rather have Guardian Greaves, you need defensive items instead"
+    },
+    "Boots Of Elves": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+6 agi",
+      "buyWhen": "you're building Dragon Lance, Power Treads, or Yasha components",
+      "skipWhen": "you don't need the component"
+    },
+    "Boots of Bearing": {
+      "cost": 4225,
+      "buildsFrom": "Tranquil Boots + Drum of Endurance + Recipe",
+      "provides": "+65 MS, +8 str, +8 int, +18 HP regen, active 6s aura giving +15% MS and +50% AS to allies",
+      "buyWhen": "you're a position 4/5 who finished Tranquils + Drums and want to upgrade, your team benefits heavily from the MS/AS boost, you're pushing as 5",
+      "skipWhen": "you're a core (waste of slot), you'd rather have Guardian Greaves, you need defensive items instead"
+    },
+    "Bottle": {
+      "cost": 675,
+      "buildsFrom": "purchased from shop",
+      "provides": "3 charges, each restores 110 HP and 60 mana over 2.5s, stores runes",
+      "buyWhen": "you're mid and contesting runes, you're a roaming hero who grabs bounty runes, you need lane sustain as a spell-dependent mid",
+      "skipWhen": "you're not near runes regularly, you have other sustain, enemy is stealing your runes consistently",
+      "patchNotes": "7.39: REMOVED | 7.39c: Increased Arm of the Deep cast time from 0.2 to 0.3."
+    },
+    "Bracer": {
+      "cost": 505,
+      "buildsFrom": "Circlet + Gauntlets + Recipe",
+      "provides": "+5 str, +2 agi, +2 int, +2 damage, +0.75 armor, double stats after 25 min",
+      "buyWhen": "you need cheap early stats as a str hero or support, you want to survive lane, slot efficient early game",
+      "skipWhen": "you need to rush core items, slot is too valuable, you're past 15 min and should buy bigger items"
+    },
+    "Branches": {
+      "cost": 55,
+      "buildsFrom": "purchased from shop",
+      "provides": "+1 all stats, can plant as Happy Little Tree",
+      "buyWhen": "you have leftover gold at game start, universal stat filler, builds into Magic Wand",
+      "skipWhen": "you need your gold for other starting items",
+      "patchNotes": "7.40: Increased gold cost from 50 to 55 ."
+    },
+    "Broadsword": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+15 damage",
+      "buyWhen": "you're building Battle Fury, Blade Mail, or Crystalys",
+      "skipWhen": "you don't need the component"
+    },
+    "Buckler": {
+      "cost": 425,
+      "buildsFrom": "Ring of Protection + Recipe",
+      "provides": "+2 armor, +2 armor aura to allies",
+      "buyWhen": "you're a support building Mekansm, Vlads, or Crimson Guard, cheap early armor for your lane",
+      "skipWhen": "you don't need the component or aura",
+      "patchNotes": "7.40: No longer builds into Guardian Greaves"
+    },
+    "Butterfly": {
+      "cost": 5450,
+      "buildsFrom": "Eaglesong + Quarterstaff + Talisman of Evasion",
+      "provides": "+35 agi, +25 damage, +20% AS, +35% evasion, can activate to lose evasion for +35% MS",
+      "buyWhen": "you're an agi carry who wants damage and survivability (AM, Spec, TB, Morph), enemy has right-clickers without MKB, you want late-game scaling",
+      "skipWhen": "enemy already has MKB or is building it, you need other stats more, enemy is mostly magic damage"
+    },
+    "Caster Rapier": {
+      "cost": 5600,
+      "buildsFrom": "Sacred Relic + Claymore + Broadsword",
+      "provides": "+100% spell amp, drops on death",
+      "buyWhen": "you're a desperate spell caster, last resort like Divine Rapier but for magic damage heroes",
+      "skipWhen": "same as Rapier — almost always too risky unless you're losing and need a hail mary"
+    },
+    "Chainmail": {
+      "cost": 550,
+      "buildsFrom": "purchased from shop",
+      "provides": "+4 armor",
+      "buyWhen": "you're building Blade Mail, Phase Boots, Medallion, or Buckler",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: Now builds into Veil of Discord ."
+    },
+    "Circlet": {
+      "cost": 155,
+      "buildsFrom": "purchased from shop",
+      "provides": "+2 all stats",
+      "buyWhen": "you're building Bracer, Null Talisman, or Wraith Band",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: Now builds into Urn of Shadows . | 7.40: Now builds into Veil of Discord ."
+    },
+    "Clarity": {
+      "cost": 60,
+      "buildsFrom": "purchased from shop",
+      "provides": "restores 150 mana over 25s (cancelled by damage)",
+      "buyWhen": "you're a mana-hungry laner (any caster or support), you want to sustain spell usage in lane, cheap and essential early",
+      "skipWhen": "you don't use mana often, you have other mana sustain (Bottle, Soul Ring)",
+      "patchNotes": "7.40: Increased initial stock from 4 to 5.; Increased max stock from 4 to 5."
+    },
+    "Claymore": {
+      "cost": 1350,
+      "buildsFrom": "purchased from shop",
+      "provides": "+20 damage",
+      "buyWhen": "you're building Shadow Blade or Battle Fury",
+      "skipWhen": "you don't need the component"
+    },
+    "Cloak": {
+      "cost": 800,
+      "buildsFrom": "purchased from shop",
+      "provides": "+15% magic resist",
+      "buyWhen": "you're building Glimmer Cape, Mage Slayer, or Hood of Defiance, cheap magic resist against spell heavy lanes",
+      "skipWhen": "enemy is physical damage focused, you don't need the component",
+      "patchNotes": "7.39c: Increased Tendrils of the Deep cast time from 0.2 to 0.3. | 7.40: U Retribution no longer deals damage if the distance between caster and target exceeds 1200.; CYCLED OUT"
+    },
+    "Cornucopia": {
+      "cost": 1200,
+      "buildsFrom": "Ring of Health + Sobi Mask + Branches",
+      "provides": "+6 HP regen, +0.75 mana regen, +1 all stats",
+      "buyWhen": "you're building Perseverance items (Battle Fury, Linken's), efficient lane sustain",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: No longer builds into Refresher Orb ."
+    },
+    "Crimson Guard": {
+      "cost": 3725,
+      "buildsFrom": "Vanguard + Buckler + Recipe",
+      "provides": "+8 armor, +250 HP, +12 HP regen, 60% chance to block 75/50 damage (melee/ranged), active 7s 100% block for allies",
+      "buyWhen": "enemy has summons or illusions (PL, Brood, NP), enemy has fast-attacking heroes where block is value, you're a frontline tank",
+      "skipWhen": "enemy has few right-clickers, enemy hits slowly with big damage (Sven, Tiny), someone else already has it (active doesn't stack)",
+      "patchNotes": "7.40: Guard is no longer dispelable ."
+    },
+    "Crown": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+4 all stats",
+      "buyWhen": "you're building Helm of the Dominator, Meteor Hammer, Rod of Atos, or Solar Crest",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: Now builds into Helm of the Dominator . | 7.40: No longer builds into Veil of Discord .; Now builds into Holy Locket ."
+    },
+    "Crystalys": {
+      "cost": 2000,
+      "buildsFrom": "Broadsword + Blades of Attack + Recipe",
+      "provides": "+32 damage, 30% chance for 160% crit",
+      "buyWhen": "you're building toward Daedalus, Silver Edge, or Bloodthorn, you want early crit damage on a right-clicker",
+      "skipWhen": "you don't plan to upgrade it, you need other stats more than crit chance, you're not a right-click hero"
+    },
+    "Cyclone": {
+      "cost": 2600,
+      "buildsFrom": "Staff of Wizardry + Void Stone + Wind Lace + Recipe",
+      "provides": "+10 int, +2.5 mana regen, +20 MS, active 2.5s cyclone (self or enemy, 50 damage on land)",
+      "buyWhen": "you need setup for combos (SF, Lina, Invoker, Leshrac), you need a basic dispel for yourself, you need to dodge projectiles/spells",
+      "skipWhen": "you need hard lockdown instead of lift, you're a right-clicker who doesn't benefit, enemy has BKB making it useless in fights"
+    },
+    "Daedalus": {
+      "cost": 5100,
+      "buildsFrom": "Crystalys + Demon Edge + Recipe",
+      "provides": "+88 damage, 30% chance for 225% crit",
+      "buyWhen": "you already have attack speed and need raw damage, you want to one-shot supports, you're a carry going late (PA, Jugg, WK)",
+      "skipWhen": "you need survivability more, you lack attack speed to make crits frequent, you're against evasion without MKB"
+    },
+    "Dagon": {
+      "cost": 2800,
+      "buildsFrom": "Staff of Wizardry + Diadem + Recipe",
+      "provides": "+16 int, +6 all stats, active 400 magic damage nuke (20s CD)",
+      "buyWhen": "you're a burst ganker who needs kill threshold (Nyx, Pugna, Lion), you want to snowball with early kills, enemy heroes are squishy",
+      "skipWhen": "enemy has high magic resist or BKB, you can't get kills with it, you need team utility instead of selfish damage",
+      "patchNotes": "7.39: REMOVED | 7.39b: Reduced Keen Eye cast range bonus from 125 to 100. | 7.39d: Increased Keen Eye damage cooldown from 3 to 6. | 7.40: CYCLED OUT"
+    },
+    "Dagon 2": {
+      "cost": 3950,
+      "buildsFrom": "Dagon + Recipe",
+      "provides": "Dagon with 500 damage nuke",
+      "buyWhen": "you already have Dagon and are snowballing hard, kills are still possible with the extra damage",
+      "skipWhen": "you should be buying other items, enemy is building magic resist, upgrading won't secure kills you aren't already getting"
+    },
+    "Dagon 3": {
+      "cost": 5100,
+      "buildsFrom": "Dagon 2 + Recipe",
+      "provides": "Dagon with 600 damage nuke",
+      "buyWhen": "you're massively ahead and want to end fast, enemy supports die to Dagon combo",
+      "skipWhen": "game is going late, enemy has pipe or BKBs, gold is better spent on utility"
+    },
+    "Dagon 4": {
+      "cost": 6250,
+      "buildsFrom": "Dagon 3 + Recipe",
+      "provides": "Dagon with 700 damage nuke",
+      "buyWhen": "you're Tinker or another hero that resets Dagon cooldown, game is completely in your favor",
+      "skipWhen": "almost always skip — gold is better spent elsewhere unless you're stomping"
+    },
+    "Dagon 5": {
+      "cost": 7400,
+      "buildsFrom": "Dagon 4 + Recipe",
+      "provides": "Dagon with 800 damage nuke (0s CD with Refresher)",
+      "buyWhen": "you're Tinker with Rearm, extremely niche otherwise",
+      "skipWhen": "almost always — 7400 gold for a single nuke is rarely efficient"
+    },
+    "Demon Edge": {
+      "cost": 2200,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+40 damage",
+      "buyWhen": "you're building Monkey King Bar, Daedalus, or Divine Rapier",
+      "skipWhen": "you don't need the component"
+    },
+    "Desolator": {
+      "cost": 3500,
+      "buildsFrom": "Mithril Hammer + Mithril Hammer + Blight Stone",
+      "provides": "+55 damage, -6 armor corruption on hit for 7s, gains +1/+2 damage per assist/kill (max +30)",
+      "buyWhen": "you want to snowball and fight early (TA, WK, Clinkz), you want to take towers fast, your team lacks armor reduction",
+      "skipWhen": "you need survivability, game is going super late where the damage falls off, your teammates already have armor reduction"
+    },
+    "Diadem": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+6 all stats",
+      "buyWhen": "you're building Harpoon, Dagon, or Phylactery components",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: No longer builds into Helm of the Dominator .; Now builds into Spirit Vessel . | 7.40: CREATED"
+    },
+    "Diffusal Blade": {
+      "cost": 2500,
+      "buildsFrom": "Blade of Alacrity + Robe of the Magi + Recipe",
+      "provides": "+15 agi, +10 int, 40 mana burn on hit, active purge + 3s root",
+      "buyWhen": "enemy has mana-dependent heroes, you need the purge for Ghost Scepter/Omni/Warlock golem, you're a right-click agi hero who benefits from mana burn",
+      "skipWhen": "you're an illusion hero (manabreak no longer works on illusions since 7.40), enemy has huge mana pools where burn doesn't matter, you need other stats more",
+      "patchNotes": "7.39: CHANGED  shop category from Armaments to Weapons . | 7.40: Inhibit can no longer be cast on invulnerable units.; Manabreak no longer works for illusions ."
+    },
+    "Disperser": {
+      "cost": 6100,
+      "buildsFrom": "Diffusal Blade + Eaglesong + Recipe",
+      "provides": "+40 agi, +10 int, 40 mana burn, active self-dispel + phase + 100% MS for 5s OR purge + slow enemy",
+      "buyWhen": "you started Diffusal and need an upgrade, you need a self-dispel on an agi carry, you want mobility without Blink",
+      "skipWhen": "you need damage more than utility, you're not an agi hero, the Diffusal active was already sufficient",
+      "patchNotes": "7.40: Suppress now also applies a basic dispel on enemy targets, instead of only on allied targets. can no longer be cast on invulnerable units.; Manabreak no longer works for illusions ."
+    },
+    "Dragon Lance": {
+      "cost": 1900,
+      "buildsFrom": "2x Ogre Axe + 2x Band of Elvenskin",
+      "provides": "+15 agi, +10 str, +140 attack range (ranged only)",
+      "buyWhen": "you're a ranged agi carry who benefits from positioning (Drow, Sniper, Luna, Medusa), you want to build Hurricane Pike later",
+      "skipWhen": "you're melee (no range bonus), you don't need the range, you need different stats",
+      "patchNotes": "7.39d: Reduced ranged attack range bonus from 150 to 140."
+    },
+    "Dust": {
+      "cost": 80,
+      "buildsFrom": "purchased from shop",
+      "provides": "reveals invisible units in 1050 radius for 12s, -20% MS debuff, 2 charges",
+      "buyWhen": "enemy has invisible heroes (Riki, Bounty, Clinkz) or Shadow Blade builders, you need detection for fights",
+      "skipWhen": "no enemy has invisibility, sentries are sufficient, you're a core who shouldn't carry dust",
+      "patchNotes": "7.39: REMOVED"
+    },
+    "Eagle": {
+      "cost": 2800,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+25 agi",
+      "buyWhen": "you're building Butterfly, Swift Blink, Disperser, or Ethereal Blade",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: CYCLED OUT"
+    },
+    "Echo Sabre": {
+      "cost": 2700,
+      "buildsFrom": "Oblivion Staff + Ogre Axe",
+      "provides": "+20 damage, +15 str, +1.75 mana regen, double attack every 5s with 100% slow for 0.8s",
+      "buyWhen": "you're a melee carry who benefits from double hit (Slark, CK, Sven, PA, MK), you want mana sustain in lane",
+      "skipWhen": "you're ranged (slow isn't as impactful), you have natural attack speed steroids already, you need other items"
+    },
+    "Enchanted Mango": {
+      "cost": 65,
+      "buildsFrom": "purchased from shop",
+      "provides": "+0.4 HP regen passively, consume for instant 100 mana",
+      "buyWhen": "you want HP regen in lane plus emergency mana for a kill or escape spell, great starting item for supports",
+      "skipWhen": "you don't need the emergency mana, you'd rather have other regen items",
+      "patchNotes": "7.39: Now also grants 15% max mana . | 7.39b: Increased health restoration amplification from 20%/30% to 30%/40%.; Reduced intelligence reduction from 8% to 5%. | 7.39d: Reduced health regen bonus from 0/4/8/12 to 0/3/6/9. | 7.39e: Reduced debuff duration amplification bonus from 10%/15% to 8%/15%.; Reduced spell damage amplification bonus from 8%/16% to 6%/16%."
+    },
+    "Energy Booster": {
+      "cost": 800,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+250 mana",
+      "buyWhen": "you're building Arcane Boots, Aeon Disk, or Soul Booster",
+      "skipWhen": "you don't need the component"
+    },
+    "Eternal Shroud": {
+      "cost": 3700,
+      "buildsFrom": "Hood of Defiance + Voodoo Mask + Recipe",
+      "provides": "+250 HP, +10 str, +20% magic resist, stacks gaining +3.5% magic resist per 300 magic damage taken (max 6 stacks), 25% of magic damage taken restores mana",
+      "buyWhen": "you're against magic-heavy lineups, you're a frontliner who tanks spells (Bristle, DK, Centaur), you want sustain against magic burst",
+      "skipWhen": "enemy is mostly physical, you're not taking enough magic damage to justify it, Pipe would benefit team more",
+      "patchNotes": "7.39: CREATED | 7.39d: Veiled Reduced initial evasion from 200% to 150%. Reduced duration from 8 to 5. | 7.40: U  MOVED TIER  from TIER 1  to TIER 2 .; CYCLED OUT"
+    },
+    "Ethereal Blade": {
+      "cost": 5200,
+      "buildsFrom": "Ghost Scepter + Eaglesong + Recipe",
+      "provides": "+24 all stats, active ethereal form (can't attack, -30% magic damage taken) + magic nuke based on your primary attribute",
+      "buyWhen": "you're a burst caster (Morphling, Tinker, Skywrath), you want to combo with magic damage, you need to save allies from right-clickers",
+      "skipWhen": "your team is mostly physical, you can't use the nuke effectively, enemy can just wait out the ethereal",
+      "patchNotes": "7.39: CHANGED  shop category from Weapons to Magical . | 7.39e: Ether Blast 's ethereal effects are now disabled while the affected unit is debuff immune . | 7.40: REWORKED  recipe and stats."
+    },
+    "Eul's Scepter": {
+      "cost": 2600,
+      "buildsFrom": "Staff of Wizardry + Void Stone + Wind Lace + Recipe",
+      "provides": "+10 int, +2.5 mana regen, +20 MS, active 2.5s cyclone (self or enemy, 50 damage on land)",
+      "buyWhen": "you need setup for combos (SF, Lina, Invoker, Leshrac), you need a basic dispel for yourself, you need to dodge projectiles/spells",
+      "skipWhen": "you need hard lockdown instead of lift, you're a right-clicker who doesn't benefit, enemy has BKB making it useless in fights"
+    },
+    "Faerie Fire": {
+      "cost": 65,
+      "buildsFrom": "purchased from shop",
+      "provides": "+2 damage passively, consume for instant 85 HP",
+      "buyWhen": "you want last-hit damage in lane plus emergency HP to survive a gank, good starting item for cores",
+      "skipWhen": "you don't need the extra last-hit damage, you'd rather have regen"
+    },
+    "Falcon Blade": {
+      "cost": 1125,
+      "buildsFrom": "Fluffy Hat + Sobi Mask + Blades of Attack",
+      "provides": "+175 HP, +1.8 mana regen, +12 damage",
+      "buyWhen": "you're a melee core who needs cheap stats and mana sustain in lane (MK, Void, Slark), cost efficient early",
+      "skipWhen": "you need to rush bigger items, slot becomes inefficient quickly, you don't need the mana regen"
+    },
+    "Flask": {
+      "cost": 100,
+      "buildsFrom": "purchased from shop",
+      "provides": "restores 400 HP over 13s (cancelled by hero damage)",
+      "buyWhen": "universal laning regen, always buy at game start, rebuy when you go back to base",
+      "skipWhen": "almost never skip in lane — only skip if you have other sustain like lifesteal"
+    },
+    "Fluffy Hat": {
+      "cost": 250,
+      "buildsFrom": "purchased from shop",
+      "provides": "+125 HP",
+      "buyWhen": "you're building Force Staff, Falcon Blade, Urn, Pavise, or other HP items",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: No longer builds into Urn of Shadows ."
+    },
+    "Force Staff": {
+      "cost": 2200,
+      "buildsFrom": "Staff of Wizardry + Fluffy Hat + Recipe",
+      "provides": "+10 int, +175 HP, push yourself or ally 600 units",
+      "buyWhen": "you're a support who needs save potential, your team lacks mobility, you're against Clockwerk/Riki/Mars who trap people",
+      "skipWhen": "you need more impactful items, you have natural escapes, you're a core who needs damage",
+      "patchNotes": "7.39: CREATED | 7.39d: Increased Self-Exile mana cost from 40 to 65. | 7.39e: Self-Exile no longer hides the caster, and only disables and turns them invulnerable . | 7.40: CYCLED OUT"
+    },
+    "Gauntlets": {
+      "cost": 140,
+      "buildsFrom": "purchased from shop",
+      "provides": "+3 str",
+      "buyWhen": "you're building Bracer or Soul Ring, cheap starting stats",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: CREATED | 7.39b: Reduced Crushing Blow debuff duration from 4 to 3. | 7.39c: Crushing Blow no longer works for illusions . | 7.40: Reduced Crushing Blow critical damage from 150% to 140%."
+    },
+    "Gem": {
+      "cost": 900,
+      "buildsFrom": "purchased from shop",
+      "provides": "True Sight in 1200 radius, drops on death",
+      "buyWhen": "enemy has multiple invis heroes, you need permanent True Sight, your team has a tanky carrier who won't die easily",
+      "skipWhen": "you might die and give it to enemy, Dust and Sentries are sufficient, no enemy invis to counter",
+      "patchNotes": "7.39: REMOVED | 7.39b: Increased Death Delay cooldown from 50 to 100. | 7.39d: Death Delay Now prevents the hero from attacking buildings while active. Increased base duration from 5 to 6. | 7.39e: Scan no longer triggers on creep heroes (with the exception of Lone Druid 's Spirit Bear ).; Neutral Creep Gold/XP penalty for stacked camps increased from 15% to 20%. | 7.40: CYCLED OUT"
+    },
+    "Ghost": {
+      "cost": 1500,
+      "buildsFrom": "purchased from shop",
+      "provides": "Ghost Scepter: +4 all stats, active 4s ethereal form (can't attack, take 30% extra magic damage, immune to physical)",
+      "buyWhen": "you're a squishy support getting right-clicked to death, enemy has physical burst (PA, Ursa), you need cheap survival",
+      "skipWhen": "enemy is magic damage heavy (you take extra), you need to keep attacking, enemy has Nullifier",
+      "patchNotes": "7.39e: Ghost Form 's ethereal effects are now disabled while the affected unit is debuff immune . | 7.40: Reduced Ghost Form magic resistance reduction from 40% to 30%."
+    },
+    "Gleipnir": {
+      "cost": 4550,
+      "buildsFrom": "Rod of Atos + Maelstrom + Recipe",
+      "provides": "+450 HP, +200 mana, +12 int, Maelstrom chain lightning, active 2s root in 350 AoE",
+      "buyWhen": "you want AoE lockdown + farming (Mirana, WR, Viper, Medusa), you have magic damage that benefits from root setup, you want Maelstrom farming but also control",
+      "skipWhen": "you need single-target lockdown (Abyssal better), you need pure damage over utility, enemy has easy root dispels (Manta, BKB)",
+      "patchNotes": "7.39: Reduced intelligence bonus from 15 to 12.; Increased Eternal Chains mana cost from 100 to 150."
+    },
+    "Glimmer Cape": {
+      "cost": 2150,
+      "buildsFrom": "Cloak + Shadow Amulet + Recipe",
+      "provides": "+20% magic resist, active gives invisibility + 20% MS + 375 magic barrier over 5s",
+      "buyWhen": "you're a support who needs to save teammates, enemy has magic burst, you need budget invisibility for escapes",
+      "skipWhen": "enemy has detection everywhere, you need something more defensive, active gets cancelled too easily",
+      "patchNotes": "7.39: REMOVED | 7.39d: Increased Glimmer cooldown from 14 to 15. | 7.40: Item cost changes: Reduced Shadow Amulet cost from 1000 to 900 . Increased Recipe cost from 350 to 450 . Total gold cost remains at 2150 ."
+    },
+    "Gloves": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+20 AS",
+      "buyWhen": "you're building Power Treads or Hand of Midas",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: READDED  as a TIER 1  neutral artifact.; No longer grants 12 attack damage ."
+    },
+    "Guardian Greaves": {
+      "cost": 4300,
+      "buildsFrom": "Arcane Boots + Mekansm + Recipe",
+      "provides": "+5 armor, +50 MS, HP/mana restore active, aura +2.5 HP regen and +1.5 mana regen (bonus when allies below 25% HP)",
+      "buyWhen": "you're a frontline support (Omni, Aba, Undying), you want to purge silences/debuffs from yourself, your team benefits from the sustain aura",
+      "skipWhen": "you're a core (slot inefficient), you can't farm it fast enough to matter, enemy has healing reduction",
+      "patchNotes": "7.40: Item cost changes: No longer requires Buckler to build (− 425 cost). Reduced Recipe cost from 1450 to 1125 . Total gold cost decreases ▼ from 5050 to 4300 .; Increased armor bonus from 4 to 5.; Guardian Aura No longer grants 3 armor. The boost when below 25% health now only works for the wielder, instead of all allies. The boost no longer increases the mana regen bonus to 5. The boost no longer increases the armor bonus to 8. The boost still increases health regen to 14.5."
+    },
+    "Hand Of Midas": {
+      "cost": 2200,
+      "buildsFrom": "Gloves of Haste + Recipe",
+      "provides": "+35 AS, active consumes creep for 160 bonus gold and 1.75x XP",
+      "buyWhen": "you can get it before 15-18 min, you're a farming carry who wants to hit level 25 fast (Invoker, Arc Warden), game will go late",
+      "skipWhen": "you need to fight early, you're behind, you got it too late (past 20 min it's questionable)",
+      "patchNotes": "7.40: Transmute No longer multiplies the target's experience bounty by 2.1. Reduced charge replenish time from 110 to 90."
+    },
+    "Hand of Midas": {
+      "cost": 2200,
+      "buildsFrom": "Gloves of Haste + Recipe",
+      "provides": "+35 AS, active consumes creep for 160 bonus gold and 1.75x XP",
+      "buyWhen": "you can get it before 15-18 min, you're a farming carry who wants to hit level 25 fast (Invoker, Arc Warden), game will go late",
+      "skipWhen": "you need to fight early, you're behind, you got it too late (past 20 min it's questionable)"
+    },
+    "Harpoon": {
+      "cost": 4700,
+      "buildsFrom": "Echo Sabre + Diadem + Recipe",
+      "provides": "+25 damage, +25 str, +10 agi, +10 int, +2 mana regen, active pulls you and enemy together, keeps Echo double attack",
+      "buyWhen": "you started Echo Sabre and need gap close (Slark, CK, Sven, Ursa), you need to catch mobile heroes",
+      "skipWhen": "you don't need the gap close, you'd rather have Abyssal for the stun, enemy can just BKB through the pull"
+    },
+    "Headdress": {
+      "cost": 425,
+      "buildsFrom": "Ring of Regen + Recipe",
+      "provides": "+2 HP regen, +2 HP regen aura to allies",
+      "buyWhen": "you're building Mekansm, Pipe, or Holy Locket, cheap sustain for your lane",
+      "skipWhen": "you don't need the component or aura"
+    },
+    "Heart": {
+      "cost": 5100,
+      "buildsFrom": "Reaver + Vitality Booster + Recipe",
+      "provides": "+40 str, +1% max HP regen + 1.5% missing HP regen (disabled 5s after taking damage from heroes/Roshan)",
+      "buyWhen": "you're a tanky strength hero who wants to reset between fights, you're Centaur/Bristle/Pudge, you want HP for damage abilities",
+      "skipWhen": "enemy has DoTs that disable regen, you need armor or magic resist not just HP, you're not tanky enough to benefit",
+      "patchNotes": "7.39: REMOVED | 7.39c: Fixed Gut 'Em 's granting illusions True Strike on all their attacks. | 7.40: Burn Through Now deals 50% less damage to non-hero units. Increased total damage from 72 to 90."
+    },
+    "Heart of Tarrasque": {
+      "cost": 5100,
+      "buildsFrom": "Reaver + Vitality Booster + Recipe",
+      "provides": "+40 str, +1% max HP regen + 1.5% missing HP regen (disabled 5s after taking damage from heroes/Roshan)",
+      "buyWhen": "you're a tanky strength hero who wants to reset between fights, you're Centaur/Bristle/Pudge, you want HP for damage abilities",
+      "skipWhen": "enemy has DoTs that disable regen, you need armor or magic resist not just HP, you're not tanky enough to benefit"
+    },
+    "Heaven's Halberd": {
+      "cost": 2600,
+      "buildsFrom": "Sange + Talisman of Evasion",
+      "provides": "+275 HP, +5 all stats, +6 HP regen, 60% chance to block 60/30 damage, active 3s disarm (can't be dispelled)",
+      "buyWhen": "enemy carry is the main threat, you need disarm against physical carries (PA, Ursa, Troll), you're offlane/support with gold",
+      "skipWhen": "enemy has BKB making disarm useless during key fights, you need other defensive items more, enemy is spell-based"
+    },
+    "Heavens Halberd": {
+      "cost": 2600,
+      "buildsFrom": "Sange + Talisman of Evasion",
+      "provides": "+275 HP, +5 all stats, +6 HP regen, 60% chance to block 60/30 damage, active 3s disarm (can't be dispelled)",
+      "buyWhen": "enemy carry is the main threat, you need disarm against physical carries (PA, Ursa, Troll), you're offlane/support with gold",
+      "skipWhen": "enemy has BKB making disarm useless during key fights, you need other defensive items more, enemy is spell-based",
+      "patchNotes": "7.39d: Increased Disarm duration from 3 / 4 to 3.5 / 4.5 . | 7.40: Disarm Can no longer be dispelled by basic dispels . Can still be dispelled by strong dispels . Reduced Disarm duration from 3.5 / 4.5 to 3. Increased cooldown from 18 to 20."
+    },
+    "Helm Of Iron Will": {
+      "cost": 975,
+      "buildsFrom": "purchased from shop",
+      "provides": "+4 armor, +4 HP regen",
+      "buyWhen": "you're building Armlet, Nullifier, or Helm of the Dominator, good lane sustain",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: No longer builds into Veil of Discord ."
+    },
+    "Helm Of The Dominator": {
+      "cost": 2550,
+      "buildsFrom": "Helm of Iron Will + Crown + Recipe",
+      "provides": "+6 armor, +6 HP regen, +6 all stats, dominate a creep (370 MS, +1000 HP, +4 armor, +25 damage, +12 HP regen)",
+      "buyWhen": "you want a strong creep aura or ability (Alpha Wolf, Centaur stun, Satyr purge), you're Chen/Beastmaster/Lycan, you want to stack",
+      "skipWhen": "you can't micro the creep well, the creeps available don't help your game, you need other items more",
+      "patchNotes": "7.39: Item cost changes: Now requires Crown ( 450 ) to build, instead of Diadem ( 1000 ). Increased Recipe cost from 650 to 1125 . Total gold cost decreases ▼ from 2625 to 2550 .; CHANGED  shop category from Accessories to Armor . | 7.39c: Reflect No longer considers creep-heroes for the damage reflected | 7.39e: Dominate Now goes on a 3-second un-resettable cooldown whenever the currently dominated creep takes damage from a player or Roshan . Reduced dominated unit movement speed from 380 to 370. Increased mana cost from 0 to 50. | 7.40: Dominate now grants 50% of the experience and gold bounties of dominated creep upon cast, instead of 100%."
+    },
+    "Helm Of The Overlord": {
+      "cost": 5650,
+      "buildsFrom": "Helm of the Dominator + Vladmir's Offering + Recipe",
+      "provides": "all HotD bonuses but stronger (+21 all stats, +7 armor/regen, ancient domination, +1800 HP dominated creep)",
+      "buyWhen": "you invested in HotD and want the upgrade, you want ancient creep abilities (Prowler root, Thunderhide frenzy), you can micro well",
+      "skipWhen": "you don't need the ancient abilities, your HotD creep is already sufficient, gold is better spent elsewhere",
+      "patchNotes": "7.39: Reduced Helm of the Dominator cost from 2625 to 2550 (total cost decreases ▼ from 5725 to 5650 ).; CHANGED  shop category from Accessories to Armor . | 7.39e: Dominate Now goes on a 3-second un-resettable cooldown whenever the currently dominated creep takes damage from a player or Roshan . Increased mana cost from 0 to 50."
+    },
+    "Helm of the Dominator": {
+      "cost": 2550,
+      "buildsFrom": "Helm of Iron Will + Crown + Recipe",
+      "provides": "+6 armor, +6 HP regen, +6 all stats, dominate a creep (370 MS, +1000 HP, +4 armor, +25 damage, +12 HP regen)",
+      "buyWhen": "you want a strong creep aura or ability (Alpha Wolf, Centaur stun, Satyr purge), you're Chen/Beastmaster/Lycan, you want to stack",
+      "skipWhen": "you can't micro the creep well, the creeps available don't help your game, you need other items more"
+    },
+    "Helm of the Overlord": {
+      "cost": 5650,
+      "buildsFrom": "Helm of the Dominator + Vladmir's Offering + Recipe",
+      "provides": "all HotD bonuses but stronger (+21 all stats, +7 armor/regen, ancient domination, +1800 HP dominated creep)",
+      "buyWhen": "you invested in HotD and want the upgrade, you want ancient creep abilities (Prowler root, Thunderhide frenzy), you can micro well",
+      "skipWhen": "you don't need the ancient abilities, your HotD creep is already sufficient, gold is better spent elsewhere"
+    },
+    "Holy Locket": {
+      "cost": 2250,
+      "buildsFrom": "Magic Wand + Energy Booster + Void Stone + Recipe",
+      "provides": "+7 all stats, 25 charges max (gain 1 per spell near you), +15% outgoing heals, active uses charges for HP/mana restore",
+      "buyWhen": "you're a healer support (Oracle, Dazzle, Warlock, Omni), you want to amplify your heals significantly",
+      "skipWhen": "you don't have healing abilities, charges are hard to build, you need other utility items",
+      "patchNotes": "7.39: Reduced Holy Blessing heal amplification from 25% to 15%. | 7.40: Item cost changes: Now requires Crown ( 450 ) to build, instead of Diadem ( 1000 ). Increased Magic Wand cost from 450 to 460 . Increased Recipe cost from 800 to 1340 . Total gold cost remains at 2250 .; Reduced all attributes from 9 to 7.; Energy Charge Now also applies 10% heal amplification on the target for 4 seconds on cast. Increased charge restore time from 8 to 10. Increased max charges from 20 to 25. Increased cast range from 500 to 600. Reduced mana restored per charge from 17 to 15."
+    },
+    "Hurricane Pike": {
+      "cost": 4450,
+      "buildsFrom": "Dragon Lance + Force Staff",
+      "provides": "+20 agi, +15 str, +15 int, +200 HP, +140 attack range, push active + 5 unlimited range attacks for 6s",
+      "buyWhen": "you're a ranged carry who built Dragon Lance (Drow, Sniper, Medusa), you need defensive push, you want to kite melee heroes",
+      "skipWhen": "you're melee, you don't need the range, you'd rather have other mobility/damage items",
+      "patchNotes": "7.39: CHANGED  shop category from Armor to Armaments . | 7.39c: Hurricane Thrust 's caster buffs when cast on an enemy are now dispellable. | 7.39d: Reduced ranged attack range bonus from 150 to 140."
+    },
+    "Hyperstone": {
+      "cost": 2000,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+60 AS",
+      "buyWhen": "you're building Assault Cuirass, Mjollnir, or Moon Shard",
+      "skipWhen": "you don't need the component"
+    },
+    "Infused Raindrop": {
+      "cost": 225,
+      "buildsFrom": "purchased from shop (5 min+)",
+      "provides": "+0.85 mana regen, blocks 120 magic damage per instance (5 charges, consumed when depleted)",
+      "buyWhen": "enemy has magic burst in lane (Zeus, Skywrath, Lina), cheap mana regen + magic damage block",
+      "skipWhen": "enemy is physical damage focused, you already have enough magic protection, charges will burn out before they matter"
+    },
+    "Javelin": {
+      "cost": 900,
+      "buildsFrom": "purchased from shop",
+      "provides": "+25% chance for 60 bonus magic damage on attack",
+      "buyWhen": "you're building Maelstrom, Basher, or MKB, cheap damage proc in lane",
+      "skipWhen": "you don't need the component"
+    },
+    "Kaya": {
+      "cost": 2100,
+      "buildsFrom": "Staff of Wizardry + Robe of the Magi + Recipe",
+      "provides": "+16 int, +10% spell amp, +40% mana regen amp",
+      "buyWhen": "you're rushing a Kaya upgrade (Kaya-Sange, Yasha-Kaya, or Trident), you're a spell caster core (Storm, Lesh)",
+      "skipWhen": "you're not going to upgrade it soon, you need other stats more, spell amp doesn't scale well on your hero",
+      "patchNotes": "7.39: No longer grants 20% Spell Lifesteal Amplification .; Reduced Mana Regen Amplification from 50% to 40%."
+    },
+    "Kaya And Sange": {
+      "cost": 4200,
+      "buildsFrom": "Kaya + Sange",
+      "provides": "+16 int, +16 str, +12% spell amp, +50% mana regen amp, +25% mana cost reduction, +20% HP regen amp, +25% slow resist",
+      "buyWhen": "you're a tanky spell caster (Leshrac, Death Prophet, Bristle), you want sustain + spell amp",
+      "skipWhen": "you're not a spell caster, you need different stats, another SY variant suits you better"
+    },
+    "Kaya and Sange": {
+      "cost": 4200,
+      "buildsFrom": "Kaya + Sange",
+      "provides": "+16 int, +16 str, +12% spell amp, +50% mana regen amp, +25% mana cost reduction, +20% HP regen amp, +25% slow resist",
+      "buyWhen": "you're a tanky spell caster (Leshrac, Death Prophet, Bristle), you want sustain + spell amp",
+      "skipWhen": "you're not a spell caster, you need different stats, another SY variant suits you better"
+    },
+    "Khanda": {
+      "cost": 5600,
+      "buildsFrom": "Phylactery + Crystalys + Recipe",
+      "provides": "+50 damage, +12 all stats, +6.5 HP regen, +2.5 mana regen, spells empower next attack for 150 + 130% crit damage",
+      "buyWhen": "you're a hybrid caster/attacker (PA, Ember, Pangolier, MK), you cast spells frequently and follow up with attacks",
+      "skipWhen": "you're a pure caster who doesn't attack, you need defensive items, Daedalus gives better raw crit damage",
+      "patchNotes": "7.39: Reduced Recipe cost from 1500 to 1300 (total cost decreases ▼ from 5900 to 5700 ).; CHANGED  shop category from Weapons to Armaments . | 7.39c: Reduced Phylactery cost from 2600 to 2500 (total cost decreases ▼ from 5700 to 5600 ).; Empower Spell Now uses a separate un dispelable debuff for its Break . Now uses its own modifier for its slow debuff, rather than using the same modifier as Phylactery . If the same unit has multiple Phylactery-based items, only the oldest one applies its debuffs. | 7.39d: Reduced Empower Spell cooldown from 10 to 9. | 7.40: REWORKED  recipe and stats. | 7.40c: Can now be disassembled ."
+    },
+    "Linken's Sphere": {
+      "cost": 4800,
+      "buildsFrom": "Perseverance + Ultimate Orb + Recipe",
+      "provides": "+16 all stats, +6.5 HP regen, +4.25 mana regen, blocks one targeted spell every 14s, can transfer to ally",
+      "buyWhen": "enemy has important targeted abilities (Doom, Duel, Grip, Lasso, Hex), you're a carry who needs spell block",
+      "skipWhen": "enemy has ways to pop it easily (multiple targeted spells), Lotus Orb would be better, you need other items first"
+    },
+    "Linkens Sphere": {
+      "cost": 4800,
+      "buildsFrom": "Perseverance + Ultimate Orb + Recipe",
+      "provides": "+16 all stats, +6.5 HP regen, +4.25 mana regen, blocks one targeted spell every 14s, can transfer to ally",
+      "buyWhen": "enemy has important targeted abilities (Doom, Duel, Grip, Lasso, Hex), you're a carry who needs spell block",
+      "skipWhen": "enemy has ways to pop it easily (multiple targeted spells), Lotus Orb would be better, you need other items first",
+      "patchNotes": "7.39: Increased health regeneration bonus from 6 to 6.5."
+    },
+    "Lotus Orb": {
+      "cost": 3850,
+      "buildsFrom": "Perseverance + Platemail + Recipe",
+      "provides": "+10 armor, +6.5 HP regen, +250 mana, +4 mana regen, active reflects targeted spells for 5s + basic dispel",
+      "buyWhen": "enemy has key targeted spells you want to reflect (Doom, Hex, Grip, stuns), you need a team dispel item, you're a utility hero",
+      "skipWhen": "you can't get it off in time, enemy damage is AoE not targeted, you need other items for your role"
+    },
+    "Lunar Crest": {
+      "cost": 2275,
+      "buildsFrom": "Crown + Fluffy Hat + Recipe",
+      "provides": "+10 all stats, +200 HP, active gives ally +20% evasion +8 armor OR gives enemy -20% accuracy -8 armor for 8s",
+      "buyWhen": "you're a support against physical damage teams, you want to buff your carry or debuff enemy carry, cheap and versatile defensive item",
+      "skipWhen": "enemy is mostly magic damage, you need other utility items more, MKB counters the evasion"
+    },
+    "Maelstrom": {
+      "cost": 2950,
+      "buildsFrom": "Javelin + Mithril Hammer",
+      "provides": "+25 damage, +25 AS, 25% chance for 110 damage chain lightning (4 targets)",
+      "buyWhen": "you want farming speed (WR, Weaver, Sniper), you're building toward Mjollnir or Gleipnir, you benefit from attack procs",
+      "skipWhen": "you need consistent damage not procs, you're not planning to upgrade it, other damage items suit you better",
+      "patchNotes": "7.39d: Chain Lightning no longer has a damage multiplier of 1.5 against illusions ."
+    },
+    "Mage Slayer": {
+      "cost": 2800,
+      "buildsFrom": "Cloak + Oblivion Staff + Recipe",
+      "provides": "+30 AS, +8 damage, +20% magic resist, +5 HP regen, +2 mana regen, attacks apply -40% spell amp debuff for 3s",
+      "buyWhen": "enemy has scary spell casters (Lina, Zeus, Skywrath), you're an attacker who can apply debuff, you want magic resist + damage",
+      "skipWhen": "enemy isn't spell-heavy, you're not attacking enough to apply debuff, you need different stats",
+      "patchNotes": "7.39: CHANGED  shop category from Armaments to Weapons ."
+    },
+    "Magic Stick": {
+      "cost": 200,
+      "buildsFrom": "purchased from shop",
+      "provides": "stores up to 10 charges from nearby enemy spells, active uses charges for 15 HP + 15 mana per charge",
+      "buyWhen": "you're against spell spammers in lane (Bristle, Batrider, Zeus), universal early pickup",
+      "skipWhen": "enemy barely casts spells, you need the gold elsewhere"
+    },
+    "Magic Wand": {
+      "cost": 460,
+      "buildsFrom": "Magic Stick + Branches + Branches + Recipe",
+      "provides": "+3 all stats, stores up to 20 charges from nearby enemy spells, active uses charges for 15 HP + 15 mana per charge",
+      "buyWhen": "you're against spell spammers in lane (Bristle, Batrider, Zeus, Skywrath), universal early pickup for most heroes",
+      "skipWhen": "enemy barely casts spells, you need the slot for something else, you're a carry who wants to rush bigger items",
+      "patchNotes": "7.39: REMOVED | 7.40: Increased Iron Branch cost from 50 to 55 (total cost increases ▲ from 450 to 460 )."
+    },
+    "Manta": {
+      "cost": 4650,
+      "buildsFrom": "Yasha + Ultimate Orb + Recipe",
+      "provides": "+26 agi, +10 str, +10 int, +10 MS, +15 AS, active creates 2 illusions + basic dispel",
+      "buyWhen": "you're an agi carry who benefits from illusions (AM, TB, Naga, PL, Jugg), you need dispel (silences, roots), illusions can apply your effects (mana burn, crit)",
+      "skipWhen": "your illusions are useless (no good attack modifiers), you don't need dispel, you're not an agi hero",
+      "patchNotes": "7.39: CHANGED  shop category from Armor to Armaments . | 7.39c: Rescaled Bottoms Up total mana restored from 60 + 4% to 70 + 3% of max mana. | 7.40: READDED  as a TIER 2  neutral artifact.; No longer grants 7 to All attributes .; No longer grants 6 armor .; Reciprocity Now triggers when an attack is initiated against the wielder, rather than upon an attack landing on them. Reduced attack damage as damage from 100% to 80%. No longer works against buildings . Now works against wards . No longer deals damage to allies when triggered by them."
+    },
+    "Manta Style": {
+      "cost": 4650,
+      "buildsFrom": "Yasha + Ultimate Orb + Recipe",
+      "provides": "+26 agi, +10 str, +10 int, +10 MS, +15 AS, active creates 2 illusions + basic dispel",
+      "buyWhen": "you're an agi carry who benefits from illusions (AM, TB, Naga, PL, Jugg), you need dispel (silences, roots), illusions can apply your effects (mana burn, crit)",
+      "skipWhen": "your illusions are useless (no good attack modifiers), you don't need dispel, you're not an agi hero"
+    },
+    "Mantle": {
+      "cost": 140,
+      "buildsFrom": "purchased from shop",
+      "provides": "+3 int",
+      "buyWhen": "you're building Null Talisman, cheap starting stats for int heroes",
+      "skipWhen": "you don't need the component"
+    },
+    "Mask Of Madness": {
+      "cost": 1900,
+      "buildsFrom": "Morbid Mask + Quarterstaff + Recipe",
+      "provides": "+20 damage, 24% lifesteal, active +100 AS +25 MS but -8 armor and silenced for 6s",
+      "buyWhen": "you want early farming speed (Sven, WK, Luna), the silence doesn't hurt you (limited actives), you're okay being more vulnerable during activation",
+      "skipWhen": "you have crucial active abilities, enemy can burst you during the -8 armor window, you need consistent lifesteal not burst",
+      "patchNotes": "7.39d: Reduced Berserk attack speed bonus from 110 to 100. | 7.40b: Berserk now shows the overhead Silenced icon while active."
+    },
+    "Mask of Madness": {
+      "cost": 1900,
+      "buildsFrom": "Morbid Mask + Quarterstaff + Recipe",
+      "provides": "+20 damage, 24% lifesteal, active +100 AS +25 MS but -8 armor and silenced for 6s",
+      "buyWhen": "you want early farming speed (Sven, WK, Luna), the silence doesn't hurt you (limited actives), you're okay being more vulnerable during activation",
+      "skipWhen": "you have crucial active abilities, enemy can burst you during the -8 armor window, you need consistent lifesteal not burst"
+    },
+    "Medallion Of Courage": {
+      "cost": 1025,
+      "buildsFrom": "Chainmail + Sobi Mask + Blight Stone",
+      "provides": "+4 armor, +1.5 mana regen, active -4 armor on enemy (lose your own +4 armor for duration)",
+      "buyWhen": "you're a roaming support who wants early kill potential, you want to take Roshan early, building toward Solar Crest",
+      "skipWhen": "losing your armor is too dangerous, you don't need the armor reduction, other items are more impactful"
+    },
+    "Mekansm": {
+      "cost": 1775,
+      "buildsFrom": "Headdress + Buckler + Recipe",
+      "provides": "+4 all stats, +2 armor, +3 HP regen, active 275 HP heal in AoE",
+      "buyWhen": "you're building toward Guardian Greaves, your team needs sustain for early pushes, you're a frontline support or offlaner",
+      "skipWhen": "someone else is buying it, you can't farm it fast enough, enemy has healing reduction",
+      "patchNotes": "7.40: CREATED"
+    },
+    "Meteor Hammer": {
+      "cost": 2850,
+      "buildsFrom": "Ogre Axe + Staff of Wizardry + Crown + Recipe",
+      "provides": "+6 str, +24 int, +6 agi, +10% spell amp, +40% mana regen amp, channeled AoE stun + DoT + building damage",
+      "buyWhen": "you have setup (Bane grip, Morph stun, treant ult), you want to take towers, you're a pusher hero",
+      "skipWhen": "you can't reliably channel it, you don't need tower damage, other items give you more",
+      "patchNotes": "7.39: No longer grants 24% Spell Lifesteal Amplification .; Reduced Mana Regen Amplification from 50% to 40%.; CHANGED  shop category from Weapons to Magical . | 7.40: Increased Meteor Hammer stun duration from 0.5 to 0.75."
+    },
+    "Mithril Hammer": {
+      "cost": 1600,
+      "buildsFrom": "purchased from shop",
+      "provides": "+24 damage",
+      "buyWhen": "you're building Maelstrom, BKB, or Desolator",
+      "skipWhen": "you don't need the component"
+    },
+    "Mjollnir": {
+      "cost": 5500,
+      "buildsFrom": "Maelstrom + Hyperstone + Recipe",
+      "provides": "+90 AS, +25 damage, 25% chain lightning (180 damage, 12 targets), active Static Charge (counter-procs lightning when attacked)",
+      "buyWhen": "you started Maelstrom and want upgrade, you're an attack speed hero (WR, Weaver, Sniper, Troll), you want farming + fighting",
+      "skipWhen": "you went Gleipnir path instead, enemy doesn't attack enough to trigger Static Charge, you need raw damage not procs",
+      "patchNotes": "7.39d: Chain Lightning no longer has a damage multiplier of 1.5 against illusions ."
+    },
+    "Monkey King Bar": {
+      "cost": 4700,
+      "buildsFrom": "Javelin + Demon Edge + Recipe",
+      "provides": "+40 damage, +45 AS, 80% chance for 70 bonus magic damage (effective True Strike on proc)",
+      "buyWhen": "enemy has evasion (Butterfly, PA, WR, Radiance), you need to hit uphill, you want consistent damage vs evasion",
+      "skipWhen": "no enemy has evasion, you need other damage types, 80% proc isn't reliable enough for your needs"
+    },
+    "Moon Shard": {
+      "cost": 4000,
+      "buildsFrom": "2x Hyperstone",
+      "provides": "+140 AS, +400 night vision, can consume permanently for +60 AS and +200 night vision",
+      "buyWhen": "you're 6-slotted and want more attack speed (Troll, Alch, Windranger), you're in ultra-late game, attack speed is your main scaling",
+      "skipWhen": "you're not 6-slotted yet, you need damage not just AS, your hero doesn't scale with attack speed",
+      "patchNotes": "7.40: CREATED"
+    },
+    "Morbid Mask": {
+      "cost": 900,
+      "buildsFrom": "purchased from shop",
+      "provides": "+15% lifesteal",
+      "buyWhen": "you're building Mask of Madness, Vladmir's, or Satanic, want lifesteal for jungle sustain",
+      "skipWhen": "you don't need lifesteal or the component"
+    },
+    "Mystic Staff": {
+      "cost": 2800,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+25 int",
+      "buyWhen": "you're building Scythe of Vyse, Shiva's Guard, Wind Waker, or Arcane Blink",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: Now also grants 0/0/0/100 cast range .; Reduced magic resistance bonus from 0%/10%/14%/18% to 0%/10%/13%/16%. | 7.39d: Reduced mana regen bonus from 1/1.75/2.5/3.25 to 0.8/1.6/2.4/3.2."
+    },
+    "Necronomicon 2": {
+      "cost": 3300,
+      "buildsFrom": "Necronomicon 1 + Recipe",
+      "provides": "summons warrior and archer with upgraded stats, warrior has True Sight",
+      "buyWhen": "you're a push-oriented hero (Lycan, Beastmaster, NP), you want to deathball with summons, need True Sight",
+      "skipWhen": "enemy has cleave/AoE that kills summons instantly, you can't micro, you need other items"
+    },
+    "Necronomicon 3": {
+      "cost": 4550,
+      "buildsFrom": "Necronomicon 2 + Recipe",
+      "provides": "max level summons with mana burn on warrior, high push damage",
+      "buyWhen": "you committed to Necro build and want full power summons, you're pushing as a strategy",
+      "skipWhen": "enemy has strong AoE, game has moved past push timing, other items give more value"
+    },
+    "Null Talisman": {
+      "cost": 505,
+      "buildsFrom": "Circlet + Mantle + Recipe",
+      "provides": "+5 int, +2 str, +2 agi, +3% spell amp, +0.75 mana regen, double stats after 25 min",
+      "buyWhen": "you're an int hero who needs cheap early stats, you want spell amp in lane, slot efficient early game",
+      "skipWhen": "you need to rush core items, slot becomes inefficient quickly, you're past 15 min"
+    },
+    "Nullifier": {
+      "cost": 4375,
+      "buildsFrom": "Sacred Relic + Helm of Iron Will",
+      "provides": "+75 damage, +10 armor, +6 HP regen, active mutes and continuously dispels target for 4s",
+      "buyWhen": "enemy relies on items (Ghost Scepter, Glimmer, Euls, Force, Aeon), you need to kill through Ethereal, you're a high-damage carry",
+      "skipWhen": "enemy doesn't have many active save items, you need other items more, target has BKB anyway",
+      "patchNotes": "7.40: Nullify can no longer be cast on invulnerable units."
+    },
+    "Oblivion Staff": {
+      "cost": 1625,
+      "buildsFrom": "Quarterstaff + Sobi Mask + Robe of the Magi",
+      "provides": "+10 int, +10 AS, +10 damage, +1.25 mana regen",
+      "buyWhen": "you're building toward Orchid, Echo Sabre, or Witch Blade, cheap well-rounded stats",
+      "skipWhen": "you don't plan to upgrade it, you need specific stats this doesn't provide"
+    },
+    "Octarine Core": {
+      "cost": 4900,
+      "buildsFrom": "Soul Booster + Aether Lens",
+      "provides": "+450 HP, +450 mana, +6 mana regen, +25% cooldown reduction",
+      "buyWhen": "you're a spell-spam core (Timber, Storm, Invoker, Zeus), long cooldown abilities benefit from CDR, you already have Aether Lens",
+      "skipWhen": "your cooldowns don't matter as much, you need other stats, you can't spam spells due to mana",
+      "patchNotes": "7.39c: Roshan 's attacks are now treated as hero attacks when attacking a Courier, rather than creep attack. | 7.39d: Reduced health bonus from 500 to 450.; Reduced mana bonuos from 500 to 450. | 7.40: Item cost changes: Reduced Tiara of Selemene cost from 1800 to 1700 . Now requires a Recipe to build (+ 200 cost). Total gold cost increases ▲ from 4800 to 4900 .; Can no longer be disassembled ."
+    },
+    "Ogre Axe": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+10 str",
+      "buyWhen": "you're building BKB, Echo Sabre, Sange, or Aghanim's Scepter",
+      "skipWhen": "you don't need the component"
+    },
+    "Orb Of Corrosion": {
+      "cost": 1050,
+      "buildsFrom": "Orb of Venom + Blight Stone + Fluffy Hat",
+      "provides": "+175 HP, attacks slow MS by 13% (ranged) / 26% (melee) and reduce armor by 2 for 3s",
+      "buyWhen": "you're an aggressive offlaner or support who trades a lot (Undying, Venomancer, SB), you want to win lane through attrition",
+      "skipWhen": "you don't trade hits often, you need other items, the slow and armor reduction aren't impactful for your hero",
+      "patchNotes": "7.39: Increased Orb of Frost cost from 250 to 300 (total cost increases ▲ from 1000 to 1050 ).; Corrosion Health Regen Manipulation , Lifesteal Manipulation , and Spell Lifesteal Manipulation are now replaced by Health Restoration Manipulation , combining all three into one mechanic. Reduction value remains 16%. No longer applies heal reduction . Slow and heal/health restore reduction of Orb of Frost-based items no longer stack, the highest values take priority."
+    },
+    "Orb Of Frost": {
+      "cost": 300,
+      "buildsFrom": "purchased from shop",
+      "provides": "+4 armor, attacks slow enemy MS by 15% for 1s",
+      "buyWhen": "you're a ranged support who wants to trade in lane, cheap laning item, want to slow for ganks",
+      "skipWhen": "you don't trade attacks in lane, you're melee and have other slows, gold is better saved",
+      "patchNotes": "7.39: Increased gold cost from 250 to 300 .; Frost Health Regen Manipulation , Lifesteal Manipulation , and Spell Lifesteal Manipulation are now replaced by Health Restoration Manipulation , combining all three into one mechanic. Reduction value remains 13%. No longer applies heal reduction . Slow and heal/health restore reduction of Orb of Frost-based items no longer stack, the highest values take priority."
+    },
+    "Orb Of Venom": {
+      "cost": 350,
+      "buildsFrom": "purchased from shop",
+      "provides": "attacks slow enemy MS by 11% (melee) / 5% (ranged) and deal 2/1 poison DPS for 3s",
+      "buyWhen": "you're an aggressive laner who trades hits (Ursa, SB, Undying), want to slow for early kills",
+      "skipWhen": "you don't trade hits, the slow is too small to matter, you need other starting items",
+      "patchNotes": "7.39c: Poison Attack no longer has True Strike on the triggering attack."
+    },
+    "Orchid": {
+      "cost": 3275,
+      "buildsFrom": "Oblivion Staff + Oblivion Staff + Recipe",
+      "provides": "+35 AS, +10 damage, +10 int, +3 mana regen, +6 HP regen, active 5s silence that deals 30% of damage taken at end",
+      "buyWhen": "enemy has escape/spell reliant heroes (Storm, Puck, Ember, QoP, AM), you're a ganker (Clinkz, QoP, Void Spirit)",
+      "skipWhen": "enemy has easy dispels (Manta, BKB, Lotus), silence doesn't stop their threats, you can't catch them anyway"
+    },
+    "Orchid Malevolence": {
+      "cost": 3275,
+      "buildsFrom": "Oblivion Staff + Oblivion Staff + Recipe",
+      "provides": "+35 AS, +10 damage, +10 int, +3 mana regen, +6 HP regen, active 5s silence that deals 30% of damage taken at end",
+      "buyWhen": "enemy has escape/spell reliant heroes (Storm, Puck, Ember, QoP, AM), you're a ganker (Clinkz, QoP, Void Spirit)",
+      "skipWhen": "enemy has easy dispels (Manta, BKB, Lotus), silence doesn't stop their threats, you can't catch them anyway"
+    },
+    "Overwhelming Blink": {
+      "cost": 6800,
+      "buildsFrom": "Blink Dagger + Reaver",
+      "provides": "+25 str, blink deals 100 + 50% str instant damage + 100% str over 6s in AoE, also slows",
+      "buyWhen": "you're a str initiator who wants damage on blink (Axe, Centaur, Slardar, Mars), you want blink + tankiness",
+      "skipWhen": "you're not str, the damage doesn't matter for your initiation, base blink is sufficient",
+      "patchNotes": "7.39: Overwhelming Blink no longer clamps its distance to 4/5 of max distance when targeted beyond the max distance."
+    },
+    "Parasma": {
+      "cost": 5975,
+      "buildsFrom": "Witch Blade + Mystic Staff + Recipe",
+      "provides": "+35 int, +40 AS, +5 armor, +1.5 mana regen, attacks deal bonus magic damage (1.5x int) + 25% slow, applies Break on magic damage proc",
+      "buyWhen": "you're an int right-clicker (Silencer, OD, NP) who wants Break, enemy has strong passives, you started Witch Blade",
+      "skipWhen": "you don't attack often enough, enemy passives aren't a problem, other items give better value",
+      "patchNotes": "7.39: CHANGED  shop category from Support to Weapons . | 7.39d: Reduced armor bonus from 8 to 7."
+    },
+    "Pavise": {
+      "cost": 1400,
+      "buildsFrom": "Ring of Protection + Fluffy Hat + Sobi Mask + Recipe",
+      "provides": "+175 HP, +2.5 mana regen, +3 armor, active gives 300 physical damage shield to ally for 8s",
+      "buyWhen": "you're a support against physical damage lanes, you want to protect your carry, building toward Solar Crest or Aeon Disk",
+      "skipWhen": "enemy is magic damage heavy, shield doesn't block enough to matter, you need other items",
+      "patchNotes": "7.39d: Reduced Protect mana cost from 100 to 60. | 7.40: Increased armor bonus from 2 to 3."
+    },
+    "Pers": {
+      "cost": 1400,
+      "buildsFrom": "Cornucopia + Void Stone",
+      "provides": "+6.5 HP regen, +2.75 mana regen",
+      "buyWhen": "you're building Battle Fury, Linken's Sphere, Lotus Orb, or Refresher Orb",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: READDED  as a TIER 3  neutral item artifact.; No longer grants 15% intelligence .; No longer grants 100 cast range . | 7.39d: Reduced Psychic Push cooldown from 20 to 15. | 7.39e: Reduced Skeleton Warrior Rally attack damage bonus from 3 to 2. | 7.40: CREATED"
+    },
+    "Phase Boots": {
+      "cost": 1500,
+      "buildsFrom": "Boots of Speed + Chainmail + Blades of Attack",
+      "provides": "+45 MS, +4 armor, +18 damage, active +20% MS and phase movement for 3s",
+      "buyWhen": "you're a melee core who needs to chase and trade (Ursa, MK, Legion, Slark), you want damage + armor in lane, you need to close gaps",
+      "skipWhen": "you need attack speed (Treads better), you're a support (Tranquils or Arcane better), you don't benefit from phase movement"
+    },
+    "Phylactery": {
+      "cost": 2600,
+      "buildsFrom": "Fluffy Hat + Point Booster + Void Stone + Recipe",
+      "provides": "+7 all stats, +6.5 HP regen, +2.5 mana regen, spells deal +150 bonus magic damage + 30% slow for 3s",
+      "buyWhen": "you have many low-cooldown spells (Ogre, Lion, Lina, Skywrath), you want to add burst damage to casts",
+      "skipWhen": "your spells are long cooldown (one-shot abilities), you're not casting many spells, bonus damage isn't impactful",
+      "patchNotes": "7.39: Reduced Empower Spell cooldown from 12 to 10. | 7.39c: Reduced Recipe cost from 400 to 300 (total cost decreases ▼ from 2600 to 2500 ). | 7.39d: Reduced Empower Spell cooldown from 10 to 9. | 7.40: REWORKED  recipe and stats. | 7.40c: Reduced all attributes bonus from 7 to 6.; Reduced mana regen bonus from 2.5 to 2.25."
+    },
+    "Pipe": {
+      "cost": 3725,
+      "buildsFrom": "Hood of Defiance + Headdress + Recipe",
+      "provides": "+14 HP regen, +20% magic resist, aura +8% magic resist and +2.5 HP regen, active 425 magic damage barrier in AoE",
+      "buyWhen": "enemy has heavy magic damage (Zeus, Tinker, Leshrac), your team needs magic protection, you're offlane/support with gold",
+      "skipWhen": "someone else is building it (doesn't stack), enemy is mostly physical, your team doesn't group up",
+      "patchNotes": "7.40: Item cost changes: Reduced Ring of Tarrasque cost from 1800 to 1700 . Increased Recipe cost from 700 to 800 . Total gold cost remains at 3725 ."
+    },
+    "Pipe of Insight": {
+      "cost": 3725,
+      "buildsFrom": "Hood of Defiance + Headdress + Recipe",
+      "provides": "+14 HP regen, +20% magic resist, aura +8% magic resist and +2.5 HP regen, active 425 magic damage barrier in AoE",
+      "buyWhen": "enemy has heavy magic damage (Zeus, Tinker, Leshrac), your team needs magic protection, you're offlane/support with gold",
+      "skipWhen": "someone else is building it (doesn't stack), enemy is mostly physical, your team doesn't group up"
+    },
+    "Platemail": {
+      "cost": 1400,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+10 armor",
+      "buyWhen": "you're building Shiva's Guard, Lotus Orb, or Assault Cuirass",
+      "skipWhen": "you don't need the component"
+    },
+    "Point Booster": {
+      "cost": 1200,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+175 HP, +175 mana",
+      "buyWhen": "you're building Aghanim's Scepter, Soul Booster, or Phylactery",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: No longer builds into Eye of Skadi . | 7.40: No longer builds into Phylactery ."
+    },
+    "Power Treads": {
+      "cost": 1400,
+      "buildsFrom": "Boots of Speed + Gloves of Haste + Belt of Strength",
+      "provides": "+45 MS, +25 AS, +8 selected attribute (str/agi/int toggle)",
+      "buyWhen": "you're a right-click carry who needs attack speed (AM, PL, Troll, PA), you can tread-switch to save mana, universal boot choice for most carries",
+      "skipWhen": "you need Phase movement to chase, you're a caster (Arcane Boots better), you don't attack often"
+    },
+    "Quarterstaff": {
+      "cost": 875,
+      "buildsFrom": "purchased from shop",
+      "provides": "+10 damage, +10 AS",
+      "buyWhen": "you're building Oblivion Staff, Butterfly, or Mask of Madness",
+      "skipWhen": "you don't need the component"
+    },
+    "Quelling Blade": {
+      "cost": 100,
+      "buildsFrom": "purchased from shop",
+      "provides": "+18 damage vs creeps (melee) / +6 (ranged), active chop tree",
+      "buyWhen": "you're a melee carry and need to last hit in lane, essential starting item for most melee cores",
+      "skipWhen": "you're ranged (less value), you're a support who doesn't need to last hit"
+    },
+    "Radiance": {
+      "cost": 4700,
+      "buildsFrom": "Sacred Relic + Recipe",
+      "provides": "+55 damage, +25% evasion, 60 magic DPS burn aura (650 radius, reduced on illusions)",
+      "buyWhen": "you have illusions or summons to spread burn (Spectre, Naga, WK, PL), you want to burn down supports in fights, you're okay skipping other items",
+      "skipWhen": "you need to fight before you can finish it, enemy has MKB/breaks negating evasion, you can't apply the burn effectively",
+      "patchNotes": "7.39: Reduced evasion from 20% to 15%. | 7.40: Increased evasion from 15% to 25%.; Burn U  Can now be toggled while invisible without breaking the invisibility. No longer applies a 15% chance blind on enemies within range. No longer deals 1.5 times more damage against illusions."
+    },
+    "Rapier": {
+      "cost": 5600,
+      "buildsFrom": "Sacred Relic + Claymore + Broadsword",
+      "provides": "+350 damage, drops on death (enemy can pick up)",
+      "buyWhen": "you're desperate and need a comeback, you're a hero who can protect it (Medusa, Gyro with BKB, Ember with Sleight), last resort item",
+      "skipWhen": "you're ahead (too risky), you can't protect it, enemy has catch that will kill you and take it"
+    },
+    "Reaver": {
+      "cost": 2800,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+25 str",
+      "buyWhen": "you're building Heart of Tarrasque, Satanic, or Overwhelming Blink",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: REMOVED | 7.40: Plant Can no longer be placed within a 300 radius of another Observer Ward planted by an ally within the last 1 second. Cast range is no longer affected by cast range bonuses."
+    },
+    "Refresher": {
+      "cost": 5000,
+      "buildsFrom": "Perseverance + Perseverance + Recipe",
+      "provides": "+12 HP regen, +6 mana regen, active resets all cooldowns (180-210s CD based on level)",
+      "buyWhen": "you have game-winning ultimates (Enigma, Tidehunter, Magnus, Warlock), you have enough mana for double combo",
+      "skipWhen": "you don't have mana for double cast, your cooldowns aren't impactful enough, slot is better used elsewhere",
+      "patchNotes": "7.39e: Reset Cooldowns The cooldown is now bound to the hero, instead of the item. Cooldown now increases with each use, up to 3 times. Cooldown from 180 to 180/190/200/210. Increased mana cost from 350 to 400. | 7.40: REWORKED  recipe and stats."
+    },
+    "Refresher Orb": {
+      "cost": 5000,
+      "buildsFrom": "Perseverance + Perseverance + Recipe",
+      "provides": "+12 HP regen, +6 mana regen, active resets all cooldowns (180-210s CD based on level)",
+      "buyWhen": "you have game-winning ultimates (Enigma, Tidehunter, Magnus, Warlock), you have enough mana for double combo",
+      "skipWhen": "you don't have mana for double cast, your cooldowns aren't impactful enough, slot is better used elsewhere"
+    },
+    "Relic": {
+      "cost": 3400,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+55 damage",
+      "buyWhen": "you're building Nullifier, Radiance, or Divine Rapier",
+      "skipWhen": "you don't need the component"
+    },
+    "Revenants Brooch": {
+      "cost": 3300,
+      "buildsFrom": "Witch Blade + Platemail + Recipe",
+      "provides": "+25 int, +40 AS, +12 armor, +1.5 mana regen, active makes attacks deal magic damage and hit ethereal units for 5s",
+      "buyWhen": "you're an int right-clicker who wants to bypass armor (Silencer, OD), enemy is stacking armor, you want to combo with Ethereal Blade",
+      "skipWhen": "enemy has high magic resist, you don't attack often, other items give better value",
+      "patchNotes": "7.40: Item cost changes: Reduced Voodoo Mask cost from 700 to 650 . Increased Recipe cost from 600 to 650 . Total gold cost remains at 3300 ."
+    },
+    "Ring Of Basilius": {
+      "cost": 425,
+      "buildsFrom": "Sobi Mask + Ring of Protection",
+      "provides": "+1 armor, +1.5 mana regen, aura +1.5 mana regen to allies, toggle to push lane",
+      "buyWhen": "you're a support who wants cheap mana sustain for your lane partner, building toward Vladmir's or Veil",
+      "skipWhen": "your lane doesn't need mana sustain, you have other mana solutions, you need different items"
+    },
+    "Ring Of Health": {
+      "cost": 700,
+      "buildsFrom": "purchased from shop",
+      "provides": "+5.5 HP regen",
+      "buyWhen": "you're building Cornucopia, Vanguard, or Hood of Defiance, good lane sustain",
+      "skipWhen": "you don't need the component or regen",
+      "patchNotes": "7.40: Now builds into Veil of Discord ."
+    },
+    "Ring Of Protection": {
+      "cost": 175,
+      "buildsFrom": "purchased from shop",
+      "provides": "+2 armor",
+      "buyWhen": "you're building Basilius, Buckler, Urn, or Pavise, cheap starting armor",
+      "skipWhen": "you don't need the component"
+    },
+    "Ring Of Regen": {
+      "cost": 175,
+      "buildsFrom": "purchased from shop",
+      "provides": "+1.5 HP regen",
+      "buyWhen": "you're building Headdress, Tranquil Boots, or Soul Ring",
+      "skipWhen": "you don't need the component"
+    },
+    "Ring Of Tarrasque": {
+      "cost": 1700,
+      "buildsFrom": "purchased from shop",
+      "provides": "+150 HP, +4 HP regen, +1% max HP regen",
+      "buyWhen": "you're building Heart of Tarrasque",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: Reduced gold cost from 1800 to 1700 .; Now builds into Boots of Bearing"
+    },
+    "Robe": {
+      "cost": 450,
+      "buildsFrom": "purchased from shop",
+      "provides": "+6 int",
+      "buyWhen": "you're building Blade Mail, Kaya, Diffusal Blade, or Witch Blade",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: REMOVED | 7.39c: Roshan's attacks are now treated as hero attacks when attacking a Courier , rather than creep attack. | 7.40: Place Banner Now upgrades each time Roshan drops this item, up to 2 times. Increased hit count from 24 to 24/32/40. Increased effect radius 650 to 600/900/1200."
+    },
+    "Rod Of Atos": {
+      "cost": 2250,
+      "buildsFrom": "Crown + Staff of Wizardry + Vitality Booster",
+      "provides": "+275 HP, +12 int, active 2s root (can be dispelled)",
+      "buyWhen": "you need cheap lockdown (Skywrath, AA, OD), you want to build into Gleipnir, enemy lacks easy dispels",
+      "skipWhen": "enemy has BKB/Manta/dispels, you need more impactful items, root isn't enough setup for your spells",
+      "patchNotes": "7.39: Reduced intelligence bonus from 15 to 12.; Increased Cripple mana cost from 50 to 100."
+    },
+    "Rod of Atos": {
+      "cost": 2250,
+      "buildsFrom": "Crown + Staff of Wizardry + Vitality Booster",
+      "provides": "+275 HP, +12 int, active 2s root (can be dispelled)",
+      "buyWhen": "you need cheap lockdown (Skywrath, AA, OD), you want to build into Gleipnir, enemy lacks easy dispels",
+      "skipWhen": "enemy has BKB/Manta/dispels, you need more impactful items, root isn't enough setup for your spells"
+    },
+    "Sange": {
+      "cost": 2100,
+      "buildsFrom": "Ogre Axe + Belt of Strength + Recipe",
+      "provides": "+16 str, +16% HP regen amp, +20% slow resist",
+      "buyWhen": "you're rushing a Sange upgrade (SnY, KnS, Halberd), you're a str core who wants the components",
+      "skipWhen": "you're not upgrading it soon, you need other stats, final item isn't something you want",
+      "patchNotes": "7.39: Health Regen Amplification , Lifesteal Amplification , and Spell Lifesteal Amplification are now replaced by Health Restoration Manipulation , combining all three into one mechanic. As such, Sange now also amplifies Spell Lifesteal . Reduced amplification value from 20% to 16%. | 7.39b: The Bottom Radiant Tier 1 tower has been moved slightly to the south; Several trees have been added and adjusted above the Bottom Radiant Tier 1 tower and on the west side of the lane; Adjusted a juke path to the east of the Mid Radiant Tier 2 tower; A tree has been removed to the south of the Top Dire Tier 1 tower; Fixed some locations that were incorrectly blocked for warding | 7.39c: Watchers by the respective Wisdom shrines have been slightly moved away from the nearby ramps; Watcher activation range decreased from 300 to 200 | 7.39d: Increased spawnboxes of Triangle Ancient camps; Fixed a ward spot in Radiant safe lane hard camp; Removed several trees from the inside corner of the Dire Safelane small camp | 7.40: Extended the streams into both Radiant and Dire bases and added defender's gate to the outside of the respective safe lanes where the stream flows; Removed some trees inside the base near the new safelane defender's gate positions; The Hard camp nearest to Tier 3 towers where the streams used to start has been demoted to a 'medium' camp; Moved the safelane medium amphibian neutral camp closest to the Tier 2 tower up the stream, slightly closer to the respective bases"
+    },
+    "Sange And Yasha": {
+      "cost": 4200,
+      "buildsFrom": "Sange + Yasha",
+      "provides": "+16 str, +16 agi, +20 AS, +12% MS, +20% HP regen amp, +25% slow resist, +15% status resist",
+      "buyWhen": "you're an agi or str carry who wants stats + mobility (Slark, Jugg, CK, Spec), you want tank + speed",
+      "skipWhen": "you need specific effects other items provide, you're an int hero, Manta would be better for dispel"
+    },
+    "Sange and Yasha": {
+      "cost": 4200,
+      "buildsFrom": "Sange + Yasha",
+      "provides": "+16 str, +16 agi, +20 AS, +12% MS, +20% HP regen amp, +25% slow resist, +15% status resist",
+      "buyWhen": "you're an agi or str carry who wants stats + mobility (Slark, Jugg, CK, Spec), you want tank + speed",
+      "skipWhen": "you need specific effects other items provide, you're an int hero, Manta would be better for dispel"
+    },
+    "Satanic": {
+      "cost": 5050,
+      "buildsFrom": "Reaver + Morbid Mask + Recipe",
+      "provides": "+25 str, +25 damage, 30% lifesteal, active 145% lifesteal (175% total) for 6s",
+      "buyWhen": "you're a late-game carry who needs to sustain through fights, you have big damage to lifesteal from, you can survive long enough to press it",
+      "skipWhen": "enemy has healing reduction (Spirit Vessel, AA), enemy stuns you before you can press it, you're not hitting hard enough",
+      "patchNotes": "7.39c: Fixed Petrify 's neutral AI cast restriction still applying when used by players."
+    },
+    "Scythe of Vyse": {
+      "cost": 5200,
+      "buildsFrom": "Mystic Staff + Ultimate Orb + Void Stone",
+      "provides": "+30 int, +8.5 mana regen, active 2.8s hex (target becomes critter, 140 MS, can't attack or cast)",
+      "buyWhen": "you need reliable hard disable (any support or int core), enemy has BKB-dependent heroes you catch before activation",
+      "skipWhen": "enemy pops BKB before you can hex, you need other items more, someone else is getting it"
+    },
+    "Shadow Blade": {
+      "cost": 3250,
+      "buildsFrom": "Claymore + Shadow Amulet + Recipe",
+      "provides": "+25 damage, +35 AS, active 17s invis with +20 MS, breaking invis deals +175 damage",
+      "buyWhen": "you want initiation or escape on a core (Slark, SF, Kunkka, Legion), you're building toward Silver Edge",
+      "skipWhen": "enemy already has detection everywhere, you need other items, your hero has built-in invis",
+      "patchNotes": "7.40: Reduced Shadow Amulet cost from 1000 to 900 (total cost decreases ▼ from 3350 to 3250 )."
+    },
+    "Sheepstick": {
+      "cost": 5200,
+      "buildsFrom": "Mystic Staff + Ultimate Orb + Void Stone",
+      "provides": "+30 int, +8.5 mana regen, active 2.8s hex (target becomes critter, 140 MS, can't attack or cast)",
+      "buyWhen": "you need reliable hard disable (any support or int core), enemy has BKB-dependent heroes you catch before activation",
+      "skipWhen": "enemy pops BKB before you can hex, you need other items more, someone else is getting it",
+      "patchNotes": "7.40: U Fondue health restoration is once again affected by Heal Manipulation ."
+    },
+    "Shiva's Guard": {
+      "cost": 5175,
+      "buildsFrom": "Platemail + Mystic Staff + Recipe",
+      "provides": "+15 armor, +5 all stats, +5 HP regen, +15% spell amp, aura -45 AS and -25% healing/regen to enemies, active blast for 200 damage + slow",
+      "buyWhen": "you're against healing (Alch, Huskar, lifesteal carries), you want armor + offensive aura, you're int/tanky (Axe, Timber, DK)",
+      "skipWhen": "enemy doesn't have much healing/AS to reduce, you need other tank items, you're not tanky enough to use the aura"
+    },
+    "Shivas Guard": {
+      "cost": 5175,
+      "buildsFrom": "Platemail + Mystic Staff + Recipe",
+      "provides": "+15 armor, +5 all stats, +5 HP regen, +15% spell amp, aura -45 AS and -25% healing/regen to enemies, active blast for 200 damage + slow",
+      "buyWhen": "you're against healing (Alch, Huskar, lifesteal carries), you want armor + offensive aura, you're int/tanky (Axe, Timber, DK)",
+      "skipWhen": "enemy doesn't have much healing/AS to reduce, you need other tank items, you're not tanky enough to use the aura",
+      "patchNotes": "7.39: Freezing Aura Health Regen Manipulation , Lifesteal Manipulation , and Spell Lifesteal Manipulation are now replaced by Health Restoration Manipulation , combining all three into one mechanic. Reduction value remains 25%. | 7.39d: Reduced Cyclonic Shield barrier health from 250 to 225. | 7.40: Arctic Blast no longer deals 1.5 times damage against illusions."
+    },
+    "Silver Edge": {
+      "cost": 5700,
+      "buildsFrom": "Shadow Blade + Crystalys + Recipe",
+      "provides": "+70 damage, +35 AS, invis with +25 MS, breaking invis deals +300 damage and applies Break for 5s",
+      "buyWhen": "enemy has strong passives to break (PA blur, Bristle quills, Spec dispersion), you already have Shadow Blade",
+      "skipWhen": "enemy has detection making invis useless, no important passives to break, you can apply Break other ways",
+      "patchNotes": "7.40: Reduced Shadow Amulet cost from 1000 to 900 (total cost decreases ▼ from 5800 to 5700 ).; Shadow Walk now also caps the attack target's movement speed at 200. | 7.40b: Reduced Shadow Walk debuff duration from 6 to 5."
+    },
+    "Skadi": {
+      "cost": 5900,
+      "buildsFrom": "Ultimate Orb + Ultimate Orb + Point Booster",
+      "provides": "+35 all stats, attacks slow MS by 25-50% and AS by 20%, reduce enemy healing by 40%",
+      "buyWhen": "you're a late-game carry who wants stats (Morph, Medusa, TB, Troll), enemy has strong regen/healing, you want to kite",
+      "skipWhen": "you need specific effects other items provide, other items give better damage, slot is needed elsewhere",
+      "patchNotes": "7.39: REWORKED  recipe and stats."
+    },
+    "Slippers": {
+      "cost": 140,
+      "buildsFrom": "purchased from shop",
+      "provides": "+3 agi",
+      "buyWhen": "you're building Wraith Band, cheap starting stats for agi heroes",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39c: Increased Flay cast range from 700 to 850. | 7.40: CYCLED OUT"
+    },
+    "Smoke Of Deceit": {
+      "cost": 50,
+      "buildsFrom": "purchased from shop",
+      "provides": "team invisibility in 1200 radius for 35s, breaks within 1025 of enemy hero, +15% MS",
+      "buyWhen": "you want to gank or initiate without being seen on minimap, you're setting up Roshan, coordinated team movements",
+      "skipWhen": "you're split pushing alone (waste of smoke), you can initiate without it, limited stock so use wisely",
+      "patchNotes": "7.40: Disguise Can now be cast while the item is in the Backpack . The 6-second penalty cooldown upon moving an item from the backpack to the main inventory no longer applies to Smoke of Deceit."
+    },
+    "Sobi Mask": {
+      "cost": 175,
+      "buildsFrom": "purchased from shop",
+      "provides": "+1 mana regen",
+      "buyWhen": "you're building Ring of Basilius, Oblivion Staff, Medallion, or Urn",
+      "skipWhen": "you don't need the component"
+    },
+    "Solar Crest": {
+      "cost": 2575,
+      "buildsFrom": "Medallion of Courage + Crown + Wind Lace",
+      "provides": "+4 all stats, +4 armor, +175 HP, +300 mana, +25 self MS, active gives ally +5 armor +60 AS +15 MS OR reduces enemy armor by 5",
+      "buyWhen": "you're a support or utility hero, you want to buff your carry or debuff Roshan, you have the Medallion already",
+      "skipWhen": "your team needs other support items more, you can't use the active effectively, enemy doesn't have important physical damage",
+      "patchNotes": "7.39: CHANGED  shop category from Magical to Support ."
+    },
+    "Soul Booster": {
+      "cost": 3000,
+      "buildsFrom": "Energy Booster + Vitality Booster + Point Booster",
+      "provides": "+425 HP, +425 mana",
+      "buyWhen": "you're building Bloodstone or Octarine Core",
+      "skipWhen": "you don't need the component"
+    },
+    "Soul Ring": {
+      "cost": 805,
+      "buildsFrom": "Ring of Regen + Gauntlets + Recipe",
+      "provides": "+6 str, +2 HP regen, active sacrifices 170 HP for 170 mana",
+      "buyWhen": "you're a hero who needs mana but builds strength (Huskar, Bristle, Undying, Timbersaw), you can sustain the HP cost",
+      "skipWhen": "you're too squishy to sacrifice HP, you have other mana solutions, the HP cost puts you in kill range"
+    },
+    "Spirit Vessel": {
+      "cost": 2725,
+      "buildsFrom": "Urn of Shadows + Vitality Booster + Wind Lace",
+      "provides": "+10 all stats, +2 armor, +1.75 mana regen, active heals ally 40 HP/s or damages enemy 4% max HP/s with -70% healing",
+      "buyWhen": "enemy has healing (Alch, Huskar, Morph, lifesteal carries), you got early Urn charges, you're roaming/ganking support",
+      "skipWhen": "enemy doesn't heal much, you can't get charges, someone else has Vessel already (healing reduction doesn't stack)",
+      "patchNotes": "7.39: REWORKED  recipe and stats. | 7.40: Soul Release Spirit Vessels and Urns of Shadows are now able to gain charges from the same hero death. Spirit Vessels are still limited to one Vessel per death, only the closest Vessel gains a charge. Increased charge gain radius from 1400 to 1500. | 7.40b: Soul Release If the same player has multiple Spirit Vessels, only one of them gains charges now. If the same player also has an Urn of Shadows , Spirit Vessel now prevents the urns from gaining charges. Allies with Urn of Shadows can still gain their charges independently."
+    },
+    "Staff Of Wizardry": {
+      "cost": 1000,
+      "buildsFrom": "purchased from shop",
+      "provides": "+10 int",
+      "buyWhen": "you're building Eul's, Force Staff, Kaya, Dagon, or Aghanim's Scepter",
+      "skipWhen": "you don't need the component"
+    },
+    "Swift Blink": {
+      "cost": 6800,
+      "buildsFrom": "Blink Dagger + Eaglesong",
+      "provides": "+25 agi, blink gives +35 agi and +40 MS for 6s after use",
+      "buyWhen": "you're an agi hero who wants Blink (PA, Jugg, Ember, TA), you want blink + damage boost for initiations",
+      "skipWhen": "you're not agi, the burst stats don't matter for your use case, base Blink is sufficient",
+      "patchNotes": "7.39: Swift Blink no longer clamps its distance to 4/5 of max distance when targeted beyond the max distance."
+    },
+    "Talisman Of Evasion": {
+      "cost": 1300,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+15% evasion",
+      "buyWhen": "you're building Butterfly or Heaven's Halberd",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: Reduced evasion from 20% to 15%."
+    },
+    "Tango": {
+      "cost": 90,
+      "buildsFrom": "purchased from shop",
+      "provides": "3 charges, consume tree for 115 HP regen over 16s (double from wards/Iron Branch trees)",
+      "buyWhen": "universal starting regen, always buy at game start, share with mid if they need it",
+      "skipWhen": "almost never — you always want Tangos in the starting items",
+      "patchNotes": "7.39: CREATED | 7.40: Increased initial stock from 8 to 10.; Increased max stock from 8 to 10.; Reduced Devour health regen bonus from shared Tangoes from 7 to 3.5."
+    },
+    "Tiara Of Selemene": {
+      "cost": 1700,
+      "buildsFrom": "purchased from shop",
+      "provides": "+150 mana, +2.5 mana regen",
+      "buyWhen": "you're building Octarine Core or other mana items",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: Reduced gold cost from 1800 to 1700 ."
+    },
+    "Tpscroll": {
+      "cost": 100,
+      "buildsFrom": "purchased from shop",
+      "provides": "teleport to allied building (80/70/60/50s CD based on level), 3s channel",
+      "buyWhen": "always carry one, essential for rotations and defense, never leave base without a TP",
+      "skipWhen": "never skip — always carry a TP scroll"
+    },
+    "Tranquil Boots": {
+      "cost": 900,
+      "buildsFrom": "Boots of Speed + Ring of Regen + Wind Lace",
+      "provides": "+65 MS, +14 HP regen (breaks to +24 MS and 0 regen when attacking or attacked for 13s)",
+      "buyWhen": "you're a roaming support who needs MS and regen between fights (Earth Spirit, Tusk, Clockwerk), you don't need to trade hits",
+      "skipWhen": "you need to trade hits in lane (breaks constantly), you need mana from Arcane Boots, you need attack speed"
+    },
+    "Travel Boots": {
+      "cost": 2500,
+      "buildsFrom": "Boots of Speed + Recipe",
+      "provides": "+90 MS, active TP to any allied building (40s CD)",
+      "buyWhen": "you want map mobility without using TP scroll slot, you're a split pusher (AM, NP, Ember), you want to defend/push globally",
+      "skipWhen": "TP scrolls are sufficient, you need other items more, you can't afford to delay your core items"
+    },
+    "Travel Boots 2": {
+      "cost": 4500,
+      "buildsFrom": "Boots of Travel + Recipe",
+      "provides": "+110 MS, active TP to any allied unit including creeps (40s CD, 2s channel)",
+      "buyWhen": "you already have BoTs and want upgrade, you want to TP to creep waves for split push, you're ultra-late game",
+      "skipWhen": "BoT1 is sufficient, gold is better spent elsewhere, you don't need the creep TP"
+    },
+    "Ultimate Orb": {
+      "cost": 2800,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+15 all stats",
+      "buyWhen": "you're building Linken's Sphere, Manta Style, Skadi, or Scythe of Vyse",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: Now builds into Ethereal Blade ."
+    },
+    "Ultimate Scepter": {
+      "cost": 4200,
+      "buildsFrom": "Point Booster + Ogre Axe + Staff of Wizardry + Blade of Alacrity",
+      "provides": "+10 all stats, +175 HP, +175 mana, hero-specific ultimate upgrade",
+      "buyWhen": "your Aghanim's upgrade is strong for the game (Juggernaut, Invoker, Windranger, etc.), the upgrade changes how you play fights",
+      "skipWhen": "your Aghs upgrade is weak, you need core items first, other items give more value for the gold"
+    },
+    "Ultimate Scepter 2": {
+      "cost": 5800,
+      "buildsFrom": "Aghanim's Blessing (consumed, cannot be dropped)",
+      "provides": "permanent Aghanim's Scepter effect without taking a slot",
+      "buyWhen": "you're 6-slotted and want Aghs without losing a slot, ultra late game purchase, your Aghs upgrade is essential",
+      "skipWhen": "you're not 6-slotted yet, your Aghs upgrade isn't worth the extra cost, other items are more impactful"
+    },
+    "Urn Of Shadows": {
+      "cost": 825,
+      "buildsFrom": "Sobi Mask + Ring of Protection + Fluffy Hat",
+      "provides": "+2 armor, +1.4 mana regen, +150 HP, gains charges on nearby hero kills, active heals ally 30 HP/s or damages enemy 25 DPS for 8s",
+      "buyWhen": "you're a ganking support who gets kills early (Tusk, Earth Spirit, Clock), building toward Spirit Vessel, you want early sustain for your team",
+      "skipWhen": "you can't get charges (passive lane), someone else is buying it, you want to rush Vessel directly",
+      "patchNotes": "7.39: REWORKED  recipe and stats. | 7.40: Reduced mana regen bonus from 1.4 to 1.25.; Soul Release Multiple Urns of Shadows are now able to gain a charge from the same hero death. This includes all Urns owned by allies, as well multiple copies owned by the same player. A nearby Spirit Vessel does not prevent the Urns from gaining their charges. Increased charge gain radius from 1400 to 1500. | 7.40b: Soul Release If the same player has multiple Urns of Shadows, only one of them gains charges now. No longer gains charges if the same player also has a Spirit Vessel . Allies with copies of this item can still gain their charges independently."
+    },
+    "Vanguard": {
+      "cost": 1700,
+      "buildsFrom": "Ring of Health + Vitality Booster",
+      "provides": "+250 HP, +7 HP regen, 60% chance to block 64/36 damage (melee/ranged)",
+      "buyWhen": "you're a melee offlaner who wants to survive lane and jungle (Axe, Bristle, Centaur), building toward Crimson Guard",
+      "skipWhen": "you're ranged (block is halved), you need other stats more, you'd rather rush Blink or BKB"
+    },
+    "Veil Of Discord": {
+      "cost": 1725,
+      "buildsFrom": "Crown + Ring of Basilius + Recipe",
+      "provides": "+5 all stats, +5 armor, +50% mana regen amp, active -25% magic resist debuff in AoE for 16s",
+      "buyWhen": "your team has heavy magic damage (Zeus, Leshrac, Tinker), you want to amplify all allied spell damage in fights",
+      "skipWhen": "your team is mostly physical damage, enemy already has low magic resist, other items provide more for you",
+      "patchNotes": "7.39: CHANGED  shop category from Magical to Armor . | 7.40: REWORKED  recipe and stats."
+    },
+    "Vitality Booster": {
+      "cost": 1000,
+      "buildsFrom": "purchased from secret shop",
+      "provides": "+250 HP",
+      "buyWhen": "you're building Aeon Disk, Vanguard, Spirit Vessel, or Soul Booster",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.39: No longer builds into Spirit Vessel ."
+    },
+    "Vladmir": {
+      "cost": 2200,
+      "buildsFrom": "Morbid Mask + Blades of Attack + Sage's Mask + Buckler",
+      "provides": "+2 armor, +0.75 mana regen, aura +2 armor +18% damage +20% lifesteal +1 mana regen",
+      "buyWhen": "you're a melee team who benefits from aura (melee lifesteal is great), you want to take Roshan, you're offlane/support buying for carry",
+      "skipWhen": "your team is ranged (aura is worse), you're the carry and want selfish items, someone else is building it",
+      "patchNotes": "7.39: Reduced armor bonus from 2 to 1. | 7.39c: Reduced spell lifesteal bonus from 8%/10%/12% to 6%/8%/10%."
+    },
+    "Vladmir's Offering": {
+      "cost": 2200,
+      "buildsFrom": "Morbid Mask + Blades of Attack + Sage's Mask + Buckler",
+      "provides": "+2 armor, +0.75 mana regen, aura +2 armor +18% damage +20% lifesteal +1 mana regen",
+      "buyWhen": "you're a melee team who benefits from aura (melee lifesteal is great), you want to take Roshan, you're offlane/support buying for carry",
+      "skipWhen": "your team is ranged (aura is worse), you're the carry and want selfish items, someone else is building it"
+    },
+    "Void Stone": {
+      "cost": 700,
+      "buildsFrom": "purchased from shop",
+      "provides": "+1.75 mana regen",
+      "buyWhen": "you're building Perseverance, Eul's Scepter, or Aether Lens",
+      "skipWhen": "you don't need the component"
+    },
+    "Voodoo Mask": {
+      "cost": 650,
+      "buildsFrom": "purchased from shop",
+      "provides": "+10% spell lifesteal",
+      "buyWhen": "you're building Bloodstone or Eternal Shroud",
+      "skipWhen": "you don't need the component",
+      "patchNotes": "7.40: Reduced gold cost from 700 to 650 ."
+    },
+    "Ward Dispenser": {
+      "cost": 50,
+      "buildsFrom": "purchased from shop",
+      "provides": "Observer ward: reveals 1400 radius for 6 min. Sentry ward: True Sight in 1000 radius for 8 min",
+      "buyWhen": "you're a support — always buy wards off cooldown, vision wins games, deward enemy wards with sentries",
+      "skipWhen": "you're a core (let supports buy wards unless they can't), all ward spots are covered"
+    },
+    "Ward Sentry": {
+      "cost": 50,
+      "buildsFrom": "purchased from shop",
+      "provides": "True Sight in 1000 radius for 8 min, invisible",
+      "buyWhen": "enemy has invis heroes, you want to deward, you need detection at objectives or lanes",
+      "skipWhen": "no enemy invis and you don't need to deward",
+      "patchNotes": "7.40: Plant Can no longer be placed within a 300 radius of another Sentry Ward planted by an ally within the last 1 second. Cast range is no longer affected by cast range bonuses."
+    },
+    "Wind Lace": {
+      "cost": 225,
+      "buildsFrom": "purchased from shop",
+      "provides": "+15 MS",
+      "buyWhen": "you're building Eul's, Tranquil Boots, or Solar Crest, cheap MS boost for roaming supports",
+      "skipWhen": "you don't need the component or MS"
+    },
+    "Wind Waker": {
+      "cost": 6800,
+      "buildsFrom": "Eul's Scepter + Mystic Staff + Recipe",
+      "provides": "+35 int, +3 mana regen, +30 MS, Eul's active on enemy OR self-tornado you can move for 2.5s",
+      "buyWhen": "you want upgraded Eul's mobility, you need extended self-save, you're Lina/Puck/Storm and want the MS + tornado",
+      "skipWhen": "regular Eul's is sufficient, you need the gold for other items, you can't effectively use the tornado movement",
+      "patchNotes": "7.40: Increased Cyclone cooldown from 16 to 19."
+    },
+    "Witch Blade": {
+      "cost": 2775,
+      "buildsFrom": "Blitz Knuckles + Chainmail + Robe of the Magi + Recipe",
+      "provides": "+12 int, +40 AS, +5 armor, +1.5 mana regen, attacks poison for 0.75x int damage + 25% slow for 4s",
+      "buyWhen": "you're an int core who attacks (Silencer, OD, Necro, NP), you want early fighting power, you're building Devastator",
+      "skipWhen": "you don't attack often, you need different stats, other items suit your hero better",
+      "patchNotes": "7.39: CHANGED  shop category from Magical to Weapons . | 7.39d: Reduced armor bonus from 6 to 5. | 7.40: CYCLED OUT"
+    },
+    "Wraith Band": {
+      "cost": 505,
+      "buildsFrom": "Circlet + Slippers + Recipe",
+      "provides": "+5 agi, +2 str, +2 int, +5 AS, double stats after 25 min",
+      "buyWhen": "you're an agi hero who needs cheap early stats, you want attack speed in lane, slot efficient early game",
+      "skipWhen": "you need to rush core items, slot becomes inefficient quickly, you're past 15 min",
+      "patchNotes": "7.40: Increased attack speed bonus from 5 to 6."
+    },
+    "Wraith Pact": {
+      "cost": 3800,
+      "buildsFrom": "Vladmir's Offering + Point Booster + Recipe",
+      "provides": "+250 HP, +250 mana, upgraded Vlads aura (+24% lifesteal +3 armor +2 mana regen), deployable ward that reduces enemy damage by 30% and deals 45 DPS",
+      "buyWhen": "your team groups up and fights together, you want the damage reduction totem, you already had Vlads",
+      "skipWhen": "team fights too spread out, enemy can easily kill totem, Vlads alone is sufficient"
+    },
+    "Yasha": {
+      "cost": 2100,
+      "buildsFrom": "Blade of Alacrity + Band of Elvenskin + Recipe",
+      "provides": "+16 agi, +15 AS, +10% MS",
+      "buyWhen": "you're rushing a Yasha upgrade (SnY, YnK, Manta), you're an agi core who benefits from the components",
+      "skipWhen": "you're not upgrading it soon, you need other stats, Yasha doesn't build into what you want",
+      "patchNotes": "7.39: No longer grants 25% Spell Lifesteal Amplification ."
+    },
+    "Yasha And Kaya": {
+      "cost": 4200,
+      "buildsFrom": "Yasha + Kaya",
+      "provides": "+16 agi, +16 int, +20 AS, +12% MS, +12% spell amp, +50% mana regen amp, +25% cast speed",
+      "buyWhen": "you're a hybrid caster + attacker (Silencer, OD, Void Spirit), you want mobility + spell damage",
+      "skipWhen": "you're pure physical, you're pure int caster (KnS better), other items suit you more"
+    },
+    "Yasha and Kaya": {
+      "cost": 4200,
+      "buildsFrom": "Yasha + Kaya",
+      "provides": "+16 agi, +16 int, +20 AS, +12% MS, +12% spell amp, +50% mana regen amp, +25% cast speed",
+      "buyWhen": "you're a hybrid caster + attacker (Silencer, OD, Void Spirit), you want mobility + spell damage",
+      "skipWhen": "you're pure physical, you're pure int caster (KnS better), other items suit you more"
+    }
+  },
+  "roleStaples": {
+    "Carry staples": "Battle Fury (flash farm), Black King Bar (spell immunity), Manta Style (dispel + illusions), Butterfly (evasion + damage), Satanic (late-game lifesteal), Daedalus (crit damage), Abyssal Blade (BKB-piercing lockdown), Skadi (stats + slow)",
+    "Offlane staples": "Blink Dagger (initiation), Black King Bar, Pipe of Insight (magic protect), Crimson Guard (physical protect), Assault Cuirass (armor aura), Heaven's Halberd (disarm), Lotus Orb (reflect), Shiva's Guard (anti-healing)",
+    "Support staples": "Force Staff (save), Glimmer Cape (magic protection), Eul's (setup + dispel), Aether Lens (cast range), Guardian Greaves (sustain + dispel), Spirit Vessel (anti-healing), Solar Crest (buff/debuff), Blink Dagger (positioning)",
+    "Int core staples": "Bloodstone (spell lifesteal), Octarine Core (CDR), Eul's (setup), Scythe of Vyse (disable), Kaya upgrades (spell amp), Wind Waker (mobility), Ethereal Blade (burst)"
+  }
+}

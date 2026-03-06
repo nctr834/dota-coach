@@ -5,85 +5,74 @@ with open("data/hero_data.json", "r") as f:
     hero_data = json.load(f)
 with open("data/matchup_data.json", "r") as f:
     matchup_data = json.load(f)
+with open("data/pos_data.json", "r") as f:
+    pos_dict = json.load(f)
 
-
-total_matches = sum(matchup_data[hero]["matchCountVs"] for hero in matchup_data)
-avg_matches = total_matches / len(matchup_data)
-hero_sums_vs = {
-    hero: (
-        sum(
-            matchup_data[hero]["vs"][enemy]["winCount"]
-            for enemy in matchup_data[hero]["vs"]
-        ),
-        matchup_data[hero]["matchCountVs"],
-    )
-    for hero in matchup_data
-}
-
-hero_sums_with = {
-    hero: (
-        sum(
-            matchup_data[hero]["with"][enemy]["winCount"]
-            for enemy in matchup_data[hero]["with"]
-        ),
-        matchup_data[hero]["matchCountWith"],
-    )
-    for hero in matchup_data
-}
+TOTAL_MATCHES = sum([v["matchCountVs"] for v in matchup_data.values()]) / 5
 
 
 class Hero:
-    def __init__(self, name, id, score):
+    def __init__(self, name: str, id: str, score: float, pos: int):
         self.name = name
         self.id = id
         self.score = score
+        self.pos = pos
 
 
-def rank_picks(
-    team,
-    enemy_team,
-    pos,
-    pos_dict,
-):
+def rank_picks(team, enemy_team, pos):
     scores = {}
-    for hero in matchup_data.keys():
-        scores[hero] = evaluate_hero(hero, team, enemy_team, pos, pos_dict)
-
-    ranked_scores = list(reversed(sorted(scores.items(), key=lambda x: x[1])))[:5]
+    team_ids = set(h.id for h in team.values())
+    enemy_team_ids = set(h.id for h in enemy_team.values())
+    for hero_id in matchup_data.keys():
+        if hero_id in team_ids or hero_id in enemy_team_ids:
+            continue
+        score = evaluate_hero(hero_id, team, enemy_team, str(pos))
+        if score != -1000:
+            scores[hero_id] = score
+    ranked_scores = list(reversed(sorted(scores.items(), key=lambda x: x[1])))
     ranked_scores = [
-        Hero(hero, matchup_data[hero]["heroId"], score) for hero, score in ranked_scores
+        Hero(hero_data[hero_id]["displayName"], hero_id, score, str(pos))
+        for hero_id, score in ranked_scores
     ]
     return ranked_scores
 
 
-def evaluate_hero(hero, team, enemy_team, pos, pos_dict, bypass_check=False):
-    if not bypass_check and (
-        hero in team.values()
-        or hero in enemy_team.values()
-        or not _is_viable(hero, pos, pos_dict)
-    ):
+def evaluate_hero(hero_id, team, enemy_team, pos, bypass_check=False):
+    if not bypass_check and not _is_viable(hero_id, pos):
         return -1000
     score = 100 * (
-        (hero_sums_vs[hero][0] + hero_sums_with[hero][0])
-        / (hero_sums_vs[hero][1] + hero_sums_with[hero][1])
-        - 0.5
+        pos_dict[pos][hero_id]["winCount"] / pos_dict[pos][hero_id]["matchCount"] - 0.5
     )
     for ally in team.values():
-        score += get_synergy_score(hero, ally.name, matchup_data)
+        ss = get_synergy_score(hero_id, ally.id, matchup_data, pos, ally.pos, pos_dict)
+        score += ss / 2
     for enemy in enemy_team.values():
-        score += get_counter_score(hero, enemy.name, matchup_data) - get_counter_score(
-            enemy.name, hero, matchup_data
+        cs = get_counter_score(
+            hero_id,
+            enemy.id,
+            matchup_data,
+            pos,
+            enemy.pos,
+            pos_dict,
+        )
+        score += cs - get_counter_score(
+            enemy.id,
+            hero_id,
+            matchup_data,
+            enemy.pos,
+            pos,
+            pos_dict,
         )
     return score
 
 
-def _is_viable(hero, pos, pos_dict):
-    if matchup_data[hero]["matchCountVs"] / 5 < total_matches / 5 * 0.005:
-        return False
-    s = 0
+def _is_viable(hero_id, pos):
+    if matchup_data[hero_id]["matchCountVs"] / TOTAL_MATCHES < 0.01:
+        return None
+    match_count_sum = 0
     for p in pos_dict.keys():
-        s += pos_dict[p][str(matchup_data[hero]["heroId"])]
-    return pos_dict[pos][str(matchup_data[hero]["heroId"])] >= s / len(pos_dict)
+        match_count_sum += pos_dict[str(p)][hero_id]["matchCount"]
+    return pos_dict[pos][hero_id]["matchCount"] >= match_count_sum / len(pos_dict)
 
 
 def score_teams(team, enemy_team):
@@ -92,24 +81,25 @@ def score_teams(team, enemy_team):
 
     team_list = team.values()
     enemy_list = enemy_team.values()
-
+    debug = {}
     for hero in team_list:
-        radiant_score += evaluate_hero(
-            hero.name,
+        score = evaluate_hero(
+            hero.id,
             team,
             enemy_team,
-            "",
-            {},
+            hero.pos,
             bypass_check=True,
         )
+        radiant_score += score
+        debug[hero.id] = score
     for hero in enemy_list:
-        dire_score += evaluate_hero(
-            hero.name,
+        score = evaluate_hero(
+            hero.id,
             enemy_team,
             team,
-            "",
-            {},
+            hero.pos,
             bypass_check=True,
         )
-
+        dire_score += score
+        debug[hero.id] = score
     return radiant_score, dire_score, radiant_score - dire_score

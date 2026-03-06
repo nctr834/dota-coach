@@ -6,56 +6,37 @@ with open("data/matchup_data.json", "r") as f:
     matchup_data = json.load(f)
 
 
-hero_sums_vs = {
-    hero: (
-        sum(
-            matchup_data[hero]["vs"][enemy]["winCount"]
-            for enemy in matchup_data[hero]["vs"]
-        ),
-        matchup_data[hero]["matchCountVs"],
-    )
-    for hero in matchup_data
-}
-
-hero_sums_with = {
-    hero: (
-        sum(
-            matchup_data[hero]["with"][enemy]["winCount"]
-            for enemy in matchup_data[hero]["with"]
-        ),
-        matchup_data[hero]["matchCountWith"],
-    )
-    for hero in matchup_data
-}
-
-
-def get_counter_score(hero, enemy, matchup_data):
-    if hero == enemy:
+def get_counter_score(hero_id, enemy_id, matchup_data, pos, enemy_pos, pos_dict):
+    if hero_id == enemy_id:
         return 0
     PRIOR_MATCHES = 100
     PRIOR_WR = 0.5
 
-    wins = matchup_data[hero]["vs"][enemy]["winCount"]
-    matches = matchup_data[hero]["vs"][enemy]["matchCount"]
-
+    wins = matchup_data[hero_id]["vs"][enemy_id]["winCount"] / 5
+    matches = matchup_data[hero_id]["vs"][enemy_id]["matchCount"] / 5
     vs_wr = (wins + PRIOR_MATCHES * PRIOR_WR) / (matches + PRIOR_MATCHES)
-    hero_base = hero_sums_vs[hero][0] / hero_sums_vs[hero][1]
-    enemy_base = hero_sums_vs[enemy][0] / hero_sums_vs[enemy][1]
-    expected = (hero_base + enemy_base) / 2
-    return 100 * (vs_wr - expected)
+    hero_at_role = pos_dict[pos][hero_id]
+    enemy_at_role = pos_dict[enemy_pos][enemy_id]
+    hero_base = hero_at_role["winCount"] / hero_at_role["matchCount"]
+    enemy_base = enemy_at_role["winCount"] / enemy_at_role["matchCount"]
+    expected = 0.5 + (hero_base - 0.5) - (enemy_base - 0.5)
+    score = 100 * ((expected + vs_wr) / 2 - 0.5) / 5
+    return score
 
 
-def get_synergy_score(hero, ally, matchup_data):
-    if hero == ally:
+def get_synergy_score(hero_id, ally_id, matchup_data, pos, ally_pos, pos_dict):
+    if hero_id == ally_id:
         return 0
     PRIOR_MATCHES = 100
     PRIOR_WR = 0.5
 
-    wins = matchup_data[hero]["with"][ally]["winCount"]
-    matches = matchup_data[hero]["with"][ally]["matchCount"]
-
+    wins = matchup_data[hero_id]["with"][ally_id]["winCount"] / 4
+    matches = matchup_data[hero_id]["with"][ally_id]["matchCount"] / 4
     with_wr = (wins + PRIOR_MATCHES * PRIOR_WR) / (matches + PRIOR_MATCHES)
-    hero_base = hero_sums_with[hero][0] / hero_sums_with[hero][1]
-    ally_base = hero_sums_with[ally][0] / hero_sums_with[ally][1]
-    expected = (hero_base + ally_base) / 2
-    return 100 * (with_wr - expected)
+    hero_at_role = pos_dict[pos][hero_id]
+    ally_at_role = pos_dict[ally_pos][ally_id]
+    hero_base = hero_at_role["winCount"] / hero_at_role["matchCount"]
+    ally_base = ally_at_role["winCount"] / ally_at_role["matchCount"]
+    expected = 0.5 + (hero_base - 0.5) + (ally_base - 0.5)
+    score = 100 * ((expected + with_wr) / 2 - 0.5) / 4
+    return score
