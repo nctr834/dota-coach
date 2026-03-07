@@ -4,57 +4,22 @@ from enum import Enum
 from pathlib import Path
 from dotenv import load_dotenv
 import cloudscraper
-from requests import get, request
+from requests import get
 
 load_dotenv()
 token = os.getenv("STRATZ_API_KEY")
 scraper = cloudscraper.create_scraper()
-
-# Create data directory if it doesn't exist
 Path("data").mkdir(exist_ok=True)
+
+
 ignore = {
-    "hero_data": False,
+    "hero_data": True,
     "matchup_data": False,
     "pos_data": False,
     "item_data": False,
-    "aghs_data": False,
+    "aghs_data": True,
     "patch_data": False,
 }
-try:
-    with open("data/hero_data.json", "r") as f:
-        hero_data = json.load(f)
-except:
-    ignore["hero_data"] = False
-
-try:
-    with open("data/matchup_data.json", "r") as f:
-        matchup_data = json.load(f)
-except:
-    ignore["matchup_data"] = False
-
-try:
-    with open("data/pos_data.json", "r") as f:
-        pos_data = json.load(f)
-except:
-    ignore["pos_data"] = False
-
-try:
-    with open("data/item_data.json", "r") as f:
-        item_data = json.load(f)
-except:
-    ignore["item_data"] = False
-
-try:
-    with open("data/aghs_data.json", "r") as f:
-        aghs_data = json.load(f)
-except:
-    ignore["aghs_data"] = False
-
-try:
-    with open("data/patch_data.json", "r") as f:
-        patch_data = json.load(f)
-except:
-    ignore["patch_data"] = False
 
 
 class Rank(Enum):
@@ -90,17 +55,12 @@ def gather_hero_data():
         abilities {
             ability {
             name
-            id
             attributes {
                 name
                 value
             }
             stat {
                 dispellable
-                duration
-                hasScepterUpgrade
-                hasShardUpgrade
-                isGrantedByShard
             }
             }
         }
@@ -121,28 +81,28 @@ def gather_hero_data():
         for hero in hero_data.values():
             abilities = []
             for a in hero["abilities"]:
-                ability = a["ability"]
-                attributes = ability["attributes"]
+                ability = {}
+                a = a["ability"]
+                attributes = a["attributes"]
                 attribute_list = []
                 if not attributes:
                     continue
                 for attribute in attributes:
-                    if (
-                        attribute["value"] == ""
-                        and "scepter" not in attribute["name"]
-                        and "shard" not in attribute["name"]
-                    ):
+                    if attribute["value"] == "":
                         continue
                     attribute["name"] = attribute["name"].replace("_", " ").title()
                     attribute_list.append(attribute)
-                attributes = attribute_list
-                ability_name = ability["name"]
                 display_name = (
-                    ability_name.replace(hero["shortName"] + "_", "")
+                    a["name"]
+                    .replace(hero["shortName"] + "_", "")
                     .replace("_", " ")
                     .title()
                 )
+                # not actual display name but whatever
+                ability["name"] = a["name"]
                 ability["displayName"] = display_name
+                ability["attributes"] = attribute_list
+                ability["dispellable"] = a["stat"]["dispellable"]
                 abilities.append(ability)
             hero_data[hero["id"]]["abilities"] = abilities
             hero["id"] = str(hero["id"])
@@ -285,7 +245,7 @@ def gather_item_data():
 
     if response.status_code == 200:
         items = response.json()["data"]["constants"]["items"]
-        items = {item["name"]: item for item in items}
+        items = {str(item["id"]): item for item in items}
         invalid_items = {
             "item_samurai_tabi",
             "item_hermes_sandals",
@@ -324,18 +284,19 @@ def gather_item_data():
                 and item["stat"]["cost"] > 30
                 and item["stat"]["quality"] is not None
             ):
-                item_data[item["name"]] = item
+                # also not display name
                 display_name = " ".join(item["name"].split("_")[1:]).title()
-                item_data[item["name"]]["displayName"] = rename_items.get(
+                item_data[str(item["id"])] = item
+                item_data[str(item["id"])]["displayName"] = rename_items.get(
                     display_name, display_name
                 )
-        item_displayName_to_name = {
-            item["displayName"]: item["name"] for item in item_data.values()
+        item_displayName_to_id = {
+            item["displayName"]: str(item["id"]) for item in item_data.values()
         }
         print(f"{len(item_data)} (items)")
         Path("data/item_data.json").open("w").write(json.dumps(item_data))
-        Path("data/item_displayName_to_name.json").open("w").write(
-            json.dumps(item_displayName_to_name)
+        Path("data/item_displayName_to_id.json").open("w").write(
+            json.dumps(item_displayName_to_id)
         )
         print(f"Found item data")
     else:
@@ -367,7 +328,7 @@ def gather_patch_data():
     HEROES = "heroes"
     ABILITIES = "abilities"
     ITEMS = "items"
-    hero_keys = set([hero["shortName"] for hero in hero_data.values()])
+    hero_keys = {hero["shortName"]: hero["id"] for hero in hero_data.values()}
     item_keys = set([item["name"] for item in item_data.values()])
     ability_keys = set(
         ability["name"] for hero in hero_data.values() for ability in hero["abilities"]
@@ -377,7 +338,7 @@ def gather_patch_data():
     patch_data_dict = {
         GENERAL: {},
         HEROES: {
-            hero["shortName"]: {
+            hero["id"]: {
                 ABILITIES: {ability["name"]: {} for ability in hero["abilities"]},
                 "hero": {},
             }
@@ -411,11 +372,9 @@ def gather_patch_data():
                 if key[0] == "_":
                     key = key[1:]
                 if not hero_name and key in hero_keys:
-                    heroes = patch_data_dict[HEROES][key]["hero"]
-                    if patch not in heroes:
-                        heroes[patch] = ""
+                    heroes = patch_data_dict[HEROES][hero_keys[key]]["hero"]
                     if j == len(info) - 1:
-                        heroes[patch] += f"{pair[1]} "
+                        check(heroes, patch)
                     if not hero_name:
                         hero_name = key
                         key = ""
@@ -426,7 +385,9 @@ def gather_patch_data():
                     items = patch_data_dict[ITEMS][key]
                     check(items, patch)
                 elif hero_name and key in ability_keys:
-                    abilities = patch_data_dict[HEROES][hero_name][ABILITIES][key]
+                    abilities = patch_data_dict[HEROES][hero_keys[hero_name]][
+                        ABILITIES
+                    ][key]
                     check(abilities, patch)
                 key += "_"
                 j += 1
@@ -435,9 +396,37 @@ def gather_patch_data():
         json.dump(patch_data_dict, f)
 
 
-gather_hero_data()
-gather_matchup_data()
-gather_pos_data()
-gather_item_data()
-gather_aghs_data()
-gather_patch_data()
+def _load(fname):
+    try:
+        with open(f"data/{fname}.json", "r") as f:
+            return json.load(f)
+    except:
+        ignore[fname] = False
+
+
+def _exists_checks():
+    return (
+        _load("hero_data"),
+        _load("matchup_data"),
+        _load("pos_data"),
+        _load("item_data"),
+        _load("aghs_data"),
+        _load("patch_data"),
+    )
+
+
+if __name__ == "__main__":
+    (
+        hero_data,
+        matchup_data,
+        pos_data,
+        item_data,
+        aghs_data,
+        patch_data,
+    ) = _exists_checks()
+    gather_hero_data()
+    gather_matchup_data()
+    gather_pos_data()
+    gather_item_data()
+    gather_aghs_data()
+    gather_patch_data()

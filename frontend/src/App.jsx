@@ -30,6 +30,15 @@ function App() {
     if (i + 1 === pos) {
       setPicked(true)
     }
+    // --- FUTURE: Gemini Synergy/Counter Annotations ---
+    // When any hero is added to either team, trigger Gemini 2.5 Flash API call to generate:
+    //   - Allied heroes: short synergy sentence with the new hero
+    //   - Enemy heroes: short counter sentence against the new hero
+    // Store in state: Map<heroSlotKey, { text: string, type: 'synergy'|'counter' }>
+    // Display as arrows from each hero converging into a team game plan description.
+    // Only trigger AFTER user has picked (picked === true).
+    // Rate limit: ~20-50 req/day on Gemini free tier.
+    // Pass annotations into processQuery() for future chat context.
   }
 
   const clearHero = (side, i) => {
@@ -205,7 +214,7 @@ function App() {
             loading={loading}
             highlighted={mySide === 'radiant'}
           />
-          <ChatBox onSend={handleChat} loading={chatLoading} />
+          <ChatBox onSend={handleChat} loading={chatLoading} disabled={!pos || !picked || !mySide} />
           <DraftGrid
             side="dire"
             heroes={dire}
