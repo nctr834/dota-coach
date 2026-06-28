@@ -1,4 +1,6 @@
 [lint.per-file-ignores]
-# api/main.py inserts analyzer/ onto sys.path before importing from it, so those
-# imports must come after the path setup rather than at the top of the file.
+# These insert analyzer/ onto sys.path and chdir before importing from it, so the
+# analyzer import must come after the path setup rather than at the top.
 "api/main.py" = ["E402"]
+"scripts/try_review.py" = ["E402"]
+"eval/run_eval.py" = ["E402"]

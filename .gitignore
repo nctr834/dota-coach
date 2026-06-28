@@ -8,3 +8,4 @@ data/transcripts_raw/*
 data/*.json
 data/vectordb/*
 frontend/src/data/*.json
+eval/labels.json
