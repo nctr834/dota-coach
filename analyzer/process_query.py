@@ -2,59 +2,60 @@ import json
 import anthropic
 import os
 import time
+from collections.abc import Iterable
 from rapidfuzz import process, fuzz
 from json_repair import repair_json
 from dotenv import load_dotenv
 from evaluator import rank_picks
-from requests import get
+from counters import get_counter_score, get_synergy_score
+from hero_lookup import hero_data, NAME_TO_ID
+from data_loader import (
+    matchup_data,
+    pos_data,
+    item_data,
+    item_displayName_to_id as item_displayName_to_name,
+    patch_data,
+    aghs_data,
+    hero_tags,
+    rag_items,
+    hero_item_builds,
+)
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-with open("data/hero_data.json", "r") as f:
-    hero_data = json.load(f)
-with open("data/hero_displayName_to_id.json", "r") as f:
-    hero_displayName_to_id = json.load(f)
-with open("data/item_data.json", "r") as f:
-    item_data = json.load(f)
-with open("data/aghs_data.json", "r") as f:
-    aghs_data = json.load(f)
-with open("data/patch_data.json", "r") as f:
-    patch_data = json.load(f)
-# TODO: re-enable once hero guides are regenerated via scripts/generate_hero_guides.py
-# with open("data/RAG/RAG_content_heroes.json", "r") as f:
-#     hero_guides = json.load(f)
 
-HERO_NAMES = {hero["displayName"]: hero["id"] for hero in hero_data.values()}
 ITEM_NAMES = {item["displayName"] for item in item_data.values()}
+RAG_ITEM_NAMES = list(rag_items.keys())
 NUM_PICKS = 10
+
+STRATEGIC_TAGS = [
+    "stun",
+    "root",
+    "silence",
+    "slow",
+    "displacement",
+    "initiation",
+    "save",
+    "heal",
+    "burst_damage",
+    "sustained_damage",
+    "waveclear",
+    "mobility",
+]
 
 SYSTEM_GAMEPLAY = [
     {
         "type": "text",
         "text": """You are a high-MMR Dota 2 coach on patch 7.40. Be CONCISE — 3-5 short paragraphs max.
 
-RULES:
-- Short, direct sentences. No filler, no repeating the question.
-- Be opinionated — give ONE clear recommendation, then briefly note alternatives.
-- Rely ONLY on the provided data for ability/item mechanics. If unsure, say so.
+Your job is to convert structured match context into short, accurate gameplay advice.
 
-CURRENT META (7.40):
-- Games are slower midgame; high-ground defense is very strong (T4 towers gain +4 armor per standing barracks, up to +24).
-- Multi-lane pressure required before throne push. Secure Mega Creeps first.
-- Illusion heroes nerfed hard: reduced vision, Diffusal/Disperser no longer works on illusions, Radiance blind removed (now 25% evasion).
-- Roshan harder to solo (lifesteal reduced 40% physical, 80% spell). Roshan moves between top/bottom pit on day/night cycle starting at 15:00.
-- Tormentor spawns at 20:00, alternates sides opposite to Roshan. Grants 250 gold per team member + Aghs Shard.
-- Buyback cost: 100 + NetWorth/13, no post-buyback gold penalty.
-- Talents no longer cost skill points (separate talent points at 10/15/20/25/27-30).
-- Flex picks (Tiny, Pudge) are premium. Offlane heroes that convert survivability into retaliation dominate.
-- Heart of Tarrasque scales regen with missing HP. Hand of Midas gives zero XP now (pure gold acceleration).
-
-GAME PHASES:
-- Early (0-15m): Win lanes, secure last hits, stack camps. Flagbearer creeps give bonus gold in 1500 radius.
-- Mid (15-30m): Take towers, smoke gank, contest Roshan/Tormentor. Wisdom Shrines activate every 7 min.
-- Late (30m+): Group for objectives, multi-lane pressure, disciplined fights. Lotus Pools spawn Great Lotuses after T4 neutrals.
-
-ROLES: Pos 1 = carry, 2 = mid, 3 = offlane, 4 = soft support, 5 = hard support. Pos 1+5 lane vs 3+4.""",
+Rules:
+- Do not invent mechanics or items not present in the context.
+- Prefer statistical signals over assumptions.
+- Prioritize immediate gameplay decisions over theory.
+- Advice must be concise and actionable.
+- If context is insufficient, say "insufficient context".""",
     }
 ]
 
@@ -96,12 +97,14 @@ def _get_response(
                 system=system,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return response.content[0].text.strip()
+            block = response.content[0]
+            return block.text.strip() if block.type == "text" else ""
         except (anthropic.InternalServerError, anthropic.RateLimitError):
             if attempt < retries - 1:
                 time.sleep(2**attempt)
             else:
                 raise
+    raise RuntimeError("unreachable: retries exhausted without return or raise")
 
 
 def _parse_json_response(response: str) -> dict:
@@ -112,7 +115,7 @@ def _parse_json_response(response: str) -> dict:
         return {}
 
 
-def _verify_names(names: list[str], valid_names: set[str]) -> list[str]:
+def _verify_names(names: list[str], valid_names: Iterable[str]) -> list[str]:
     matches = []
     for name in names:
         name = name.title()
@@ -136,33 +139,72 @@ def _hero_display_name(hero_id: str) -> str:
     return hero_data.get(hero_id, {}).get("displayName", f"Hero#{hero_id}")
 
 
-## TODO: re-enable once hero guides are regenerated via scripts/generate_hero_guides.py
-# def _get_hero_guide(name: str) -> str:
-#     guide = hero_guides.get(name)
-#     if not guide:
-#         return ""
-#     parts = [f"Hero Guide — {name}"]
-#     for field in ["position", "goal", "requires", "fights", "dont", "timings", "gameStage"]:
-#         if guide.get(field):
-#             parts.append(f"  {field}: {guide[field]}")
-#     return "\n".join(parts)
+def _get_hero_tags(hero_id: str) -> dict:
+    """Return tag dict for a hero, or empty dict if unavailable."""
+    entry = hero_tags.get(str(hero_id), {})
+    return entry.get("tags", {})
 
 
-def extract_from(query: str, pick: str = "", enemy_pick: str = "") -> dict:
+def _format_hero_tags_line(hero_id: str, name: str) -> str:
+    """One-line tag summary for a hero: 'Name: stun=2, slow=1, ...' (non-zero only)."""
+    tags = _get_hero_tags(hero_id)
+    if not tags:
+        return ""
+    non_zero = [f"{k}={v}" for k, v in tags.items() if v > 0]
+    return f"  {name}: {', '.join(non_zero)}" if non_zero else ""
+
+
+def _sum_team_tags(team: dict) -> dict:
+    """Sum strategic tags across all picked heroes in a team."""
+    totals = {t: 0 for t in STRATEGIC_TAGS}
+    for hero in team.values():
+        if not hero.id:
+            continue
+        tags = _get_hero_tags(hero.id)
+        for k in STRATEGIC_TAGS:
+            totals[k] += tags.get(k, 0)
+    return totals
+
+
+def _build_tag_analysis(team: dict, enemy_team: dict) -> str:
+    """Build team capability analysis from summed strategic tags."""
+    if not hero_tags:
+        return ""
+    team_totals = _sum_team_tags(team)
+    enemy_totals = _sum_team_tags(enemy_team)
+
+    has_team = any(h.id for h in team.values())
+    has_enemy = any(h.id for h in enemy_team.values())
+    if not has_team and not has_enemy:
+        return ""
+
+    parts = []
+    if has_team:
+        team_str = " ".join(f"{k}={v}" for k, v in team_totals.items() if v > 0)
+        parts.append(f"TEAM TAGS [{team_str}]")
+        gaps = [k for k in STRATEGIC_TAGS if team_totals[k] == 0]
+        if gaps:
+            parts.append(f"GAPS: {', '.join(gaps)}")
+    if has_enemy:
+        enemy_str = " ".join(f"{k}={v}" for k, v in enemy_totals.items() if v > 0)
+        parts.append(f"ENEMY TAGS [{enemy_str}]")
+        enemy_gaps = [k for k in STRATEGIC_TAGS if enemy_totals[k] == 0]
+        if enemy_gaps:
+            parts.append(f"ENEMY GAPS: {', '.join(enemy_gaps)}")
+    return "\n" + "\n".join(parts) + "\n"
+
+
+def extract_from(query: str) -> dict:
     prompt = f"""Extract hero and item names from this Dota 2 query. Return ONLY a JSON object with:
 - "heroes": array of FULL hero names mentioned
 - "items": array of FULL item names mentioned
-- "itemSuggestions": array of FULL item names of what you would think to suggest for BOTH!: USER: {pick} and ENEMY: {enemy_pick}
 
 Query: {query}"""
     result = _parse_json_response(_get_response(prompt))
     result["heroes"] = _dedup(
-        _verify_names(result.get("heroes", []), HERO_NAMES.keys())
+        _verify_names(result.get("heroes", []), NAME_TO_ID.keys())
     )
     result["items"] = _dedup(_verify_names(result.get("items", []), ITEM_NAMES))
-    result["itemSuggestions"] = _dedup(
-        _verify_names(result.get("itemSuggestions", []), ITEM_NAMES)
-    )
     return result
 
 
@@ -179,28 +221,25 @@ def _get_enemy_pick(enemy_team: dict, pos: str) -> str:
 
 def _get_aghs_data(hero_name: str) -> str:
     """Return formatted Aghanim's Scepter/Shard info for a hero."""
-    hero_id = HERO_NAMES.get(hero_name)
+    hero_id = NAME_TO_ID.get(hero_name)
     if not hero_id:
         return ""
-    data = aghs_data.get(hero_id)
-    if not data:
-        return ""
+    entry = aghs_data.get(hero_id, {})
     parts = []
-    if data.get("has_scepter"):
-        parts.append(
-            f"  Scepter ({data.get('scepter_skill_name', '')}): {data.get('scepter_desc', '')}"
-        )
-    if data.get("has_shard"):
-        parts.append(
-            f"  Shard ({data.get('shard_skill_name', '')}): {data.get('shard_desc', '')}"
-        )
+    if entry.get("has_scepter") and entry.get("scepter_desc"):
+        skill = entry.get("scepter_skill_name", "")
+        label = f"Scepter ({skill})" if skill else "Scepter"
+        parts.append(f"  {label}: {entry['scepter_desc']}")
+    if entry.get("has_shard") and entry.get("shard_desc"):
+        skill = entry.get("shard_skill_name", "")
+        label = f"Shard ({skill})" if skill else "Shard"
+        parts.append(f"  {label}: {entry['shard_desc']}")
     return "\n".join(parts)
 
 
-def _get_patch_notes(key: str, path: str = None) -> str:
+def _get_patch_notes(key: str, path: str = "") -> str:
     """Return formatted recent patch notes for a hero or item."""
     if path:
-        # notes = patch_data.get("heroes", {}).get(key, {}).get(path)
         notes = patch_data["heroes"][str(key)][path]
     else:
         notes = patch_data["items"][str(key)]
@@ -213,42 +252,98 @@ def _get_patch_notes(key: str, path: str = None) -> str:
     return "\n".join(parts)
 
 
+def _format_item_builds(hero_id: str, hero_name: str) -> str:
+    """Format popular item builds for a hero from pro game data."""
+    builds = hero_item_builds.get(str(hero_id))
+    if not builds:
+        return ""
+    parts = [f"{hero_name}'s Popular Items (pro games):"]
+    phase_labels = {
+        "start_game": "Starting",
+        "early_game": "Early",
+        "mid_game": "Mid",
+        "late_game": "Late",
+    }
+    for phase_key, label in phase_labels.items():
+        phase = builds.get(phase_key)
+        if not phase or not phase.get("items"):
+            continue
+        item_strs = [f"{it['name']}({it['rate']}%)" for it in phase["items"]]
+        parts.append(f"  {label}: {', '.join(item_strs)}")
+    return "\n".join(parts) + "\n"
+
+
+def _lookup_rag_item(display_name: str) -> dict | None:
+    """Look up an item in rag_items by exact match, then fuzzy match."""
+    if display_name in rag_items:
+        return rag_items[display_name]
+    match = process.extractOne(
+        display_name,
+        RAG_ITEM_NAMES,
+        scorer=fuzz.ratio,
+        score_cutoff=70,
+    )
+    if match:
+        return rag_items[match[0]]
+    return None
+
+
+def _format_rag_item(display_name: str) -> str:
+    """Format an item using RAG data: compact one-liner + patch notes."""
+    rag = _lookup_rag_item(display_name)
+    item_key = item_displayName_to_name.get(display_name)
+    if not rag:
+        # Fallback: just name + cost from item_data
+        if item_key and item_key in item_data:
+            cost = item_data[item_key].get("cost", "?")
+            return f"{display_name} ({cost}g)"
+        return display_name
+
+    cost = rag.get("cost", "?")
+    provides = rag.get("provides", "")
+    buy = rag.get("buyWhen", "")
+    skip = rag.get("skipWhen", "")
+    line = f"{display_name} ({cost}g): {provides}"
+    if buy:
+        line += f" | buy: {buy}"
+    if skip:
+        line += f" | skip: {skip}"
+    # Append patch notes from RAG if available
+    patch = rag.get("patchNotes", "")
+    if patch:
+        line += f"\n  patch: {patch}"
+    elif item_key:
+        try:
+            patch_info = _get_patch_notes(item_key)
+            if patch_info:
+                line += f"\n{patch_info}"
+        except KeyError:
+            pass
+    return line
+
+
 def _add_item_context(header, items):
     item_context = ""
     if items:
         item_context += f"{header}:\n"
-        for item in items:
-            try:
-                item_context += f"{item}: {json.dumps(item_data[item])}\n"
-                patch_info = _get_patch_notes(item)
-                if patch_info:
-                    item_context += f"{item} Recent Patch Notes:\n{patch_info}\n"
-            except KeyError:
-                continue
+        for display_name in items:
+            item_context += f"  {_format_rag_item(display_name)}\n"
     return item_context
 
 
-# TODO: why tf are the game count numbers so low
-def _get_popular_items(hero_id):
-    url = f"https://api.opendota.com/api/heroes/{hero_id}/itemPopularity"
-    response = get(url).json()
-    items = []
-    for game_stage in response.keys():
-        item_freq = {}
-        item_freq["_".join(game_stage.split("_")[:-1])] = list(
-            reversed(
-                sorted(
-                    (
-                        (item_data[item]["displayName"], games)
-                        for item, games in response[game_stage].items()
-                        if item in item_data.keys()
-                    ),
-                    key=lambda x: x[1],
-                )[:5]
-            )
-        )
-        items.append(item_freq)
-    return items
+def _format_other_hero(hero_id: str, name: str) -> str:
+    """Compact format for mentioned heroes: tags + patch notes only."""
+    tags = _get_hero_tags(hero_id)
+    non_zero = ",".join(f"{k}={v}" for k, v in tags.items() if v > 0)
+    line = f"{name}: {non_zero}" if non_zero else name
+    # Add patch notes
+    try:
+        patch_info = _get_patch_notes(hero_id, "hero")
+        if patch_info:
+            line += f"\n{patch_info}"
+    except KeyError:
+        pass
+    return line
 
 
 def build_gameplay_context(
@@ -258,49 +353,77 @@ def build_gameplay_context(
 ) -> str:
     context = ""
 
-    # User's hero guide + aghs + patch notes
+    # User's hero data + tags + aghs + patch notes
     if pick:
-        # context += _get_hero_guide(pick) + "\n"
-        context += f"Popular items for {pick} (item, num_games):\n{_get_popular_items(hero_displayName_to_id[pick])}\n"
+        hero_id = NAME_TO_ID[pick]
+        hero = hero_data.get(hero_id, {})
+        # Hero tags (compact capability summary)
+        tags_line = _format_hero_tags_line(hero_id, pick)
+        if tags_line:
+            context += f"{pick}'s Capabilities:\n{tags_line}\n"
+        # Hero abilities context (full detail for user's hero)
+        context += f"{pick}'s Abilities:\n"
+        for ab in hero.get("abilities", []):
+            context += f"  {ab['displayName']}: {ab.get('description', '')}\n"
+        # Tips
+        if hero.get("tips"):
+            context += f"{pick}'s Tips:\n"
+            for tip in hero["tips"]:
+                context += f"  - {tip}\n"
         aghs_info = _get_aghs_data(pick)
         if aghs_info:
-            context += f"{pick}'s Aghanim's Scepter/Shard Data:\n{aghs_info}"
-        patch_info = f"{_get_patch_notes(hero_displayName_to_id[pick], "hero")}\n{_get_patch_notes(hero_displayName_to_id[pick], "abilities")}"
-        if patch_info:
-            context += f"{pick}'s Recent Patch Notes:\n{patch_info}\n"
+            context += f"{pick}'s Aghanim's Scepter/Shard Data:\n{aghs_info}\n"
+        try:
+            patch_info = f"{_get_patch_notes(hero_id, 'hero')}\n{_get_patch_notes(hero_id, 'abilities')}"
+            if patch_info.strip():
+                context += f"{pick}'s Recent Patch Notes:\n{patch_info}\n"
+        except KeyError:
+            pass
+        # Popular item builds from pro games
+        builds_info = _format_item_builds(hero_id, pick)
+        if builds_info:
+            context += builds_info
 
-    # Enemy same-position hero guide + patch notes
+    # Enemy hero: tags + ability names + hero & ability patch notes
     if enemy_pick:
-        # context += _get_hero_guide(enemy_pick) + "\n"
-        context += f"Popular items for {enemy_pick} (item, num_games):\n{_get_popular_items(hero_displayName_to_id[enemy_pick])}\n"
-        patch_info = _get_patch_notes(hero_displayName_to_id[enemy_pick], "hero")
-        if patch_info:
-            context += f"{enemy_pick}'s Recent Patch Notes:\n{patch_info}\n"
+        enemy_hero_id = NAME_TO_ID[enemy_pick]
+        enemy_hero = hero_data.get(enemy_hero_id, {})
+        tags_line = _format_hero_tags_line(enemy_hero_id, enemy_pick)
+        if tags_line:
+            context += f"{enemy_pick}'s Capabilities:\n{tags_line}\n"
+        ability_names = [ab["displayName"] for ab in enemy_hero.get("abilities", [])]
+        context += f"{enemy_pick}'s Abilities: {', '.join(ability_names)}\n"
+        try:
+            patch_parts = []
+            hero_patch = _get_patch_notes(enemy_hero_id, "hero")
+            if hero_patch:
+                patch_parts.append(hero_patch)
+            ability_patch = _get_patch_notes(enemy_hero_id, "abilities")
+            if ability_patch:
+                patch_parts.append(ability_patch)
+            if patch_parts:
+                context += (
+                    f"{enemy_pick}'s Recent Patch Notes:\n"
+                    + "\n".join(patch_parts)
+                    + "\n"
+                )
+        except KeyError:
+            pass
 
-    # Other heroes mentioned in query
+    # Other heroes mentioned in query — compact format
     extracted_heroes = extracted.get("heroes", [])
     extracted_items = extracted.get("items", [])
-    item_suggestions = extracted.get("itemSuggestions", [])
 
     other_heroes = [h for h in extracted_heroes if h not in (pick, enemy_pick)]
     if other_heroes:
-        context += "Other Hero Data:\n"
+        context += "Other Heroes:\n"
         for hero in other_heroes:
-            hero_id = HERO_NAMES.get(hero)
+            hero_id = NAME_TO_ID.get(hero)
             if hero_id:
-                context += json.dumps(hero_data[hero_id]) + "\n"
+                context += f"  {_format_other_hero(hero_id, hero)}\n"
 
-    # Items mentioned in query
+    # Items mentioned in query — RAG format
     context += _add_item_context("Item Data", extracted_items)
-    # Patch notes for items the LLM might suggest
-    context += _add_item_context(
-        "Item patch notes for potential suggestions", item_suggestions
-    )
-
-    # --- FUTURE: Gemini Synergy/Counter Annotations ---
-    # Include pre-computed Gemini annotations about team dynamics
-    # relevant to gameplay decisions (target priority, fight plan).
-    # --- END FUTURE ---
 
     return context
 
@@ -313,28 +436,54 @@ def build_draft_context(
 ) -> str:
     ranked_picks = rank_picks(team, enemy_team, pos)[:NUM_PICKS]
 
-    context = f"\nDRAFT MODE — Top {NUM_PICKS} picks for Position {pos}:\n"
+    context = f"\nDRAFT pos{pos} — Top {NUM_PICKS}:\n"
     for hero in ranked_picks:
         name = _hero_display_name(hero.id)
-        context += f"  {name}: {hero.score:.1f}\n"
+        # Compute score breakdown
+        breakdown_parts = []
+        # Base WR
+        hero_pos = pos_data.get(str(pos), {}).get(hero.id, {})
+        if hero_pos and hero_pos.get("matchCount", 0) > 0:
+            base_wr = 100 * hero_pos["winCount"] / hero_pos["matchCount"]
+            breakdown_parts.append(f"WR:{base_wr:.1f}%")
+        # Counter scores vs each enemy
+        vs_parts = []
+        for enemy in enemy_team.values():
+            if not enemy.id:
+                continue
+            try:
+                cs = get_counter_score(
+                    hero.id, enemy.id, matchup_data, str(pos), enemy.pos, pos_data
+                )
+                if abs(cs) >= 0.1:
+                    enemy_name = _hero_display_name(enemy.id)
+                    vs_parts.append(f"{enemy_name}{cs:+.1f}")
+            except (KeyError, ZeroDivisionError):
+                continue
+        if vs_parts:
+            breakdown_parts.append(f"vs:[{','.join(vs_parts)}]")
+        # Synergy scores with each ally
+        syn_parts = []
+        for ally in team.values():
+            if not ally.id:
+                continue
+            try:
+                ss = get_synergy_score(
+                    hero.id, ally.id, matchup_data, str(pos), ally.pos, pos_data
+                )
+                if abs(ss) >= 0.1:
+                    ally_name = _hero_display_name(ally.id)
+                    syn_parts.append(f"{ally_name}{ss:+.1f}")
+            except (KeyError, ZeroDivisionError):
+                continue
+        if syn_parts:
+            breakdown_parts.append(f"syn:[{','.join(syn_parts)}]")
 
-    # TODO: re-add hero guides once regenerated via scripts/generate_hero_guides.py
-    # if any(h.id for h in team.values()):
-    #     context += "\nAllied hero guides:\n"
-    #     for hero in team.values():
-    #         if hero.id:
-    #             context += _get_hero_guide(_hero_display_name(hero.id)) + "\n"
-    # if any(h.id for h in enemy_team.values()):
-    #     context += "\nEnemy hero guides:\n"
-    #     for hero in enemy_team.values():
-    #         if hero.id:
-    #             context += _get_hero_guide(_hero_display_name(hero.id)) + "\n"
+        breakdown = f" ({' '.join(breakdown_parts)})" if breakdown_parts else ""
+        context += f"  {name}: {hero.score:.1f}{breakdown}\n"
 
-    # --- FUTURE: Gemini Synergy/Counter Annotations ---
-    # Insert pre-computed Gemini annotations for each picked hero here.
-    # Format: "Synergy: [hero] + [hero]: [text]" and "Counter: [hero] vs [hero]: [text]"
-    # These would come from the frontend state, passed through the API.
-    # --- END FUTURE ---
+    # Team capability analysis from tags
+    context += _build_tag_analysis(team, enemy_team)
 
     return context
 
@@ -354,18 +503,16 @@ def build_team_context(
     if side:
         context += f"User side: {side}\n"
 
-    team_label = side.capitalize() if side else "Team"
-    enemy_label = (
-        "Dire" if side == "radiant" else "Radiant" if side == "dire" else "Enemy"
-    )
+    team_label = "Radiant" if side == "radiant" else "Dire"
+    enemy_label = "Dire" if side == "radiant" else "Radiant"
 
-    if team:
+    if team_label == "Radiant":
         names = [
             f"{_hero_display_name(h.id)} (Pos {h.pos})" for h in team.values() if h.id
         ]
         if names:
             context += f"{team_label}: {', '.join(names)}\n"
-    if enemy_team:
+    if team_label == "Dire":
         names = [
             f"{_hero_display_name(h.id)} (Pos {h.pos})"
             for h in enemy_team.values()
@@ -374,11 +521,6 @@ def build_team_context(
         if names:
             context += f"{enemy_label}: {', '.join(names)}\n"
 
-    context += "Notes:\n"
-    context += (
-        "- Ability attribute values of 0 may indicate a dynamic or computed value.\n"
-    )
-    context += "- Ability attributes with 'scepter'/'shard' in the name and empty values indicate the upgrade exists but values are unavailable.\n"
     return context
 
 
@@ -396,25 +538,17 @@ def generate_response(
     is_draft = bool(pos) and not bool(pick)
     enemy_pick = _get_enemy_pick(enemy_team, pos) if pos else ""
 
-    # --- FUTURE: Gemini Synergy/Counter Annotations ---
-    # If Gemini annotations have been pre-computed for the current draft state,
-    # inject them here as top-level context so both draft and gameplay modes
-    # can reference team dynamics (synergy sentences, counter sentences, team game plan).
-    # Format: "TEAM DYNAMICS:\n  Synergy: ...\n  Counter: ...\n  Game Plan: ..."
-    # --- END FUTURE ---
-
     if is_draft:
         context += build_draft_context(team, enemy_team, pos, side)
         system = SYSTEM_DRAFT
     elif pick:
-        extracted = extract_from(query, pick, enemy_pick)
+        extracted = extract_from(query)
         context += build_gameplay_context(pick, enemy_pick, extracted)
         system = SYSTEM_GAMEPLAY
 
     context += build_team_context(team, enemy_team, side, pick, pos)
     prompt = f"{context}\nResponse:"
     print(prompt)
-    # resp = _get_response(prompt, model="claude-sonnet-4-6", system=system)
     resp = _get_response(prompt, system=system)
     print(f"\n\n{resp}")
     return resp
