@@ -9,8 +9,11 @@ from dotenv import load_dotenv
 
 from counters import get_counter_score
 from evaluator import evaluate_hero, Hero
-from data_loader import matchup_data, pos_data
+from data_loader import matchup_data, pos_data, hero_data
 from hero_lookup import ID_TO_NAME
+
+# OpenDota kills_log / killed_by keys use the unit name npc_dota_hero_<shortName>.
+_NPC_NAME = {int(h["id"]): f"npc_dota_hero_{h['shortName']}" for h in hero_data.values()}
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -182,25 +185,37 @@ def get_death_timings(match_id: int, account_id: int | None = None) -> dict:
             "total_deaths": total_deaths,
             "note": "match not parsed; death minutes unavailable",
         }
-    # life_state is a histogram (seconds alive/dying/dead), not a timeline, so
-    # only teamfight deaths have known minutes.
-    seconds_dead = (player.get("life_state") or {}).get("2", 0)
-    order = [p["player_slot"] for p in match["players"]]
-    idx = order.index(player["player_slot"])
-    teamfight_deaths = []
-    for tf in match.get("teamfights", []):
-        n = tf["players"][idx].get("deaths", 0)
-        if n:
-            teamfight_deaths.append({"minute": round(tf["start"] / 60, 1), "deaths": n})
-    tf_total = sum(d["deaths"] for d in teamfight_deaths)
-    early = sum(d["deaths"] for d in teamfight_deaths if d["minute"] <= 10)
+    # Death timestamps are recovered from enemies' kills_log: each entry is a kill
+    # they got, keyed by the victim's hero unit name. Scan enemies for kills of
+    # this player's hero.
+    radiant = player["player_slot"] < 128
+    my_npc = _NPC_NAME.get(player["hero_id"])
+    deaths = []
+    for other in match["players"]:
+        if (other["player_slot"] < 128) == radiant:
+            continue
+        for k in other.get("kills_log") or []:
+            if k.get("key") == my_npc:
+                t = k["time"]
+                deaths.append(
+                    {
+                        "minute": "pre-horn" if t < 0 else round(t / 60, 1),
+                        "killed_by": ID_TO_NAME.get(other["hero_id"]),
+                        "_t": t,
+                    }
+                )
+    deaths.sort(key=lambda d: d["_t"])
+    before_10 = sum(1 for d in deaths if d["_t"] <= 600)
+    before_15 = sum(1 for d in deaths if d["_t"] <= 900)
+    for d in deaths:
+        del d["_t"]
     return {
         "parsed": True,
         "total_deaths": total_deaths,
-        "seconds_spent_dead": seconds_dead,
-        "teamfight_death_minutes": teamfight_deaths,
-        "deaths_outside_teamfights": total_deaths - tf_total,
-        "early_teamfight_deaths_pre10": early,
+        "seconds_spent_dead": (player.get("life_state") or {}).get("2", 0),
+        "deaths": deaths,
+        "deaths_before_10min": before_10,
+        "deaths_before_15min": before_15,
     }
 
 
