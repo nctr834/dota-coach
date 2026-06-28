@@ -1,11 +1,3 @@
-import json
-
-with open("data/hero_data.json", "r") as f:
-    hero_data = json.load(f)
-with open("data/matchup_data.json", "r") as f:
-    matchup_data = json.load(f)
-
-
 def get_counter_score(hero_id, enemy_id, matchup_data, pos, enemy_pos, pos_dict):
     if hero_id == enemy_id:
         return 0

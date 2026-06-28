@@ -1,18 +1,12 @@
 from counters import get_counter_score, get_synergy_score
-import json
-
-with open("data/hero_data.json", "r") as f:
-    hero_data = json.load(f)
-with open("data/matchup_data.json", "r") as f:
-    matchup_data = json.load(f)
-with open("data/pos_data.json", "r") as f:
-    pos_data = json.load(f)
+from hero_lookup import hero_data
+from data_loader import matchup_data, pos_data
 
 TOTAL_MATCHES = sum([v["matchCountVs"] for v in matchup_data.values()]) / 5
 
 
 class Hero:
-    def __init__(self, name: str, id: str, score: float, pos: int):
+    def __init__(self, name: str, id: str, score: float, pos: str):
         self.name = name
         self.id = id
         self.score = score
