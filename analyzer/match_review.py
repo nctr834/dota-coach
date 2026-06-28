@@ -235,24 +235,49 @@ def get_matchup_difficulty(
     }
 
 
-def _lane_to_heroes(lane: list[dict]) -> dict:
-    return {
-        h["pos"]: Hero(
-            ID_TO_NAME.get(h["hero_id"], str(h["hero_id"])),
-            str(h["hero_id"]),
-            0,
-            str(h["pos"]),
+# lane: 1=bot, 2=mid, 3=top. Heroes share a lane (and oppose each other) when
+# their lane number matches. Within a lane the higher-GPM hero is the core; the
+# other is the support. Position is assigned by which lane: bot core is the safe
+# carry (1) with a hard support (5); top core is the offlaner (3) with a soft
+# support (4); mid is solo (2).
+_LANE_POS = {1: ("1", "5"), 3: ("3", "4"), 2: ("2", "2")}
+
+
+def _lane_heroes(players: list[dict], lane: int) -> dict:
+    in_lane = sorted(
+        (p for p in players if p.get("lane") == lane),
+        key=lambda p: p.get("gold_per_min", 0),
+        reverse=True,
+    )
+    core_pos, sup_pos = _LANE_POS[lane]
+    positions = [core_pos, sup_pos]
+    heroes = {}
+    for p, pos in zip(in_lane[:2], positions):
+        heroes[pos] = Hero(
+            ID_TO_NAME.get(p["hero_id"], str(p["hero_id"])), str(p["hero_id"]), 0, pos
         )
-        for h in lane
-    }
+    return heroes
 
 
-def score_lane_matchup(my_lane: list[dict], enemy_lane: list[dict]) -> dict:
-    """Score one lane the same way score_teams scores a full draft, but only
-    over the heroes in that lane. For a carry that is the safelane (pos 1 + 5)
-    against the enemy offlane (pos 3 + 4). Positive favors my_lane."""
-    my = _lane_to_heroes(my_lane)
-    enemy = _lane_to_heroes(enemy_lane)
+def score_lane_matchup(match_id: int, account_id: int | None = None) -> dict:
+    """Score the player's lane vs the lane they faced, using the same
+    win-rate/counter math as full-draft scoring. Lanes are read from the match
+    (heroes sharing a lane number fought each other); the caller supplies only
+    the match. Positive advantage favors the player's lane."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    lane = player.get("lane")
+    if lane not in _LANE_POS:
+        return {"note": "player's lane is unknown or jungle; cannot score lane"}
+    radiant = player["player_slot"] < 128
+    allies = [p for p in match["players"] if (p["player_slot"] < 128) == radiant]
+    enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
+
+    my = _lane_heroes(allies, lane)
+    enemy = _lane_heroes(enemies, lane)
+    if not my or not enemy:
+        return {"note": "could not resolve both lanes from match data"}
+
     my_score = 0.0
     enemy_score = 0.0
     breakdown = {"my_lane": [], "enemy_lane": []}
@@ -347,34 +372,14 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "score_lane_matchup",
-        "description": "Score how favorable the player's lane was, using the same win-rate/counter math as full-draft scoring but only over the lane heroes. For a carry, my_lane is the safelane (the carry + the pos-5 support) and enemy_lane is the offlane (pos 3 + pos 4). Positive advantage means the lane was favored on paper; pair this with the actual farm percentiles to separate a hard lane from poor execution. Pass {hero_id, pos} for each hero from get_match_detail.",
+        "description": "Score how favorable the player's lane was vs the lane they faced, using the same win-rate/counter math as full-draft scoring. Reads the actual lane heroes from the match itself; you do not supply heroes, only the match. Positive advantage means the lane was favored on paper; pair with the farm percentiles to separate a hard lane from poor execution.",
         "input_schema": {
             "type": "object",
             "properties": {
-                "my_lane": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "hero_id": {"type": "integer"},
-                            "pos": {"type": "integer"},
-                        },
-                        "required": ["hero_id", "pos"],
-                    },
-                },
-                "enemy_lane": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "hero_id": {"type": "integer"},
-                            "pos": {"type": "integer"},
-                        },
-                        "required": ["hero_id", "pos"],
-                    },
-                },
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
             },
-            "required": ["my_lane", "enemy_lane"],
+            "required": ["match_id"],
         },
     },
 ]
@@ -443,11 +448,11 @@ def review_match(
         for block in resp.content:
             if block.type != "tool_use":
                 continue
-            trace.append({"tool": block.name, "input": block.input})
             try:
                 out = _TOOL_FNS[block.name](**block.input)
             except Exception as e:
                 out = {"error": str(e)}
+            trace.append({"tool": block.name, "input": block.input, "result": out})
             results.append(
                 {
                     "type": "tool_result",

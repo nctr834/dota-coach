@@ -127,11 +127,9 @@ def _compute_metrics():
 def _lane_matchup():
     import match_review as mr
 
-    lm = mr.score_lane_matchup(
-        [{"hero_id": 6, "pos": 1}, {"hero_id": 100, "pos": 5}],
-        [{"hero_id": 26, "pos": 3}, {"hero_id": 30, "pos": 4}],
-    )
+    lm = mr.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in lm
+    assert lm["breakdown"]["my_lane"], "no heroes resolved for player's lane"
 
 
 # --- API wiring (no LLM call) ----------------------------------------------
