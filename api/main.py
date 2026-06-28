@@ -1,19 +1,21 @@
 import sys
 import os
+import json
 from pathlib import Path
 
-# Ensure analyzer/ is importable (evaluator does `from counters import ...`)
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT / "analyzer"))
-os.chdir(PROJECT_ROOT)
-
-import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+# Ensure analyzer/ is importable (evaluator does `from counters import ...`)
+# and that data/ relative paths resolve. Must run before the analyzer imports.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "analyzer"))
+os.chdir(PROJECT_ROOT)
+
 from evaluator import Hero, rank_picks, score_teams
 from process_query import generate_response
+from match_review import review_match
 
 with open(PROJECT_ROOT / "data/hero_data.json") as f:
     hero_data = json.load(f)
@@ -55,6 +57,11 @@ class QueryRequest(BaseModel):
     mySide: str | None = None
 
 
+class ReviewRequest(BaseModel):
+    accountId: int | None = None
+    matchId: int | None = None
+
+
 def picks_to_dict(picks: list[HeroPick]) -> dict:
     result = {}
     for p in picks:
@@ -93,7 +100,13 @@ def api_query(req: QueryRequest):
     team = picks_to_dict(req.team)
     enemy_team = picks_to_dict(req.enemyTeam)
     pick = req.pick or ""
-    pos = f"{req.pos}" if req.pos else ""
+    pos = str(req.pos) if req.pos is not None else ""
     side = req.mySide or ""
     response = generate_response(req.query, team, enemy_team, pick, pos, side)
     return {"response": response}
+
+
+@app.post("/api/review-match")
+def api_review_match(req: ReviewRequest):
+    result = review_match(account_id=req.accountId, match_id=req.matchId)
+    return result
