@@ -1,0 +1,4 @@
+{
+  "extraPaths": ["analyzer"],
+  "reportMissingImports": "warning"
+}
