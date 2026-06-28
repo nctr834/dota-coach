@@ -7,9 +7,8 @@ import anthropic
 from anthropic.types import MessageParam, ToolParam, ToolResultBlockParam
 from dotenv import load_dotenv
 
-from counters import get_counter_score
-from evaluator import evaluate_hero, Hero
-from data_loader import matchup_data, pos_data, hero_data
+from evaluator import evaluate_hero, score_teams, Hero
+from data_loader import hero_data
 from hero_lookup import ID_TO_NAME
 
 # OpenDota kills_log / killed_by keys use the unit name npc_dota_hero_<shortName>.
@@ -219,37 +218,6 @@ def get_death_timings(match_id: int, account_id: int | None = None) -> dict:
     }
 
 
-def get_matchup_difficulty(
-    hero_id: int, enemy_hero_ids: list[int], pos: int = 1
-) -> dict:
-    hid = str(hero_id)
-    pos_key = str(pos)
-    if hid not in matchup_data:
-        return {"note": f"no matchup data for hero {hero_id}"}
-    rows = []
-    total = 0.0
-    for eid in enemy_hero_ids:
-        ekey = str(eid)
-        if ekey not in matchup_data:
-            continue
-        try:
-            score = get_counter_score(
-                hid, ekey, matchup_data, pos_key, pos_key, pos_data
-            )
-        except (KeyError, ZeroDivisionError):
-            continue
-        total += score
-        rows.append(
-            {"enemy": ID_TO_NAME.get(eid, ekey), "counter_score": round(score, 1)}
-        )
-    rows.sort(key=lambda r: r["counter_score"])
-    return {
-        "hero": ID_TO_NAME.get(hero_id, hid),
-        "net_difficulty": round(total, 1),
-        "toughest": rows[:3],
-    }
-
-
 # lane: 1=bot, 2=mid, 3=top. Heroes share a lane (and oppose each other) when
 # their lane number matches. Within a lane the higher-GPM hero is the core; the
 # other is the support. Position is assigned by which lane: bot core is the safe
@@ -288,27 +256,63 @@ def score_lane_matchup(match_id: int, account_id: int | None = None) -> dict:
     allies = [p for p in match["players"] if (p["player_slot"] < 128) == radiant]
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
 
-    my = _lane_heroes(allies, lane)
+    ally = _lane_heroes(allies, lane)
     enemy = _lane_heroes(enemies, lane)
-    if not my or not enemy:
+    if not ally or not enemy:
         return {"note": "could not resolve both lanes from match data"}
 
-    my_score = 0.0
+    ally_score = 0.0
     enemy_score = 0.0
-    breakdown = {"my_lane": [], "enemy_lane": []}
-    for hero in my.values():
-        s = evaluate_hero(hero.id, my, enemy, hero.pos, bypass_check=True)
-        my_score += s
-        breakdown["my_lane"].append({"hero": hero.name, "score": round(s, 1)})
+    breakdown = {"ally_lane": [], "enemy_lane": []}
+    for hero in ally.values():
+        s = evaluate_hero(hero.id, ally, enemy, hero.pos, bypass_check=True)
+        ally_score += s
+        breakdown["ally_lane"].append({"hero": hero.name, "score": round(s, 1)})
     for hero in enemy.values():
-        s = evaluate_hero(hero.id, enemy, my, hero.pos, bypass_check=True)
+        s = evaluate_hero(hero.id, enemy, ally, hero.pos, bypass_check=True)
         enemy_score += s
         breakdown["enemy_lane"].append({"hero": hero.name, "score": round(s, 1)})
     return {
-        "my_lane_score": round(my_score, 1),
+        "ally_lane_score": round(ally_score, 1),
         "enemy_lane_score": round(enemy_score, 1),
-        "advantage": round(my_score - enemy_score, 1),
+        "advantage": round(ally_score - enemy_score, 1),
         "breakdown": breakdown,
+    }
+
+
+def _team_by_pos(players: list[dict]) -> dict:
+    """Assign positions 1-5 to a team by GPM rank (highest farm = pos 1)."""
+    ranked = sorted(
+        players, key=lambda p: p.get("gold_per_min", 0), reverse=True
+    )
+    return {
+        str(i): Hero(
+            ID_TO_NAME.get(p["hero_id"], str(p["hero_id"])),
+            str(p["hero_id"]),
+            0,
+            str(i),
+        )
+        for i, p in enumerate(ranked[:5], 1)
+    }
+
+
+def get_draft_advantage(match_id: int, account_id: int | None = None) -> dict:
+    """Score the player's full 5-hero draft vs the enemy draft (whole-team
+    synergy and counters), distinct from the single-lane matchup. Positions are
+    assigned by GPM rank. Positive advantage favors the player's team."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    radiant = player["player_slot"] < 128
+    allies = [p for p in match["players"] if (p["player_slot"] < 128) == radiant]
+    enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
+
+    ally = _team_by_pos(allies)
+    enemy = _team_by_pos(enemies)
+    ally_score, enemy_score, delta = score_teams(ally, enemy)
+    return {
+        "ally_team_score": round(ally_score, 1),
+        "enemy_team_score": round(enemy_score, 1),
+        "advantage": round(delta, 1),
     }
 
 
@@ -373,21 +377,20 @@ TOOLS: list[ToolParam] = [
         },
     },
     {
-        "name": "get_matchup_difficulty",
-        "description": "Draft-difficulty of the player's hero vs the enemy lineup using the counter engine. Call when farm/impact was low and you want to know if the draft (not execution) was the problem. Pass hero_id and the enemy hero ids from get_match_detail.",
+        "name": "score_lane_matchup",
+        "description": "Score how favorable the player's LANE was vs the lane they faced (the 2-4 heroes in that lane), using win-rate/counter math. Reads the actual lane heroes from the match; you supply only the match. Positive advantage = the lane was favored on paper. Use to tell a hard lane apart from poor laning execution.",
         "input_schema": {
             "type": "object",
             "properties": {
-                "hero_id": {"type": "integer"},
-                "enemy_hero_ids": {"type": "array", "items": {"type": "integer"}},
-                "pos": {"type": "integer", "default": 1},
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
             },
-            "required": ["hero_id", "enemy_hero_ids"],
+            "required": ["match_id"],
         },
     },
     {
-        "name": "score_lane_matchup",
-        "description": "Score how favorable the player's lane was vs the lane they faced, using the same win-rate/counter math as full-draft scoring. Reads the actual lane heroes from the match itself; you do not supply heroes, only the match. Positive advantage means the lane was favored on paper; pair with the farm percentiles to separate a hard lane from poor execution.",
+        "name": "get_draft_advantage",
+        "description": "Score the player's whole 5-hero DRAFT vs the enemy draft (full-team synergy and counters), distinct from the single-lane matchup. Reads heroes from the match. Positive advantage = the player's team was favored on paper. Use to tell whether the team comp (not just the lane) was the disadvantage.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -405,8 +408,8 @@ _TOOL_FNS = {
     "compute_metrics": compute_metrics,
     "get_hero_benchmarks": get_hero_benchmarks,
     "get_death_timings": get_death_timings,
-    "get_matchup_difficulty": get_matchup_difficulty,
     "score_lane_matchup": score_lane_matchup,
+    "get_draft_advantage": get_draft_advantage,
 }
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach. You investigate one match and produce short, concrete feedback.
@@ -416,9 +419,9 @@ You have tools. Decide what to pull based on what you find — do NOT call every
 Investigate contingently:
 - Always start with get_match_detail (or get_recent_matches first if given only an account_id).
 - Then call compute_metrics to see the percentiles.
-- If farm metrics (GPM / last-hits) are weak, the cause matters: check get_death_timings (deaths cost farm) AND consider the lane (a hard lane costs farm). Pick based on the death count in the detail — many deaths point to death timings; few deaths with low farm points to the lane/draft.
-- For a hard lane, use score_lane_matchup first: it scores the carry's safelane (the carry + pos-5 support) against the enemy offlane (pos 3 + 4) directly. If the lane was favored but farm still came out low, the problem is execution, not the lane. Use get_matchup_difficulty when the question is the carry vs the whole enemy team, not just the lane.
-- If farm is fine but deaths are high, go to get_death_timings, not matchup difficulty.
+- If farm metrics (GPM / last-hits) are weak, the cause matters: check get_death_timings (deaths cost farm) and consider whether the lane or the draft was the problem.
+- score_lane_matchup scores just the player's LANE. get_draft_advantage scores the whole 5v5 DRAFT. They are different: a lane can be even while the overall draft is lost, or vice versa. If lane farm was weak, use score_lane_matchup; if the player did fine individually but the game was still lost, use get_draft_advantage to check the team comp. If a tool says the lane/draft was favored but results were still bad, the problem is execution, not the matchup.
+- If farm is fine but deaths are high, go to get_death_timings.
 - If the match is not parsed, say so and work only from the unparsed metrics; don't call get_death_timings.
 
 Write the final review as 3-5 short bullet points: what went well, the main problem, and one concrete fix. Use the numbers (percentiles, minutes). State drops as plainly as gains. No emojis, no bold."""

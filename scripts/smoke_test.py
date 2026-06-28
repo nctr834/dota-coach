@@ -129,7 +129,14 @@ def _lane_matchup():
 
     lm = mr.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in lm
-    assert lm["breakdown"]["my_lane"], "no heroes resolved for player's lane"
+    assert lm["breakdown"]["ally_lane"], "no heroes resolved for player's lane"
+
+
+def _draft_advantage():
+    import match_review as mr
+
+    da = mr.get_draft_advantage(PARSED_MATCH, CARRY_ACC)
+    assert "advantage" in da and "ally_team_score" in da
 
 
 # --- API wiring (no LLM call) ----------------------------------------------
@@ -166,6 +173,7 @@ for name, fn in [
     ("match_review: get_match_detail", _match_detail),
     ("match_review: compute_metrics", _compute_metrics),
     ("match_review: score_lane_matchup", _lane_matchup),
+    ("match_review: get_draft_advantage", _draft_advantage),
     ("api app loads (4 routes)", _api_loads),
     ("api /score-teams endpoint", _api_score_endpoint),
 ]:
