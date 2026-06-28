@@ -10,8 +10,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 with open(ROOT / "data/pos_data.json") as f:
     pos_data = json.load(f)
-with open(ROOT / "data/hero_displayName_to_id.json") as f:
-    name_to_id = json.load(f)
+with open(ROOT / "data/hero_data.json") as f:
+    _hero_data = json.load(f)
+name_to_id = {h["displayName"]: hid for hid, h in _hero_data.items()}
 
 POS_NAMES = {
     "1": "Carry (Pos 1)",

@@ -1,9 +1,8 @@
 """
 Regenerate RAG_content_heroes.json from actual game data.
 
-Uses hero_data.json, aghs_data.json, patch_data.json, pos_data.json,
-and OpenDota API (popular items) to build a prompt per hero, then
-asks Claude to generate a concise strategy guide.
+Uses hero_data.json, patch_data.json, pos_data.json to build a prompt
+per hero, then asks Claude to generate a concise strategy guide.
 
 Usage:
     python scripts/generate_hero_guides.py [--model claude-haiku-4-5-20251001] [--heroes "Anti-Mage,Axe"]
@@ -18,7 +17,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 import anthropic
-from requests import get
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "analyzer"))
@@ -30,14 +28,12 @@ client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 # Load data
 with open("data/hero_data.json") as f:
     hero_data = json.load(f)
-with open("data/aghs_data.json") as f:
-    aghs_data = json.load(f)
 with open("data/patch_data.json") as f:
     patch_data = json.load(f)
 with open("data/pos_data.json") as f:
     pos_data = json.load(f)
-with open("data/hero_displayName_to_id.json") as f:
-    hero_name_to_id = json.load(f)
+
+hero_name_to_id = {h["displayName"]: hid for hid, h in hero_data.items()}
 
 POS_NAMES = {
     "1": "Carry (Pos 1)",
@@ -72,51 +68,20 @@ def get_hero_positions(hero_id: str) -> list[dict]:
 
 
 def get_popular_items(hero_id: str) -> list[dict]:
-    """Fetch popular items from OpenDota API."""
-    try:
-        url = f"https://api.opendota.com/api/heroes/{hero_id}/itemPopularity"
-        resp = get(url, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        from analyzer.process_query import item_data as _item_data
-    except Exception:
-        # Fallback: load item_data directly
-        with open("data/item_data.json") as f:
-            _item_data = json.load(f)
-        try:
-            url = f"https://api.opendota.com/api/heroes/{hero_id}/itemPopularity"
-            resp = get(url, timeout=10)
-            resp.raise_for_status()
-            data = resp.json()
-        except Exception:
-            return []
-
-    results = []
-    for stage, items in data.items():
-        stage_name = "_".join(stage.split("_")[:-1])
-        top = sorted(
-            ((k, v) for k, v in items.items() if k in _item_data),
-            key=lambda x: x[1],
-            reverse=True,
-        )[:5]
-        results.append(
-            {
-                "stage": stage_name,
-                "items": [(_item_data[k]["displayName"], v) for k, v in top],
-            }
-        )
-    return results
+    """Get item info from hero abilities and facets (no longer calls OpenDota)."""
+    # With the new data structure, we don't have item popularity data.
+    # Return empty — the guide prompt handles this gracefully.
+    return []
 
 
 def get_aghs_info(hero_id: str) -> str:
-    data = aghs_data.get(str(hero_id))
-    if not data:
-        return "None"
+    hero = hero_data.get(str(hero_id), {})
     parts = []
-    if data.get("has_scepter"):
-        parts.append(f"Scepter ({data['scepter_skill_name']}): {data['scepter_desc']}")
-    if data.get("has_shard"):
-        parts.append(f"Shard ({data['shard_skill_name']}): {data['shard_desc']}")
+    for ability in hero.get("abilities", []):
+        if ability.get("scepter_description"):
+            parts.append(f"Scepter ({ability['displayName']}): {ability['scepter_description']}")
+        if ability.get("shard_description"):
+            parts.append(f"Shard ({ability['displayName']}): {ability['shard_description']}")
     return "\n".join(parts) if parts else "None"
 
 
@@ -142,7 +107,7 @@ def get_abilities_summary(hero: dict) -> str:
     return ", ".join(parts)
 
 
-def generate_guide(hero: dict, model: str) -> dict:
+def generate_guide(hero: dict, model: str) -> dict | None:
     hero_id = hero["id"]
     name = hero["displayName"]
     positions = get_hero_positions(hero_id)
@@ -194,8 +159,8 @@ Return ONLY a JSON object with these fields (each 1-2 sentences max):
                 max_tokens=512,
                 messages=[{"role": "user", "content": prompt}],
             )
-            text = response.content[0].text.strip()
-            # Parse JSON from response
+            block = response.content[0]
+            text = block.text.strip() if block.type == "text" else ""
             start = text.find("{")
             end = text.rfind("}") + 1
             if start >= 0 and end > start:

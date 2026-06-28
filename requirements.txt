@@ -12,3 +12,4 @@ requests
 scrapetube
 uvicorn
 youtube-transcript-api
+vdf
