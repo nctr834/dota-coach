@@ -1,10 +1,4 @@
-"""Single owner of the generated JSON data files in data/.
-
-Every shared dataset is loaded here exactly once and imported by name elsewhere,
-so a file is never opened twice and the data/ path lives in one place. Files that
-may not exist yet (built by later pipeline steps) load with a default instead of
-raising.
-"""
+"""Loads the generated JSON data files in data/, once each, for import by name."""
 
 import json
 from pathlib import Path

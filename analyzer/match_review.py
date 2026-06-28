@@ -15,7 +15,6 @@ from hero_lookup import ID_TO_NAME
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-# Swap to "claude-sonnet-4-6" once the loop and tools are dialed in.
 AGENT_MODEL = "claude-haiku-4-5-20251001"
 
 OPENDOTA = "https://api.opendota.com/api"
@@ -76,9 +75,9 @@ def _pct(player: dict, metric: str) -> int | None:
     return None
 
 
-# --- Tool implementations (pure Python, summarized output) -------------------
-# Each returns small JSON-able dicts, never raw per-minute arrays, so the agent
-# reasons over numbers instead of paying to re-read 60-element series each turn.
+# --- Tool implementations -------------------------------------------------
+# Tools return summarized dicts, never raw per-minute arrays, to keep agent
+# token cost down.
 
 
 def get_recent_matches(account_id: int, limit: int = 10) -> dict:
@@ -183,10 +182,8 @@ def get_death_timings(match_id: int, account_id: int | None = None) -> dict:
             "total_deaths": total_deaths,
             "note": "match not parsed; death minutes unavailable",
         }
-    # OpenDota has no clean per-death timeline. life_state is a summary
-    # histogram (seconds alive/dying/dead); teamfights give the minutes of
-    # deaths that happened in fights. Report both, plainly, and don't pretend
-    # to know the timing of deaths that occurred outside teamfights.
+    # life_state is a histogram (seconds alive/dying/dead), not a timeline, so
+    # only teamfight deaths have known minutes.
     seconds_dead = (player.get("life_state") or {}).get("2", 0)
     order = [p["player_slot"] for p in match["players"]]
     idx = order.index(player["player_slot"])

@@ -7,8 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# Ensure analyzer/ is importable (evaluator does `from counters import ...`)
-# and that data/ relative paths resolve. Must run before the analyzer imports.
+# must run before the analyzer imports below
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "analyzer"))
 os.chdir(PROJECT_ROOT)
