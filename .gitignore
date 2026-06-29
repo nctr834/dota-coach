@@ -9,3 +9,4 @@ data/*.json
 data/vectordb/*
 frontend/src/data/*.json
 eval/labels.json
+eval/review_cache.json
