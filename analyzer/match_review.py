@@ -2,13 +2,15 @@ import os
 import re
 import json
 import time
+from collections import Counter
 import requests
 import anthropic
 from anthropic.types import MessageParam, ToolParam, ToolResultBlockParam
 from dotenv import load_dotenv
 
 from evaluator import evaluate_hero, score_teams, Hero
-from data_loader import hero_data
+from counters import get_synergy_score
+from data_loader import hero_data, matchup_data, pos_data, item_data
 from hero_lookup import ID_TO_NAME
 
 # OpenDota kills_log / killed_by keys use the unit name npc_dota_hero_<shortName>.
@@ -372,6 +374,204 @@ def get_draft_advantage(match_id: int, account_id: int | None = None) -> dict:
     }
 
 
+# --- Stratz matchup builds --------------------------------------------------
+
+STRATZ = "https://api.stratz.com/graphql"
+
+# Verified pos-1 carry accounts (OpenDota proPlayers resolved, confirmed via
+# Stratz to have recent parsed POSITION_1 matches with item purchases).
+CARRY_SEED = {
+    "Yatoro": 321580662,
+    "Ame": 898754153,
+    "skiter": 100058342,
+    "Crystallis": 127617979,
+    "Nightfall": 124801257,
+    "23savage": 375507918,
+}
+
+_items: dict[int, dict] = {}
+
+# Completed items as Valve grades them; components, consumables, and recipes
+# (the build-up noise dota2protracker hides) fall outside this set.
+_COMPLETED_QUALITY = {"common", "rare", "epic", "artifact"}
+
+# The "common" tier holds build-up filler (Wraith Band, Perseverance, Magic
+# Wand) alongside real items, so the skipped-items diff uses the higher tiers
+# only; full builds still list common items.
+_DIFF_QUALITY = {"rare", "epic", "artifact"}
+
+
+def _quality(short: str | None) -> str | None:
+    return (item_data.get(f"item_{short}") or {}).get("quality")
+
+
+def _stratz(query: str) -> dict:
+    key = os.getenv("STRATZ_API_KEY")
+    resp = requests.post(
+        STRATZ,
+        json={"query": query},
+        headers={"Authorization": f"Bearer {key}", "User-Agent": "STRATZ_API"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json().get("data") or {}
+
+
+def _load_items() -> None:
+    if _items:
+        return
+    data = _stratz("{ constants { items { id shortName displayName } } }")
+    for it in (data.get("constants") or {}).get("items") or []:
+        _items[it["id"]] = it
+
+
+def _item_name(item_id: int) -> str:
+    _load_items()
+    return (_items.get(item_id) or {}).get("displayName") or str(item_id)
+
+
+def _item_short(item_id: int) -> str:
+    _load_items()
+    return (_items.get(item_id) or {}).get("shortName") or str(item_id)
+
+
+def _is_completed(item_id: int) -> bool:
+    _load_items()
+    short = (_items.get(item_id) or {}).get("shortName")
+    quality = (item_data.get(f"item_{short}") or {}).get("quality")
+    return quality in _COMPLETED_QUALITY
+
+
+def _player_completed_items(match_id: int, account_id: int | None) -> dict[str, str]:
+    """shortName -> displayName for the player's completed items in this match."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    items = {}
+    for e in player.get("purchase_log") or []:
+        v = item_data.get(f"item_{e['key']}")
+        if v and v.get("quality") in _COMPLETED_QUALITY:
+            items[e["key"]] = v["displayName"]
+    return items
+
+
+def get_matchup_builds(
+    carry_hero_id: int,
+    enemy_hero_id: int,
+    match_id: int | None = None,
+    account_id: int | None = None,
+    n: int = 4,
+) -> dict:
+    """Recent completed-item builds (item + minute) pro pos-1 carries bought on
+    carry_hero_id in games where enemy_hero_id was on the opposing team.
+    enemy_hero_id can be a support, which is often the more useful matchup. Only
+    completed items are shown (no components, consumables, or recipes), like
+    dota2protracker. Pass match_id/account_id to also get the player's completed
+    build and pros_bought_player_skipped: the completed items pros bought here
+    that the player did not, the basis for itemization advice."""
+    builds = []
+    for name, seed_account in CARRY_SEED.items():
+        if len(builds) >= n:
+            break
+        query = f"""
+        {{
+        player(steamAccountId: {seed_account}) {{
+            matches(request: {{
+                heroIds: [{carry_hero_id}],
+                withEnemyHeroIds: [{enemy_hero_id}],
+                isParsed: true,
+                take: 2
+            }}) {{
+                id
+                players(steamAccountId: {seed_account}) {{
+                    stats {{ itemPurchases {{ itemId time }} }}
+                }}
+            }}
+        }}
+        }}
+        """
+        matches = (_stratz(query).get("player") or {}).get("matches") or []
+        for m in matches:
+            if len(builds) >= n:
+                break
+            purchases = m["players"][0]["stats"].get("itemPurchases")
+            if not purchases:
+                continue
+            builds.append(
+                {
+                    "player": name,
+                    "match_id": m["id"],
+                    "items": [
+                        {
+                            "item": _item_name(p["itemId"]),
+                            "minute": round(p["time"] / 60),
+                            "short": _item_short(p["itemId"]),
+                        }
+                        for p in purchases
+                        if _is_completed(p["itemId"])
+                    ],
+                }
+            )
+
+    result = {
+        "carry": ID_TO_NAME.get(carry_hero_id, str(carry_hero_id)),
+        "vs": ID_TO_NAME.get(enemy_hero_id, str(enemy_hero_id)),
+        "builds": builds,
+    }
+    if match_id is not None:
+        player_items = _player_completed_items(match_id, account_id)
+        pro_by_short = {i["short"]: i["item"] for b in builds for i in b["items"]}
+        bought_in = Counter(
+            s for b in builds for s in {x["short"] for x in b["items"]}
+        )
+        player_keys = {s for s in player_items if _quality(s) in _DIFF_QUALITY}
+        skipped = [
+            s
+            for s in pro_by_short
+            if _quality(s) in _DIFF_QUALITY and s not in player_keys
+        ]
+        skipped.sort(key=lambda s: bought_in[s], reverse=True)
+        result["player_build"] = sorted(player_items.values())
+        result["pros_bought_player_skipped"] = [
+            {"item": pro_by_short[s], "pro_builds": bought_in[s]} for s in skipped
+        ]
+    return result
+
+
+def _synergy(carry: Hero, support: Hero) -> float | None:
+    try:
+        return get_synergy_score(
+            carry.id, support.id, matchup_data, carry.pos, support.pos, pos_data
+        )
+    except KeyError:
+        return None
+
+
+def pick_priority_target(match_id: int, account_id: int | None = None) -> dict:
+    """The two enemies to itemize against: the enemy carry (build to deal with it
+    directly, e.g. MKB into evasion) and the support with the strongest synergy
+    with that carry (killing the enabler hurts the carry most). Feed each hero_id
+    into get_matchup_builds to see how pros built against it."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    radiant = player["player_slot"] < 128
+    enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
+    team = _team_by_pos(enemies, not radiant)
+    carry = team.get("1")
+    supports = [team[p] for p in ("4", "5") if p in team]
+    if not carry or not supports:
+        return {"target": None, "reason": "could not resolve enemy carry/supports"}
+
+    target = max(supports, key=lambda s: _synergy(carry, s) or -1e9)
+    syn = _synergy(carry, target)
+    return {
+        "enemy_carry": carry.name,
+        "enemy_carry_hero_id": int(carry.id),
+        "target_support": target.name,
+        "target_hero_id": int(target.id),
+        "synergy_with_carry": None if syn is None else round(syn, 1),
+    }
+
+
 # --- Agent loop -------------------------------------------------------------
 
 TOOLS: list[ToolParam] = [
@@ -456,6 +656,33 @@ TOOLS: list[ToolParam] = [
             "required": ["match_id"],
         },
     },
+    {
+        "name": "get_matchup_builds",
+        "description": "Completed-item builds (item + minute) pro pos-1 carries used on a hero when a specific enemy hero was on the other team; the enemy can be a support, often the more important matchup. Pass match_id and account_id to also get the player's own completed build and pros_bought_player_skipped: the high-value items pros bought here that the player did not. Use that list as the basis for itemization advice.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "carry_hero_id": {"type": "integer"},
+                "enemy_hero_id": {"type": "integer"},
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
+                "n": {"type": "integer", "default": 4},
+            },
+            "required": ["carry_hero_id", "enemy_hero_id"],
+        },
+    },
+    {
+        "name": "pick_priority_target",
+        "description": "The enemy support worth killing first: the one with the strongest synergy with the enemy carry, since removing the enabler hurts the carry most. Returns the target support and its hero_id. Feed that hero_id into get_matchup_builds as enemy_hero_id to see how to itemize against it.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
+            },
+            "required": ["match_id"],
+        },
+    },
 ]
 
 _TOOL_FNS = {
@@ -466,6 +693,8 @@ _TOOL_FNS = {
     "get_combat_timings": get_combat_timings,
     "score_lane_matchup": score_lane_matchup,
     "get_draft_advantage": get_draft_advantage,
+    "get_matchup_builds": get_matchup_builds,
+    "pick_priority_target": pick_priority_target,
 }
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. Review one match and give short, concrete feedback.
@@ -474,6 +703,7 @@ Gather this before writing:
 - get_match_detail, then compute_metrics for the percentiles.
 - score_lane_matchup (was the lane favorable?) and get_draft_advantage (was the 5v5 draft favorable?). Call both every time; they are the context for judging the player.
 - If the match is parsed, get_combat_timings.
+- pick_priority_target, then get_matchup_builds twice with the player's hero and this match_id/account_id: once against enemy_carry_hero_id (how pros build to deal with the enemy carry) and once against target_hero_id (the highest-synergy support). Call these every time, to show the pro builds in this matchup and which items the player skipped. The targets are forward-looking recommendations from synergy math, not who any pro or the player killed; do not tie them to actual kills. For who the player actually killed, use only get_combat_timings.
 
 Judge the player against that context:
 - A hard lane or losing draft is context, not the player's fault. If they won or performed well anyway, say they overcame it. Do not call it a gap.
@@ -490,6 +720,7 @@ Use these exact sections:
 - "Main gap:" the single biggest mistake that cost the game, with the numbers. If the player dominated and made no real mistake, write exactly "Main gap: none, played well." Keep nitpicks out of this section.
 - "Fix:" one concrete adjustment. Omit if there is no gap.
 - "Minor notes:" optional, for small blemishes that are not gaps.
+- "Pro build reference:" two lines, one per target (the enemy carry, and the highest-synergy support). Each frames up to three pros_bought_player_skipped items as a suggestion, e.g. "vs Medusa, consider: Monkey King Bar (22), Skull Basher (19)". Item names and pro minutes only, no reasons or editorializing. If a build came back empty, say so in one line.
 
 No emojis, no bold."""
 

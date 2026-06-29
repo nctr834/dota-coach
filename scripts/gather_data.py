@@ -7,7 +7,7 @@ import re
 from enum import Enum
 from pathlib import Path
 from dotenv import load_dotenv
-import cloudscraper
+import requests
 from requests import get
 import vdf
 
@@ -15,7 +15,19 @@ os.chdir(Path(__file__).resolve().parent.parent)
 
 load_dotenv()
 token = os.getenv("STRATZ_API_KEY")
-scraper = cloudscraper.create_scraper()
+
+
+def _stratz(query: str) -> dict:
+    resp = requests.post(
+        "https://api.stratz.com/graphql",
+        json={"query": query},
+        headers={"Authorization": f"Bearer {token}", "User-Agent": "STRATZ_API"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json().get("data") or {}
+
+
 Path("data").mkdir(parents=True, exist_ok=True)
 Path("frontend/src/data").mkdir(parents=True, exist_ok=True)
 
@@ -579,30 +591,21 @@ def gather_matchup_data():
         }}
     }}
     """
-    response = scraper.post(
-        "https://api.stratz.com/graphql",
-        headers={"Authorization": f"Bearer {token}"},
-        json={"query": query},
-    )
-    if response.status_code == 200:
-        matchup_data = response.json()["data"]["heroStats"]["matchUp"][1:]
-        matchup_data = {
-            h["heroId"]: {
-                "vs": {mu["heroId2"]: mu for mu in h["vs"]},
-                "with": {mu["heroId2"]: mu for mu in h["with"]},
-                "matchCountVs": h["matchCountVs"],
-                "matchCountWith": h["matchCountWith"],
-            }
-            for h in matchup_data
-            if str(h["heroId"]) in hero_data.keys()
+    matchup_data = _stratz(query)["heroStats"]["matchUp"][1:]
+    matchup_data = {
+        h["heroId"]: {
+            "vs": {mu["heroId2"]: mu for mu in h["vs"]},
+            "with": {mu["heroId2"]: mu for mu in h["with"]},
+            "matchCountVs": h["matchCountVs"],
+            "matchCountWith": h["matchCountWith"],
         }
-        Path("data/matchup_data.json").write_text(json.dumps(matchup_data))
-        print(
-            f"Found matchup data\nConsistency check: heroes: {len(hero_data)} | matchups: {len(matchup_data)}"
-        )
-    else:
-        print(f"Matchup data response: HTTP {response.status_code}")
-        return None
+        for h in matchup_data
+        if str(h["heroId"]) in hero_data.keys()
+    }
+    Path("data/matchup_data.json").write_text(json.dumps(matchup_data))
+    print(
+        f"Found matchup data\nConsistency check: heroes: {len(hero_data)} | matchups: {len(matchup_data)}"
+    )
 
 
 def gather_pos_data():
@@ -622,12 +625,7 @@ def gather_pos_data():
         }}
         }}
         """
-        response = scraper.post(
-            "https://api.stratz.com/graphql",
-            headers={"Authorization": f"Bearer {token}"},
-            json={"query": query},
-        )
-        response = response.json()["data"]["heroStats"]["stats"]
+        response = _stratz(query)["heroStats"]["stats"]
         roles = {1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
         i = 0
         while i < len(response):
@@ -701,7 +699,7 @@ def gather_patch_data():
         ITEMS: {name: {} for name in item_data.keys()},
     }
 
-    def check(path, patch):
+    def _check(path, patch):
         idx = path
         if patch not in idx:
             idx[patch] = ""
@@ -728,21 +726,21 @@ def gather_patch_data():
                 if not hero_name and key in hero_keys:
                     heroes = patch_data_dict[HEROES][hero_keys[key]]["hero"]
                     if j == len(info) - 1:
-                        check(heroes, patch)
+                        _check(heroes, patch)
                     if not hero_name:
                         hero_name = key
                         key = ""
                 elif GENERAL in key:
                     general = patch_data_dict[GENERAL]
-                    check(general, patch)
+                    _check(general, patch)
                 elif key in item_keys:
                     items = patch_data_dict[ITEMS][key]
-                    check(items, patch)
+                    _check(items, patch)
                 elif hero_name and key in ability_keys:
                     abilities = patch_data_dict[HEROES][hero_keys[hero_name]][
                         ABILITIES
                     ][key]
-                    check(abilities, patch)
+                    _check(abilities, patch)
                 key += "_"
                 j += 1
     print("Patch notes gathered")

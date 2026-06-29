@@ -2,7 +2,6 @@ anthropic
 beautifulsoup4
 chromadb
 fastapi
-cloudscraper
 json-repair
 playwright
 python-dotenv
