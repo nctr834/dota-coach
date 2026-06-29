@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 from evaluator import evaluate_hero, score_teams, Hero
 from counters import get_synergy_score
-from data_loader import hero_data, matchup_data, pos_data, item_data
+from data_loader import hero_data, matchup_data, pos_data, item_data, fight_timings
 from hero_lookup import ID_TO_NAME
 
 # OpenDota kills_log / killed_by keys use the unit name npc_dota_hero_<shortName>.
@@ -198,6 +198,22 @@ def _phase_counts(times: list[float]) -> dict:
     return counts
 
 
+def _deaths(match: dict, player: dict) -> list[tuple[int, str | None]]:
+    """(time, killer) for each of the player's deaths, from enemies' kills_log
+    keyed to this player's hero unit."""
+    radiant = player["player_slot"] < 128
+    my_npc = _NPC_NAME.get(player["hero_id"])
+    out = []
+    for other in match["players"]:
+        if (other["player_slot"] < 128) == radiant:
+            continue
+        killer = ID_TO_NAME.get(other["hero_id"])
+        for k in other.get("kills_log") or []:
+            if k.get("key") == my_npc:
+                out.append((k["time"], killer))
+    return out
+
+
 def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
     """Kills and deaths broken down by game phase and by opposing hero, computed
     from the parsed kill logs. Returns only these aggregates (no raw timeline),
@@ -211,9 +227,6 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
             "total_deaths": player.get("deaths", 0),
             "note": "match not parsed; phase breakdown unavailable",
         }
-    radiant = player["player_slot"] < 128
-    my_npc = _NPC_NAME.get(player["hero_id"])
-
     # Player's kills come from their own kills_log.
     kill_times, kills_by_victim = [], {}
     for k in player.get("kills_log") or []:
@@ -221,16 +234,10 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
         victim = _NPC_TO_DISPLAY.get(k.get("key"), k.get("key"))
         kills_by_victim[victim] = kills_by_victim.get(victim, 0) + 1
 
-    # Deaths come from enemies' kills_log keyed to this player's hero.
     death_times, deaths_by_killer = [], {}
-    for other in match["players"]:
-        if (other["player_slot"] < 128) == radiant:
-            continue
-        killer = ID_TO_NAME.get(other["hero_id"])
-        for k in other.get("kills_log") or []:
-            if k.get("key") == my_npc:
-                death_times.append(k["time"])
-                deaths_by_killer[killer] = deaths_by_killer.get(killer, 0) + 1
+    for t, killer in _deaths(match, player):
+        death_times.append(t)
+        deaths_by_killer[killer] = deaths_by_killer.get(killer, 0) + 1
 
     return {
         "parsed": True,
@@ -242,6 +249,106 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
         "kills_by_victim": kills_by_victim,
         "deaths_by_killer": deaths_by_killer,
     }
+
+
+_WINDOW_S = 180  # 3 minutes after a timing item to look for fight impact
+_DECIDED_GOLD = 15000  # team behind by more than this = game decided, timing moot
+
+
+def _gold_adv_at(match: dict, player: dict, minute: int) -> int | None:
+    """Player team's gold advantage at a given minute (negative = behind)."""
+    adv = match.get("radiant_gold_adv")
+    if not adv:
+        return None
+    radiant = player["player_slot"] < 128
+    val = adv[min(minute, len(adv) - 1)]
+    return val if radiant else -val
+
+
+def _lh_gain(player: dict, start: int, end: int) -> int | None:
+    """Last hits the player gained between two times, from the per-minute lh_t."""
+    lh = player.get("lh_t")
+    if not lh:
+        return None
+    a, b = start // 60, end // 60
+    if b >= len(lh):
+        return None
+    return lh[b] - lh[a]
+
+
+def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
+    """For each fight-enabling item the player completed (Blink, BKB, Manta, etc),
+    what happened in the 3 minutes after. Facts only: kills, deaths, the player's
+    teamfight damage, last hits gained, whether a teamfight happened that the
+    player dealt no damage in (team_fought_without_me), and smoke bought.
+    contestable is False when the team was already decided behind (>15k) at
+    completion, so a late item is not flagged. missed_window marks the compound
+    pattern worth asking about: contestable, no kills, the player kept farming,
+    and the team fought without them. It is a prompt to ask, not a verdict; the
+    data cannot show intent."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    if not _is_parsed(player):
+        return {"parsed": False, "note": "match not parsed; timing windows unavailable"}
+
+    purchases = {e["key"]: e["time"] for e in player.get("purchase_log") or []}
+    kill_times = [k["time"] for k in player.get("kills_log") or []]
+    death_times = [t for t, _ in _deaths(match, player)]
+    slot_order = [p["player_slot"] for p in match["players"]]
+    me_idx = slot_order.index(player["player_slot"])
+
+    windows = []
+    for short, name in fight_timings.items():
+        completed = purchases.get(short)
+        if completed is None or completed < 0:
+            continue
+        end = completed + _WINDOW_S
+        minute = completed // 60
+        kills = sum(1 for t in kill_times if completed <= t <= end)
+        deaths = sum(1 for t in death_times if completed <= t <= end)
+        fight_damage = 0
+        team_fought_without_me = False
+        for tf in match.get("teamfights") or []:
+            if not (completed <= tf["start"] <= end or completed <= tf["end"] <= end):
+                continue
+            my_dmg = tf["players"][me_idx]["damage"]
+            fight_damage += my_dmg
+            ally_in_fight = any(
+                p["damage"] > 0
+                for i, p in enumerate(tf["players"])
+                if i != me_idx
+                and (slot_order[i] < 128) == (player["player_slot"] < 128)
+            )
+            if my_dmg == 0 and ally_in_fight:
+                team_fought_without_me = True
+        smoke = any(
+            e["key"] == "smoke_of_deceit" and completed <= e["time"] <= end
+            for e in player.get("purchase_log") or []
+        )
+        lh_gained = _lh_gain(player, completed, end)
+        adv = _gold_adv_at(match, player, minute)
+        contestable = adv is None or adv > -_DECIDED_GOLD
+        farmed = lh_gained is not None and lh_gained >= 10
+        windows.append(
+            {
+                "item": name,
+                "completed_min": round(completed / 60, 1),
+                "contestable": contestable,
+                "missed_window": (
+                    contestable
+                    and kills == 0
+                    and farmed
+                    and team_fought_without_me
+                ),
+                "window_kills": kills,
+                "window_deaths": deaths,
+                "window_fight_damage": fight_damage,
+                "window_last_hits": lh_gained,
+                "team_fought_without_me": team_fought_without_me,
+                "smoke_bought": smoke,
+            }
+        )
+    return {"parsed": True, "timing_windows": windows}
 
 
 # lane: 1=bot, 2=mid, 3=top. Heroes share a lane (and oppose each other) when
@@ -633,6 +740,18 @@ TOOLS: list[ToolParam] = [
         },
     },
     {
+        "name": "get_timing_windows",
+        "description": "For each fight-enabling item the player completed (Blink, BKB, Manta, etc), whether they converted it into impact in the 3 minutes after: capitalized is True if they got a kill or dealt teamfight damage. contestable is False when the team was already decided behind, so a late item is not a missed window. Use to spot a strong item timing the player did not turn into a fight (a wasted power spike). Reports facts only, not intent.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
+            },
+            "required": ["match_id"],
+        },
+    },
+    {
         "name": "score_lane_matchup",
         "description": "Score how favorable the player's LANE was vs the lane they faced (the 2-4 heroes in that lane), using win-rate/counter math. Reads the actual lane heroes from the match; you supply only the match. Positive advantage = the lane was favored on paper. Use to tell a hard lane apart from poor laning execution.",
         "input_schema": {
@@ -691,6 +810,7 @@ _TOOL_FNS = {
     "compute_metrics": compute_metrics,
     "get_hero_benchmarks": get_hero_benchmarks,
     "get_combat_timings": get_combat_timings,
+    "get_timing_windows": get_timing_windows,
     "score_lane_matchup": score_lane_matchup,
     "get_draft_advantage": get_draft_advantage,
     "get_matchup_builds": get_matchup_builds,
@@ -702,7 +822,7 @@ SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) pla
 Gather this before writing:
 - get_match_detail, then compute_metrics for the percentiles.
 - score_lane_matchup (was the lane favorable?) and get_draft_advantage (was the 5v5 draft favorable?). Call both every time; they are the context for judging the player.
-- If the match is parsed, get_combat_timings.
+- If the match is parsed, get_combat_timings, and get_timing_windows to see whether the player turned each fight item into impact.
 - pick_priority_target, then get_matchup_builds twice with the player's hero and this match_id/account_id: once against enemy_carry_hero_id (how pros build to deal with the enemy carry) and once against target_hero_id (the highest-synergy support). Call these every time, to show the pro builds in this matchup and which items the player skipped. The targets are forward-looking recommendations from synergy math, not who any pro or the player killed; do not tie them to actual kills. For who the player actually killed, use only get_combat_timings.
 
 Judge the player against that context:
@@ -721,6 +841,7 @@ Use these exact sections:
 - "Fix:" one concrete adjustment. Omit if there is no gap.
 - "Minor notes:" optional, for small blemishes that are not gaps.
 - "Pro build reference:" two lines, one per target (the enemy carry, and the highest-synergy support). Each frames up to three pros_bought_player_skipped items as a suggestion, e.g. "vs Medusa, consider: Monkey King Bar (22), Skull Basher (19)". Item names and pro minutes only, no reasons or editorializing. If a build came back empty, say so in one line.
+- "Timing check:" only for get_timing_windows entries with missed_window true (skip if none). For each, state the facts and ask, do not assert a mistake: e.g. "You hit Manta at 20:54 and in the next 3 minutes farmed 61 last hits with no kills while your team fought without you. Was there a pickoff to make there, or was the map not set up?" Use only the window's numbers; the data shows what happened, not why.
 
 No emojis, no bold."""
 
