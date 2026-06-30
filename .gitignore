@@ -6,8 +6,9 @@ analyzer/__pycache__/*/*
 backup_transcripts_condensed/*
 data/transcripts_raw/*
 data/*.json
-!data/fight_timings.json
 data/vectordb/*
 frontend/src/data/*.json
 eval/labels.json
 eval/review_cache.json
+analyzer/item_timing_cache.json
+analyzer/matchup_builds_cache.json

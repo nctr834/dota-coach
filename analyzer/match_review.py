@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import json
 import time
 from collections import Counter
@@ -7,11 +8,15 @@ import requests
 import anthropic
 from anthropic.types import MessageParam, ToolParam, ToolResultBlockParam
 from dotenv import load_dotenv
+from pathlib import Path
 
 from evaluator import evaluate_hero, score_teams, Hero
-from counters import get_synergy_score
-from data_loader import hero_data, matchup_data, pos_data, item_data, fight_timings
+from data_loader import hero_data, item_data
 from hero_lookup import ID_TO_NAME
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "analyzer"))
+os.chdir(ROOT)
 
 # OpenDota kills_log / killed_by keys use the unit name npc_dota_hero_<shortName>.
 _NPC_NAME = {
@@ -23,6 +28,23 @@ _NPC_TO_DISPLAY = {
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+ITEM_TIMING_CACHE = ROOT / "analyzer" / "item_timing_cache.json"
+MATCHUP_BUILDS_CACHE = ROOT / "analyzer" / "matchup_builds_cache.json"
+
+# Set True (e.g. by an eval --fresh run) to recompute the timing cache instead
+# of reading it; the agent calls tools with fixed args and cannot pass it.
+_FRESH = False
+
+
+def _load_cache(path: Path) -> dict:
+    """The cache dict, or {} if the file is missing, empty, or corrupt (an
+    interrupted write leaves a zero-byte file that json.loads would choke on)."""
+    try:
+        return json.loads(path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
 
 AGENT_MODEL = "claude-haiku-4-5-20251001"
 
@@ -252,7 +274,9 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
 
 
 _WINDOW_S = 180  # 3 minutes after a timing item to look for fight impact
-_DECIDED_GOLD = 15000  # team behind by more than this = game decided, timing moot
+_DECIDED_GOLD = (
+    15000  # team behind by more than this = game essentially decided, timing moot
+)
 
 
 def _gold_adv_at(match: dict, player: dict, minute: int) -> int | None:
@@ -276,16 +300,82 @@ def _lh_gain(player: dict, start: int, end: int) -> int | None:
     return lh[b] - lh[a]
 
 
+_TIMING_TOP_N = 5  # this hero's fight items: the top-N by pro conversion rate
+_TIMING_MIN_GAMES = 3  # only rank an item pros bought in at least this many games
+
+
+def _hero_fight_timings(hero_id: int) -> list[dict]:
+    """The hero's fight-timing items, learned from pro games: the completed items
+    pros most often got a kill within 3 minutes of completing. Returns up to
+    _TIMING_TOP_N as [{short, item, converted, games, rate}], highest rate first."""
+    cache = _load_cache(ITEM_TIMING_CACHE)
+    key = str(hero_id)
+    if not _FRESH and key in cache:
+        return cache[key]
+    converted: dict[str, int] = {}
+    games_with: dict[str, int] = {}
+    for account_id in CARRY_SEED.values():
+        query = f"""
+        {{
+        player(steamAccountId: {account_id}) {{
+            matches(request: {{heroIds: [{hero_id}], isParsed: true, take: 3}}) {{
+                players(steamAccountId: {account_id}) {{
+                    stats {{
+                        itemPurchases {{ itemId time }}
+                        killEvents {{ time }}
+                    }}
+                }}
+            }}
+        }}
+        }}
+        """
+        matches = (_stratz(query).get("player") or {}).get("matches") or []
+        for m in matches:
+            stats = m["players"][0]["stats"]
+            purchases = stats.get("itemPurchases")
+            if not purchases:
+                continue
+            kill_times = [e["time"] for e in stats.get("killEvents") or []]
+            for short in {
+                _item_short(p["itemId"])
+                for p in purchases
+                if _notable(_item_short(p["itemId"]))
+            }:
+                first = min(
+                    p["time"] for p in purchases if _item_short(p["itemId"]) == short
+                )
+                games_with[short] = games_with.get(short, 0) + 1
+                if any(first <= t <= first + _WINDOW_S for t in kill_times):
+                    converted[short] = converted.get(short, 0) + 1
+
+    ranked = [
+        {
+            "short": s,
+            "item": (item_data.get(f"item_{s}") or {}).get("displayName", s),
+            "converted": converted.get(s, 0),
+            "games": g,
+            "rate": round(converted.get(s, 0) / g, 2),
+        }
+        for s, g in games_with.items()
+        if g >= _TIMING_MIN_GAMES
+    ]
+    ranked.sort(key=lambda r: r["rate"], reverse=True)
+    cache[key] = ranked[:_TIMING_TOP_N]
+    ITEM_TIMING_CACHE.write_text(json.dumps(cache, indent=2))
+    return cache[key]
+
+
 def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
-    """For each fight-enabling item the player completed (Blink, BKB, Manta, etc),
-    what happened in the 3 minutes after. Facts only: kills, deaths, the player's
-    teamfight damage, last hits gained, whether a teamfight happened that the
-    player dealt no damage in (team_fought_without_me), and smoke bought.
-    contestable is False when the team was already decided behind (>15k) at
-    completion, so a late item is not flagged. missed_window marks the compound
-    pattern worth asking about: contestable, no kills, the player kept farming,
-    and the team fought without them. It is a prompt to ask, not a verdict; the
-    data cannot show intent."""
+    """For each fight item the player completed, what happened in the 3 minutes
+    after. The fight items are learned from pro games of the same hero (the items
+    pros most often got a kill right after completing), not a fixed list. Facts
+    only: kills, deaths, the player's teamfight damage, last hits gained, whether
+    a teamfight happened that the player dealt no damage in (team_fought_without_me),
+    and smoke bought. contestable is False when the team was already decided behind
+    (>15k) at completion, so a late item is not flagged. missed_window marks the
+    compound pattern worth asking about: contestable, no kills, the player kept
+    farming, and the team fought without them. It is a prompt to ask, not a verdict;
+    the data cannot show intent."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
     if not _is_parsed(player):
@@ -297,8 +387,10 @@ def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
     slot_order = [p["player_slot"] for p in match["players"]]
     me_idx = slot_order.index(player["player_slot"])
 
+    timings = _hero_fight_timings(player["hero_id"])
     windows = []
-    for short, name in fight_timings.items():
+    for timing in timings:
+        short, name = timing["short"], timing["item"]
         completed = purchases.get(short)
         if completed is None or completed < 0:
             continue
@@ -333,12 +425,11 @@ def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
             {
                 "item": name,
                 "completed_min": round(completed / 60, 1),
+                "pro_fight_rate": timing["rate"],
+                "pro_fight_games": timing["games"],
                 "contestable": contestable,
                 "missed_window": (
-                    contestable
-                    and kills == 0
-                    and farmed
-                    and team_fought_without_me
+                    contestable and kills == 0 and farmed and team_fought_without_me
                 ),
                 "window_kills": kills,
                 "window_deaths": deaths,
@@ -348,7 +439,39 @@ def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
                 "smoke_bought": smoke,
             }
         )
-    return {"parsed": True, "timing_windows": windows}
+    missed = []
+    for w in windows:
+        if not w["missed_window"]:
+            continue
+        rate = round(w["pro_fight_rate"] * 100)
+        games = w["pro_fight_games"]
+        mins = int(w["completed_min"])
+        secs = round((w["completed_min"] - mins) * 60)
+        missed.append(
+            {
+                "item": w["item"],
+                "note": (
+                    f"You hit {w['item']} at {mins}:{secs:02d} (pros fight after it "
+                    f"~{rate}% of the time across {games} pro games) and in the next "
+                    f"3 minutes farmed {w['window_last_hits']} last hits with no kills "
+                    f"while your team fought without you. Was there a pickoff to make "
+                    f"there, or was the map not set up?"
+                ),
+            }
+        )
+    if not windows:
+        verdict = "No fight items were completed."
+    elif missed:
+        verdict = "A fight item timing was not turned into impact (see missed)."
+    else:
+        verdict = "Capitalized on your fight item timings."
+    return {
+        "parsed": True,
+        "hero_fight_items": [t["item"] for t in timings],
+        "verdict": verdict,
+        "missed": missed,
+        "timing_windows": windows,
+    }
 
 
 # lane: 1=bot, 2=mid, 3=top. Heroes share a lane (and oppose each other) when
@@ -506,10 +629,24 @@ _COMPLETED_QUALITY = {"common", "rare", "epic", "artifact"}
 # Wand) alongside real items, so the skipped-items diff uses the higher tiers
 # only; full builds still list common items.
 _DIFF_QUALITY = {"rare", "epic", "artifact"}
+# Some rare-tier items are cheap support pickups (Ring of Basilius, Headdress,
+# Urn), not build-vs-enemy choices; a cost floor drops them while keeping the
+# cheapest real core item (Falcon Blade, 1125).
+_NOTABLE_COST = 1000
+# Build-up pieces that recur as noise: when they matter the completed form
+# (Sange and Yasha, Yasha and Kaya, Manta) carries the signal, so never suggest
+# the raw component.
+_COMPONENT_NOISE = {"sange", "yasha", "kaya"}
 
 
-def _quality(short: str | None) -> str | None:
-    return (item_data.get(f"item_{short}") or {}).get("quality")
+def _notable(short: str | None) -> bool:
+    if short in _COMPONENT_NOISE:
+        return False
+    v = item_data.get(f"item_{short}")
+    if not v or v.get("quality") not in _DIFF_QUALITY:
+        return False
+    cost = v.get("cost")
+    return cost is not None and cost >= _NOTABLE_COST
 
 
 def _stratz(query: str) -> dict:
@@ -575,49 +712,60 @@ def get_matchup_builds(
     dota2protracker. Pass match_id/account_id to also get the player's completed
     build and pros_bought_player_skipped: the completed items pros bought here
     that the player did not, the basis for itemization advice."""
-    builds = []
-    for name, seed_account in CARRY_SEED.items():
-        if len(builds) >= n:
-            break
-        query = f"""
-        {{
-        player(steamAccountId: {seed_account}) {{
-            matches(request: {{
-                heroIds: [{carry_hero_id}],
-                withEnemyHeroIds: [{enemy_hero_id}],
-                isParsed: true,
-                take: 2
-            }}) {{
-                id
-                players(steamAccountId: {seed_account}) {{
-                    stats {{ itemPurchases {{ itemId time }} }}
-                }}
-            }}
-        }}
-        }}
-        """
-        matches = (_stratz(query).get("player") or {}).get("matches") or []
-        for m in matches:
+    cache = _load_cache(MATCHUP_BUILDS_CACHE)
+    key = f"{carry_hero_id}-{enemy_hero_id}"
+    if not _FRESH and key in cache:
+        builds = cache[key]["builds"]
+    else:
+        builds = []
+        for name, seed_account in CARRY_SEED.items():
             if len(builds) >= n:
                 break
-            purchases = m["players"][0]["stats"].get("itemPurchases")
-            if not purchases:
-                continue
-            builds.append(
-                {
-                    "player": name,
-                    "match_id": m["id"],
-                    "items": [
-                        {
-                            "item": _item_name(p["itemId"]),
-                            "minute": round(p["time"] / 60),
-                            "short": _item_short(p["itemId"]),
-                        }
-                        for p in purchases
-                        if _is_completed(p["itemId"])
-                    ],
-                }
-            )
+            query = f"""
+            {{
+            player(steamAccountId: {seed_account}) {{
+                matches(request: {{
+                    heroIds: [{carry_hero_id}],
+                    withEnemyHeroIds: [{enemy_hero_id}],
+                    isParsed: true,
+                    take: 2
+                }}) {{
+                    id
+                    players(steamAccountId: {seed_account}) {{
+                        stats {{ itemPurchases {{ itemId time }} }}
+                    }}
+                }}
+            }}
+            }}
+            """
+            matches = (_stratz(query).get("player") or {}).get("matches") or []
+            for mm in matches:
+                if len(builds) >= n:
+                    break
+                purchases = mm["players"][0]["stats"].get("itemPurchases")
+                if not purchases:
+                    continue
+                builds.append(
+                    {
+                        "player": name,
+                        "match_id": mm["id"],
+                        "items": [
+                            {
+                                "item": _item_name(p["itemId"]),
+                                "minute": round(p["time"] / 60),
+                                "short": _item_short(p["itemId"]),
+                            }
+                            for p in purchases
+                            if _is_completed(p["itemId"])
+                        ],
+                    }
+                )
+        cache[key] = {
+            "carry": ID_TO_NAME.get(carry_hero_id, str(carry_hero_id)),
+            "vs": ID_TO_NAME.get(enemy_hero_id, str(enemy_hero_id)),
+            "builds": builds,
+        }
+        MATCHUP_BUILDS_CACHE.write_text(json.dumps(cache, indent=2))
 
     result = {
         "carry": ID_TO_NAME.get(carry_hero_id, str(carry_hero_id)),
@@ -627,15 +775,9 @@ def get_matchup_builds(
     if match_id is not None:
         player_items = _player_completed_items(match_id, account_id)
         pro_by_short = {i["short"]: i["item"] for b in builds for i in b["items"]}
-        bought_in = Counter(
-            s for b in builds for s in {x["short"] for x in b["items"]}
-        )
-        player_keys = {s for s in player_items if _quality(s) in _DIFF_QUALITY}
-        skipped = [
-            s
-            for s in pro_by_short
-            if _quality(s) in _DIFF_QUALITY and s not in player_keys
-        ]
+        bought_in = Counter(s for b in builds for s in {x["short"] for x in b["items"]})
+        player_keys = {s for s in player_items if _notable(s)}
+        skipped = [s for s in pro_by_short if _notable(s) and s not in player_keys]
         skipped.sort(key=lambda s: bought_in[s], reverse=True)
         result["player_build"] = sorted(player_items.values())
         result["pros_bought_player_skipped"] = [
@@ -644,38 +786,67 @@ def get_matchup_builds(
     return result
 
 
-def _synergy(carry: Hero, support: Hero) -> float | None:
-    try:
-        return get_synergy_score(
-            carry.id, support.id, matchup_data, carry.pos, support.pos, pos_data
-        )
-    except KeyError:
-        return None
+_SHARED_FRAC = 0.4  # bought in this fraction of all pulled games = general gap
+_REACTIVE_PER_ENEMY = 2  # most-bought reactive items shown per enemy
+# Per-enemy attribution is weak: the pulled games share only that one enemy, so
+# their other heroes are uncontrolled. Require this many of a matchup's games to
+# buy an item before labelling it, so one off-lineup game cannot create a label.
+_REACTIVE_MIN_GAMES = 2
 
 
-def pick_priority_target(match_id: int, account_id: int | None = None) -> dict:
-    """The two enemies to itemize against: the enemy carry (build to deal with it
-    directly, e.g. MKB into evasion) and the support with the strongest synergy
-    with that carry (killing the enabler hurts the carry most). Feed each hero_id
-    into get_matchup_builds to see how pros built against it."""
+def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
+    """Items pros bought that the player skipped, computed against every enemy
+    hero, then split into 'shared' (bought in a large share of all pulled games,
+    the player's general build gap) and 'seen_against' (concentrated in one
+    enemy's games but rare overall). seen_against is a weak signal, not causal:
+    the pulled games share only that one enemy, so the item could be a response to
+    another hero in those games. Treat shared as the reliable gap and seen_against
+    as suggestive."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
+    carry_id = player["hero_id"]
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
-    team = _team_by_pos(enemies, not radiant)
-    carry = team.get("1")
-    supports = [team[p] for p in ("4", "5") if p in team]
-    if not carry or not supports:
-        return {"target": None, "reason": "could not resolve enemy carry/supports"}
 
-    target = max(supports, key=lambda s: _synergy(carry, s) or -1e9)
-    syn = _synergy(carry, target)
+    # Tally each skipped item's purchases across every matchup's games, plus the
+    # total games pulled, so 'shared' is total game-share (a generally common item
+    # regardless of which matchup it clustered in). per_enemy keeps items bought in
+    # >=_REACTIVE_MIN_GAMES of one matchup, the candidates for an enemy-specific note.
+    total_games = 0
+    bought = Counter()
+    per_enemy: dict[str, list[tuple[str, int]]] = {}
+    for e in enemies:
+        builds = get_matchup_builds(
+            carry_id, e["hero_id"], match_id=match_id, account_id=account_id
+        )
+        skipped = builds.get("pros_bought_player_skipped", [])
+        if not skipped:
+            continue
+        total_games += len(builds["builds"])
+        for x in skipped:
+            bought[x["item"]] += x["pro_builds"]
+        named = [
+            (x["item"], x["pro_builds"])
+            for x in skipped
+            if x["pro_builds"] >= _REACTIVE_MIN_GAMES
+        ]
+        if named:
+            per_enemy[ID_TO_NAME.get(e["hero_id"], str(e["hero_id"]))] = named
+
+    shared = {
+        it
+        for it, c in bought.items()
+        if total_games and c / total_games >= _SHARED_FRAC
+    }
+    reactive: dict[str, list[str]] = {}
+    for enemy, items in per_enemy.items():
+        unique = [it for it, _ in items if it not in shared][:_REACTIVE_PER_ENEMY]
+        if unique:
+            reactive[enemy] = unique
     return {
-        "enemy_carry": carry.name,
-        "enemy_carry_hero_id": int(carry.id),
-        "target_support": target.name,
-        "target_hero_id": int(target.id),
-        "synergy_with_carry": None if syn is None else round(syn, 1),
+        "carry": ID_TO_NAME.get(carry_id, str(carry_id)),
+        "shared": sorted(shared),
+        "seen_against": reactive,
     }
 
 
@@ -776,23 +947,8 @@ TOOLS: list[ToolParam] = [
         },
     },
     {
-        "name": "get_matchup_builds",
-        "description": "Completed-item builds (item + minute) pro pos-1 carries used on a hero when a specific enemy hero was on the other team; the enemy can be a support, often the more important matchup. Pass match_id and account_id to also get the player's own completed build and pros_bought_player_skipped: the high-value items pros bought here that the player did not. Use that list as the basis for itemization advice.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "carry_hero_id": {"type": "integer"},
-                "enemy_hero_id": {"type": "integer"},
-                "match_id": {"type": "integer"},
-                "account_id": {"type": "integer"},
-                "n": {"type": "integer", "default": 4},
-            },
-            "required": ["carry_hero_id", "enemy_hero_id"],
-        },
-    },
-    {
-        "name": "pick_priority_target",
-        "description": "The enemy support worth killing first: the one with the strongest synergy with the enemy carry, since removing the enabler hurts the carry most. Returns the target support and its hero_id. Feed that hero_id into get_matchup_builds as enemy_hero_id to see how to itemize against it.",
+        "name": "get_build_gaps",
+        "description": "Items pro pos-1 carries bought on the player's hero that the player skipped, computed against every enemy and split into 'shared' (items pros bought in every matchup with data, the player's general build gap) and 'reactive' (items pros bought only against specific enemies, labelled with that enemy). Use for itemization advice without guessing a single target.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -813,35 +969,30 @@ _TOOL_FNS = {
     "get_timing_windows": get_timing_windows,
     "score_lane_matchup": score_lane_matchup,
     "get_draft_advantage": get_draft_advantage,
-    "get_matchup_builds": get_matchup_builds,
-    "pick_priority_target": pick_priority_target,
+    "get_build_gaps": get_build_gaps,
 }
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. Review one match and give short, concrete feedback.
 
-Gather this before writing:
-- get_match_detail, then compute_metrics for the percentiles.
-- score_lane_matchup (was the lane favorable?) and get_draft_advantage (was the 5v5 draft favorable?). Call both every time; they are the context for judging the player.
-- If the match is parsed, get_combat_timings, and get_timing_windows to see whether the player turned each fight item into impact.
-- pick_priority_target, then get_matchup_builds twice with the player's hero and this match_id/account_id: once against enemy_carry_hero_id (how pros build to deal with the enemy carry) and once against target_hero_id (the highest-synergy support). Call these every time, to show the pro builds in this matchup and which items the player skipped. The targets are forward-looking recommendations from synergy math, not who any pro or the player killed; do not tie them to actual kills. For who the player actually killed, use only get_combat_timings.
+The review must read consistently with the result (won from get_match_detail): a loss should never read like a win. State the result and what it came down to once, in the "Result:" line below, and nowhere else.
 
-Judge the player against that context:
-- A hard lane or losing draft is context, not the player's fault. If they won or performed well anyway, say they overcame it. Do not call it a gap.
-- Blame a hard lane or draft only when it actually lost the game: a loss, or a win where the player was clearly held back by it.
-- If the lane and draft were favorable but the game still went badly, the fault is the player's play (farm, deaths, fight impact).
-- Low farm with many deaths usually means the deaths caused it. Low farm with few deaths points to laning or a hard lane.
+Investigate, do not dump. Always start with get_match_detail and compute_metrics: that gives the result, KDA, and the farm/damage/last-hit percentiles. Read that profile, then call only the deeper tools that the profile points to. You are diagnosing, not filling a form.
 
-A gap is a mistake that changed the result or kept the player well below their usual level. A nitpick is a small stat blemish that did not change anything, like a slightly low XP percentile in a short stomp or one or two deaths in a one-sided win. In a short game a low percentile is often just the short duration, not a mistake. Report gaps, not nitpicks.
+- Low farm (low GPM/LH percentile): find out why. Call score_lane_matchup (was the lane lost on paper?) and get_combat_timings (did deaths cause it, or was it a hard lane / passive play?).
+- Good farm but low hero-damage percentile: an impact problem. Call get_timing_windows (missed power spikes?) and get_build_gaps (wrong or missing items?).
+- Lost despite a strong individual game: call get_draft_advantage to check whether the draft was the story.
+- Clean dominant win with no weak percentile: little to investigate; a short confirmation is enough. Do not pull every tool to manufacture a critique.
+Call a tool when a real question needs it, not by default. It is fine to call one deeper tool, several, or none beyond the baseline.
 
-Quote numbers as the tools return them; never compute or reformat your own. Cite a tool field by its value, not a figure you derived from it. Do not invent kill or death minutes (the phase counts are the only timing you have). A positive advantage is favorable, a negative one unfavorable; keep the sign.
+Your value is judgment, not stat-reading. Reason across whatever you gathered: decide what actually decided this game, connect the dimensions (a missed timing that led to the deaths that lost the lead; elite farm that never converted to damage), and tell the player the one or two things that matter. A coach who lists every stat is useless; one who says "your farm was fine, the game turned on X" is not.
 
-Use these exact sections:
-- "What went well:" one to three bullets.
-- "Main gap:" the single biggest mistake that cost the game, with the numbers. If the player dominated and made no real mistake, write exactly "Main gap: none, played well." Keep nitpicks out of this section.
-- "Fix:" one concrete adjustment. Omit if there is no gap.
-- "Minor notes:" optional, for small blemishes that are not gaps.
-- "Pro build reference:" two lines, one per target (the enemy carry, and the highest-synergy support). Each frames up to three pros_bought_player_skipped items as a suggestion, e.g. "vs Medusa, consider: Monkey King Bar (22), Skull Basher (19)". Item names and pro minutes only, no reasons or editorializing. If a build came back empty, say so in one line.
-- "Timing check:" only for get_timing_windows entries with missed_window true (skip if none). For each, state the facts and ask, do not assert a mistake: e.g. "You hit Manta at 20:54 and in the next 3 minutes farmed 61 last hits with no kills while your team fought without you. Was there a pickoff to make there, or was the map not set up?" Use only the window's numbers; the data shows what happened, not why.
+Faithfulness is absolute and separate from judgment. Every number you state must come from a tool result, used as given: never compute, round differently, or invent a figure, a kill/death minute, or a stat no tool reported. A positive advantage is favorable, negative unfavorable; keep the sign. Reasoning and opinion on the real numbers is encouraged; inventing numbers is not.
+
+Structure. Always write "Result:" and "Read:". Add a reference block only for a tool you actually called.
+- "Result:" won or lost (from get_match_detail), and what it came down to. On a loss never read like a win; a hard lane or losing draft that beat the player is the result, not the player's failure.
+- "Read:" your coaching analysis, a few sentences. Synthesize what you investigated; prioritize, do not enumerate. If they played well and lost to the draft, say that.
+- "Item timings:" only if you called get_timing_windows. If it has "missed" entries, write each one's "note" verbatim; otherwise write its "verdict" line. Do not compose your own timing sentence.
+- "Pro build reference:" only if you called get_build_gaps. The "shared" items, e.g. "Generally consider: Silver Edge, Satanic", then for each enemy in "seen_against" one line as a weak signal, e.g. "Seen in Invoker games: Eye of Skadi" (suggestive, not causal). Item names only.
 
 No emojis, no bold."""
 

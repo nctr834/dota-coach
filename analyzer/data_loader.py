@@ -21,7 +21,6 @@ item_data = _load("item_data.json")
 item_displayName_to_id = _load("item_displayName_to_id.json")
 patch_data = _load("patch_data.json")
 aghs_data = _load("aghs_data.json", default={})
-fight_timings = _load("fight_timings.json", default={})
 rag_items = _load("RAG/RAG_content_items.json")["items"]
 
 # Built by later pipeline steps; absent on a fresh checkout.
