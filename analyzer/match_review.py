@@ -11,8 +11,9 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 from evaluator import evaluate_hero, score_teams, Hero
-from data_loader import hero_data, item_data
+from data_loader import hero_data, item_data, aghs_data, patch_data
 from hero_lookup import ID_TO_NAME
+import chat_session
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "analyzer"))
@@ -153,6 +154,7 @@ def get_match_detail(match_id: int, account_id: int | None = None) -> dict:
         "gpm": player.get("gold_per_min"),
         "xpm": player.get("xp_per_min"),
         "last_hits": player.get("last_hits"),
+        "throw": player.get("throw"),
         "parsed": parsed,
         "radiant_heroes": [
             ID_TO_NAME.get(p["hero_id"], str(p["hero_id"]))
@@ -786,67 +788,161 @@ def get_matchup_builds(
     return result
 
 
-_SHARED_FRAC = 0.4  # bought in this fraction of all pulled games = general gap
-_REACTIVE_PER_ENEMY = 2  # most-bought reactive items shown per enemy
-# Per-enemy attribution is weak: the pulled games share only that one enemy, so
-# their other heroes are uncontrolled. Require this many of a matchup's games to
-# buy an item before labelling it, so one off-lineup game cannot create a label.
-_REACTIVE_MIN_GAMES = 2
+_CORE_FRAC = 0.5  # a notable item in this share of pro builds is the core build
+_ALT_MIN_GAMES = 2  # an alternative item must appear in at least this many builds
+_DISTINCT_MAX_OVERLAP = 1  # a build sharing <= this with the core is a distinct build
 
 
 def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
-    """Items pros bought that the player skipped, computed against every enemy
-    hero, then split into 'shared' (bought in a large share of all pulled games,
-    the player's general build gap) and 'seen_against' (concentrated in one
-    enemy's games but rare overall). seen_against is a weak signal, not causal:
-    the pulled games share only that one enemy, so the item could be a response to
-    another hero in those games. Treat shared as the reliable gap and seen_against
-    as suggestive."""
+    """How pros build the player's hero, and which of those items the player
+    skipped. Pulls pro builds across every enemy (each is single-hero-conditioned,
+    not vs the whole lineup, so this is the general build, not matchup-reactive).
+    Reports: core (items in most pro builds), alternatives (situational items that
+    recur but are not core), any distinct_build (a genuinely different build that
+    shares almost nothing with the core, e.g. a magic vs right-click split), and
+    player_skipped (core/alternative items the player did not buy)."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
     carry_id = player["hero_id"]
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
 
-    # Tally each skipped item's purchases across every matchup's games, plus the
-    # total games pulled, so 'shared' is total game-share (a generally common item
-    # regardless of which matchup it clustered in). per_enemy keeps items bought in
-    # >=_REACTIVE_MIN_GAMES of one matchup, the candidates for an enemy-specific note.
-    total_games = 0
-    bought = Counter()
-    per_enemy: dict[str, list[tuple[str, int]]] = {}
+    seen = set()
+    pro_builds: list[set[str]] = []  # each build's notable completed item shorts
+    name_of: dict[str, str] = {}
     for e in enemies:
-        builds = get_matchup_builds(
+        result = get_matchup_builds(
             carry_id, e["hero_id"], match_id=match_id, account_id=account_id
         )
-        skipped = builds.get("pros_bought_player_skipped", [])
-        if not skipped:
-            continue
-        total_games += len(builds["builds"])
-        for x in skipped:
-            bought[x["item"]] += x["pro_builds"]
-        named = [
-            (x["item"], x["pro_builds"])
-            for x in skipped
-            if x["pro_builds"] >= _REACTIVE_MIN_GAMES
-        ]
-        if named:
-            per_enemy[ID_TO_NAME.get(e["hero_id"], str(e["hero_id"]))] = named
+        for b in result["builds"]:
+            if b["match_id"] in seen:
+                continue  # same pro game can surface under multiple enemies
+            seen.add(b["match_id"])
+            items = {i["short"] for i in b["items"] if _notable(i["short"])}
+            if items:
+                pro_builds.append(items)
+            for i in b["items"]:
+                name_of[i["short"]] = i["item"]
 
-    shared = {
-        it
-        for it, c in bought.items()
-        if total_games and c / total_games >= _SHARED_FRAC
+    n = len(pro_builds)
+    if not n:
+        return {"carry": ID_TO_NAME.get(carry_id, str(carry_id)), "core": []}
+
+    freq = Counter(s for b in pro_builds for s in b)
+    core = {s for s, c in freq.items() if c >= n * _CORE_FRAC}
+    alts = {s for s, c in freq.items() if s not in core and c >= _ALT_MIN_GAMES}
+
+    # A distinct build is a pulled build that barely overlaps the core and adds
+    # items of its own (a real alternative like a magic build vs a right-click
+    # core), if one exists.
+    distinct = set()
+    for b in pro_builds:
+        shared_with_core = b.intersection(core)
+        own_items = b.difference(core)
+        if len(shared_with_core) <= _DISTINCT_MAX_OVERLAP and own_items:
+            distinct = b
+            break
+
+    player_items = {
+        s for s in _player_completed_items(match_id, account_id) if _notable(s)
     }
-    reactive: dict[str, list[str]] = {}
-    for enemy, items in per_enemy.items():
-        unique = [it for it, _ in items if it not in shared][:_REACTIVE_PER_ENEMY]
-        if unique:
-            reactive[enemy] = unique
-    return {
+    # Diff against the build the player was actually going for, not a global pool:
+    # if a distinct build exists and the player's items match it more than the
+    # core, compare to it; otherwise compare to the core. alternatives are
+    # informational only and never count as a skipped gap.
+    target = core
+    on_distinct = False
+    if distinct and len(player_items.intersection(distinct)) > len(
+        player_items.intersection(core)
+    ):
+        target = distinct
+        on_distinct = True
+    skipped = target.difference(player_items)
+
+    def names(shorts):
+        return [name_of[s] for s in sorted(shorts, key=lambda s: -freq[s])]
+
+    out = {
         "carry": ID_TO_NAME.get(carry_id, str(carry_id)),
-        "shared": sorted(shared),
-        "seen_against": reactive,
+        "pro_builds_sampled": n,
+        "core": names(core),
+        "alternatives": names(alts),
+        "player_build": "distinct" if on_distinct else "core",
+        "player_skipped": names(skipped),
+    }
+    if distinct:
+        out["distinct_build"] = names(distinct)
+    return out
+
+
+_TREND_METRICS = {
+    "gold_per_min": "gold_per_min",
+    "last_hits": "last_hits",
+    "hero_damage": "hero_damage",
+    "kills": "kills",
+    "deaths": "deaths",
+    "assists": "assists",
+}
+
+
+def get_metric_trend(account_id: int, hero_id: int, metric: str, limit: int = 20) -> dict:
+    """The player's recent distribution of a metric on one hero (count, average,
+    min, max), to tell whether one game's value is typical for them. metric is one
+    of gold_per_min, last_hits, hero_damage, kills, deaths, assists."""
+    field = _TREND_METRICS.get(metric)
+    if field is None:
+        return {"error": f"metric must be one of {sorted(_TREND_METRICS)}"}
+    matches = _get_list(
+        f"/players/{account_id}/matches",
+        {"hero_id": hero_id, "limit": limit, "project": [field]},
+    )
+    values = [m[field] for m in matches if m.get(field) is not None]
+    if not values:
+        return {
+            "hero": ID_TO_NAME.get(hero_id, str(hero_id)),
+            "metric": metric,
+            "games": 0,
+        }
+    return {
+        "hero": ID_TO_NAME.get(hero_id, str(hero_id)),
+        "metric": metric,
+        "games": len(values),
+        "average": round(sum(values) / len(values), 1),
+        "min": min(values),
+        "max": max(values),
+    }
+
+
+def get_aghs(hero_id: int) -> dict:
+    """Aghanim's Scepter and Shard effects for a hero (what each upgrade does)."""
+    entry = aghs_data.get(str(hero_id)) or aghs_data.get(hero_id) or {}
+    out = {"hero": ID_TO_NAME.get(hero_id, str(hero_id))}
+    if entry.get("has_scepter") and entry.get("scepter_desc"):
+        out["scepter"] = {
+            "skill": entry.get("scepter_skill_name", ""),
+            "effect": entry["scepter_desc"],
+        }
+    if entry.get("has_shard") and entry.get("shard_desc"):
+        out["shard"] = {
+            "skill": entry.get("shard_skill_name", ""),
+            "effect": entry["shard_desc"],
+        }
+    return out
+
+
+def get_patch_notes(hero_id: int) -> dict:
+    """Recent patch changes for a hero: base-stat changes and per-ability changes,
+    keyed by patch version."""
+    entry = patch_data["heroes"].get(str(hero_id)) or {}
+    abilities = {
+        ability: changes
+        for ability, changes in (entry.get("abilities") or {}).items()
+        if changes
+    }
+    return {
+        "hero": ID_TO_NAME.get(hero_id, str(hero_id)),
+        "hero_changes": entry.get("hero") or {},
+        "ability_changes": abilities,
     }
 
 
@@ -948,7 +1044,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_build_gaps",
-        "description": "Items pro pos-1 carries bought on the player's hero that the player skipped, computed against every enemy and split into 'shared' (items pros bought in every matchup with data, the player's general build gap) and 'reactive' (items pros bought only against specific enemies, labelled with that enemy). Use for itemization advice without guessing a single target.",
+        "description": "How pros build the player's hero, and which of those items the player skipped. Returns core (items in most pro builds), alternatives (situational items), an optional distinct_build (a genuinely different build like a magic vs right-click split), and player_skipped. This is the general build for the hero, not matchup-specific. Use for itemization advice.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -956,6 +1052,37 @@ TOOLS: list[ToolParam] = [
                 "account_id": {"type": "integer"},
             },
             "required": ["match_id"],
+        },
+    },
+    {
+        "name": "get_metric_trend",
+        "description": "The player's recent average/min/max of a metric on one hero across their last games, to judge whether this match's value is typical for them (e.g. 'is my farm always this low'). metric is one of gold_per_min, last_hits, hero_damage, kills, deaths, assists.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "account_id": {"type": "integer"},
+                "hero_id": {"type": "integer"},
+                "metric": {"type": "string"},
+            },
+            "required": ["account_id", "hero_id", "metric"],
+        },
+    },
+    {
+        "name": "get_aghs",
+        "description": "What a hero's Aghanim's Scepter and Shard do (the upgrade effects). Use when itemization or power-spike advice touches a hero's Aghs.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"hero_id": {"type": "integer"}},
+            "required": ["hero_id"],
+        },
+    },
+    {
+        "name": "get_patch_notes",
+        "description": "Recent patch changes for a hero: base-stat changes and per-ability changes by patch version. Use when a recent buff or nerf is relevant to the advice.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"hero_id": {"type": "integer"}},
+            "required": ["hero_id"],
         },
     },
 ]
@@ -970,11 +1097,14 @@ _TOOL_FNS = {
     "score_lane_matchup": score_lane_matchup,
     "get_draft_advantage": get_draft_advantage,
     "get_build_gaps": get_build_gaps,
+    "get_metric_trend": get_metric_trend,
+    "get_aghs": get_aghs,
+    "get_patch_notes": get_patch_notes,
 }
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. Review one match and give short, concrete feedback.
 
-The review must read consistently with the result (won from get_match_detail): a loss should never read like a win. State the result and what it came down to once, in the "Result:" line below, and nowhere else.
+The review must read consistently with the result (won from get_match_detail): a loss should never read like a win and if a throw happened, mention it without attributing blame directly. State the result and what it came down to once, in the "Result:" line below, and nowhere else.
 
 Investigate, do not dump. Always start with get_match_detail and compute_metrics: that gives the result, KDA, and the farm/damage/last-hit percentiles. Read that profile, then call only the deeper tools that the profile points to. You are diagnosing, not filling a form.
 
@@ -992,7 +1122,7 @@ Structure. Always write "Result:" and "Read:". Add a reference block only for a 
 - "Result:" won or lost (from get_match_detail), and what it came down to. On a loss never read like a win; a hard lane or losing draft that beat the player is the result, not the player's failure.
 - "Read:" your coaching analysis, a few sentences. Synthesize what you investigated; prioritize, do not enumerate. If they played well and lost to the draft, say that.
 - "Item timings:" only if you called get_timing_windows. If it has "missed" entries, write each one's "note" verbatim; otherwise write its "verdict" line. Do not compose your own timing sentence.
-- "Pro build reference:" only if you called get_build_gaps. The "shared" items, e.g. "Generally consider: Silver Edge, Satanic", then for each enemy in "seen_against" one line as a weak signal, e.g. "Seen in Invoker games: Eye of Skadi" (suggestive, not causal). Item names only.
+- "Pro build reference:" only if you called get_build_gaps. List the player_skipped items pros build that this player did not (core first). If a distinct_build is present, name it as a separate build option (e.g. "pros also run a caster build: Aghanim's Scepter, Eul's, ..."). State only item names and that pros build them; do NOT explain why any item helps, what it counters, or why it suits this game. You do not have that information and would be guessing. The fact that pros build it is the whole point.
 
 No emojis, no bold."""
 
@@ -1003,35 +1133,36 @@ def _strip_emphasis(text: str) -> str:
     return text
 
 
-def review_match(
-    account_id: int | None = None,
-    match_id: int | None = None,
+def run_agent(
+    system: str,
+    user_message: str,
+    history: list[MessageParam] | None = None,
     max_turns: int = 8,
 ) -> dict:
-    if account_id is None and match_id is None:
-        raise ValueError("provide account_id or match_id")
-    if match_id is not None:
-        ask = f"Review match_id {match_id}" + (
-            f" for account_id {account_id}." if account_id else "."
-        )
-    else:
-        ask = f"Review the most recent notable match for account_id {account_id}."
-
-    messages: list[MessageParam] = [{"role": "user", "content": ask}]
+    """Run the tool-calling loop, optionally continuing a prior conversation.
+    history is the messages from earlier turns (None to start fresh); user_message
+    is the new turn. Returns {"text", "tool_trace", "messages"} where messages is
+    the full updated history to persist and pass back next turn."""
+    messages: list[MessageParam] = list(history or [])
+    messages.append({"role": "user", "content": user_message})
     trace = []
     for _ in range(max_turns):
         resp = client.messages.create(
             model=AGENT_MODEL,
             max_tokens=1500,
             temperature=0,
-            system=SYSTEM_REVIEW,
+            system=system,
             tools=TOOLS,
             messages=messages,
         )
         messages.append({"role": "assistant", "content": resp.content})
         if resp.stop_reason != "tool_use":
             text = "".join(b.text for b in resp.content if b.type == "text")
-            return {"review": _strip_emphasis(text.strip()), "tool_trace": trace}
+            return {
+                "text": _strip_emphasis(text.strip()),
+                "tool_trace": trace,
+                "messages": messages,
+            }
 
         results: list[ToolResultBlockParam] = []
         for block in resp.content:
@@ -1051,4 +1182,54 @@ def review_match(
             )
         messages.append({"role": "user", "content": results})
 
-    return {"review": "max turns reached", "tool_trace": trace}
+    return {"text": "max turns reached", "tool_trace": trace, "messages": messages}
+
+
+def review_match(
+    account_id: int | None = None,
+    match_id: int | None = None,
+    max_turns: int = 8,
+) -> dict:
+    if account_id is None and match_id is None:
+        raise ValueError("provide account_id or match_id")
+    if match_id is not None:
+        ask = f"Review match_id {match_id}" + (
+            f" for account_id {account_id}." if account_id else "."
+        )
+    else:
+        ask = f"Review the most recent notable match for account_id {account_id}."
+
+    result = run_agent(SYSTEM_REVIEW, ask, max_turns=max_turns)
+    # Persist the review as the opening of the chat session so a follow-up
+    # continues this conversation instead of regenerating the review.
+    if account_id is not None and match_id is not None:
+        chat_session.save(account_id, match_id, result["messages"])
+    return {
+        "review": result["text"],
+        "tool_trace": result["tool_trace"],
+        "messages": result["messages"],
+    }
+
+
+SYSTEM_CHAT = """You are a Dota 2 coach continuing a conversation about a match you
+already reviewed (the review and its tool results are in the history above).
+Answer the player's follow-up directly and concisely, in plain prose, not the
+structured review format. Reuse facts already gathered; call a tool only for a
+fact you do not yet have. Faithfulness is absolute: every number must come from a
+tool result, used as given; never invent or recompute a figure. For pro builds
+(get_build_gaps), state which items pros build and which the player skipped, and
+name a distinct_build if present; do NOT explain why an item helps or what it
+counters, you do not have that and would be guessing. No emojis, no bold."""
+
+
+def chat_about_match(account_id: int, match_id: int, message: str) -> dict:
+    """Answer a follow-up question about a match, continuing the same agent
+    conversation. Starts the session with a full review if none exists yet, then
+    runs one turn on the question. Persists the updated history."""
+    history = chat_session.load(account_id, match_id)
+    if history is None:
+        review = review_match(account_id=account_id, match_id=match_id)
+        history = review["messages"]
+    result = run_agent(SYSTEM_CHAT, message, history=history)
+    chat_session.save(account_id, match_id, result["messages"])
+    return {"reply": result["text"], "tool_trace": result["tool_trace"]}

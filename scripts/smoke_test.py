@@ -61,11 +61,11 @@ def _data_files():
 
 
 def _aghs_coverage():
-    import process_query as pq
+    from match_review import get_aghs
     from hero_lookup import NAME_TO_ID
 
-    assert pq._get_aghs_data("Anti-Mage"), "Anti-Mage aghs missing"
-    covered = sum(1 for name in NAME_TO_ID if pq._get_aghs_data(name))
+    assert get_aghs(1).get("scepter"), "Anti-Mage aghs missing"
+    covered = sum(1 for hid in NAME_TO_ID.values() if len(get_aghs(int(hid))) > 1)
     assert covered > 100, f"only {covered} heroes have aghs text"
 
 

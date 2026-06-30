@@ -14,7 +14,7 @@ os.chdir(PROJECT_ROOT)
 
 from evaluator import Hero, rank_picks, score_teams
 from process_query import generate_response
-from match_review import review_match
+from match_review import review_match, chat_about_match
 
 with open(PROJECT_ROOT / "data/hero_data.json") as f:
     hero_data = json.load(f)
@@ -59,6 +59,12 @@ class QueryRequest(BaseModel):
 class ReviewRequest(BaseModel):
     accountId: int | None = None
     matchId: int | None = None
+
+
+class ChatRequest(BaseModel):
+    accountId: int
+    matchId: int
+    message: str
 
 
 def picks_to_dict(picks: list[HeroPick]) -> dict:
@@ -108,4 +114,10 @@ def api_query(req: QueryRequest):
 @app.post("/api/review-match")
 def api_review_match(req: ReviewRequest):
     result = review_match(account_id=req.accountId, match_id=req.matchId)
-    return result
+    return {"review": result["review"], "toolTrace": result["tool_trace"]}
+
+
+@app.post("/api/chat")
+def api_chat(req: ChatRequest):
+    result = chat_about_match(req.accountId, req.matchId, req.message)
+    return {"reply": result["reply"], "toolTrace": result["tool_trace"]}
