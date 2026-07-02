@@ -39,7 +39,6 @@ ignore = {
     "pos_data": False,
     "item_data": False,
     "patch_data": False,
-    "aghs_data": False,
 }
 
 # Valve's internal item names → actual in-game display names.
@@ -645,25 +644,6 @@ def gather_pos_data():
         exit(1)
 
 
-# ---------------------------------------------------------------------------
-#  Aghanim's Scepter/Shard data (OpenDota aghs_desc constants)
-# ---------------------------------------------------------------------------
-
-
-def gather_aghs_data():
-    if ignore["aghs_data"] or not hero_data:
-        return
-    url = "https://api.opendota.com/api/constants/aghs_desc"
-    response = get(url)
-    aghs_data = {}
-    for hero in response.json():
-        hid = str(hero["hero_id"])
-        hero["hero_name"] = hero_data.get(hid, {}).get("displayName", hid)
-        aghs_data[hid] = hero
-    print(f"Aghs data gathered: {len(aghs_data)}")
-    with open("data/aghs_data.json", "w") as f:
-        json.dump(aghs_data, f)
-
 
 # ---------------------------------------------------------------------------
 #  Patch data (already uses d2vpkr)
@@ -874,6 +854,5 @@ if __name__ == "__main__":
     item_data = gather_item_game_data() or item_data
     gather_matchup_data()
     gather_pos_data()
-    gather_aghs_data()
     gather_patch_data()
     gather_item_builds()

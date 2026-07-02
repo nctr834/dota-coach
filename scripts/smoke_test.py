@@ -35,6 +35,8 @@ def _imports():
         "hero_lookup",
         "counters",
         "evaluator",
+        "utils",
+        "tools",
         "process_query",
         "match_review",
     ):
@@ -49,24 +51,13 @@ def _data_files():
         item_data,
         item_displayName_to_id,
         patch_data,
-        aghs_data,
         hero_item_builds,
     )
 
     assert len(hero_data) > 100, "too few heroes"
     assert len(matchup_data) > 100, "too few matchups"
-    assert len(aghs_data) > 100, "too few aghs entries"
     assert pos_data and item_data and item_displayName_to_id and patch_data
     assert hero_item_builds, "hero_item_builds empty"
-
-
-def _aghs_coverage():
-    from match_review import get_aghs
-    from hero_lookup import NAME_TO_ID
-
-    assert get_aghs(1).get("scepter"), "Anti-Mage aghs missing"
-    covered = sum(1 for hid in NAME_TO_ID.values() if len(get_aghs(int(hid))) > 1)
-    assert covered > 100, f"only {covered} heroes have aghs text"
 
 
 def _hero_lookup():
@@ -110,32 +101,32 @@ CARRY_ACC = 96183976
 
 
 def _match_detail():
-    import match_review as mr
+    import tools as t
 
-    d = mr.get_match_detail(PARSED_MATCH, CARRY_ACC)
+    d = t.get_match_detail(PARSED_MATCH, CARRY_ACC)
     assert d["hero"] == "Drow Ranger"
     assert d["parsed"] is True
 
 
 def _compute_metrics():
-    import match_review as mr
+    import tools as t
 
-    m = mr.compute_metrics(PARSED_MATCH, CARRY_ACC)
+    m = t.compute_metrics(PARSED_MATCH, CARRY_ACC)
     assert "metrics" in m and isinstance(m["weak_areas"], list)
 
 
 def _lane_matchup():
-    import match_review as mr
+    import tools as t
 
-    lm = mr.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
+    lm = t.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in lm
     assert lm["breakdown"]["ally_lane"], "no heroes resolved for player's lane"
 
 
 def _draft_advantage():
-    import match_review as mr
+    import tools as t
 
-    da = mr.get_draft_advantage(PARSED_MATCH, CARRY_ACC)
+    da = t.get_draft_advantage(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in da and "ally_team_score" in da
 
 
@@ -165,7 +156,6 @@ def _api_score_endpoint():
 for name, fn in [
     ("imports", _imports),
     ("data files load (all gather outputs)", _data_files),
-    ("aghs coverage (127 heroes)", _aghs_coverage),
     ("hero_lookup maps", _hero_lookup),
     ("score_teams", _score_teams),
     ("rank_picks", _rank_picks),
