@@ -46,5 +46,5 @@ python3 scripts/smoke_test.py
 - **Coach transcripts** — `data/transcripts_condensed/` (BSJ, PainDota, ZQuixotix)
 
 ## Current Focus
-- Tagged Advice RAG System — replacing LLM gameplay reasoning with expert-sourced tagged advice
+- Post-game coach UI — review + follow-up chat view over `/api/review-match` and `/api/chat`
 - GSI integration into the query pipeline
