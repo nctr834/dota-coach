@@ -24,3 +24,5 @@ patch_data = _load("patch_data.json")
 # Built by later pipeline steps; absent on a fresh checkout.
 hero_tags = _load("hero_tags.json", default={})
 hero_item_builds = _load("hero_item_builds.json", default={})
+hero_break_dispel = _load("hero_break_dispel.json", default={})
+item_tags = _load("item_tags.json", default={})

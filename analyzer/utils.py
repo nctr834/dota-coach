@@ -21,6 +21,7 @@ _NPC_NAME = {
 _NPC_TO_DISPLAY = {
     f"npc_dota_hero_{h['shortName']}": h["displayName"] for h in hero_data.values()
 }
+_NPC_TO_ID = {_NPC_NAME[int(h["id"])]: int(h["id"]) for h in hero_data.values()}
 
 load_dotenv()
 ITEM_TIMING_CACHE = ROOT / "analyzer" / "item_timing_cache.json"
@@ -47,14 +48,18 @@ OPENDOTA = "https://api.opendota.com/api"
 _cache: dict[str, dict | list] = {}
 
 
+def _cache_key(path: str, params: dict | None = None) -> str:
+    return path + "?" + json.dumps(params or {}, sort_keys=True)
+
+
 def _get(path: str, params: dict | None = None) -> dict | list:
-    key = path + "?" + json.dumps(params or {}, sort_keys=True)
+    key = _cache_key(path, params)
     if key in _cache:
         return _cache[key]
     last_resp = None
     for attempt in range(3):
         last_resp = requests.get(f"{OPENDOTA}{path}", params=params, timeout=20)
-        if last_resp.status_code == 429:
+        if last_resp.status_code == 429 or last_resp.status_code >= 500:
             time.sleep(2**attempt)
             continue
         last_resp.raise_for_status()
@@ -89,6 +94,26 @@ def _find_player(match: dict, account_id: int | None) -> dict | None:
 
 def _is_parsed(player: dict) -> bool:
     return bool(player.get("gold_t")) and player.get("life_state") is not None
+
+
+def request_parse(match_id: int) -> int | None:
+    """Queue an OpenDota replay parse. Returns the job id, None on failure."""
+    try:
+        resp = requests.post(f"{OPENDOTA}/request/{match_id}", timeout=20)
+        return (resp.json().get("job") or {}).get("jobId")
+    except Exception:
+        return None
+
+
+def ensure_parsed(match_id: int) -> bool:
+    """True when OpenDota has replay-parsed data for the match. Otherwise
+    queues a parse and evicts the cached match blob so a retry refetches."""
+    match = _get_obj(f"/matches/{match_id}")
+    if match.get("version") is not None:
+        return True
+    _cache.pop(_cache_key(f"/matches/{match_id}"), None)
+    request_parse(match_id)
+    return False
 
 
 def _pct(player: dict, metric: str) -> int | None:
@@ -141,12 +166,14 @@ _DECIDED_GOLD = (
 
 
 def _gold_adv_at(match: dict, player: dict, minute: int) -> int | None:
-    """Player team's gold advantage at a given minute (negative = behind)."""
+    """Player team's gold advantage at a given minute (negative = behind).
+    Clamped: pre-horn events have negative times, and adv[-1] would silently
+    read the end of the game."""
     adv = match.get("radiant_gold_adv")
     if not adv:
         return None
     radiant = player["player_slot"] < 128
-    val = adv[min(minute, len(adv) - 1)]
+    val = adv[max(0, min(minute, len(adv) - 1))]
     return val if radiant else -val
 
 
@@ -213,6 +240,48 @@ def _stratz(query: str) -> dict:
     return resp.json().get("data") or {}
 
 
+_match_stats_cache: dict[int, dict] = {}
+
+
+def _stratz_match_stats(match_id: int) -> dict:
+    """Stratz deep-parse stats per player, keyed by steam account id: per-minute
+    tower damage (deltas, not cumulative) and the farm gold distribution.
+    Empty per player (or entirely) when Stratz lacks the deep parse for this
+    match, the API key is missing, or the call fails — every consumer treats
+    the fields as optional."""
+    if match_id in _match_stats_cache:
+        return _match_stats_cache[match_id]
+    query = f"""
+    {{
+    match(id: {match_id}) {{
+        players {{
+            steamAccountId
+            stats {{
+                towerDamagePerMinute
+                farmDistributionReport {{
+                    creepLocation {{ gold }}
+                    neutralLocation {{ gold }}
+                    ancientLocation {{ gold }}
+                    buildings {{ gold }}
+                }}
+            }}
+        }}
+    }}
+    }}
+    """
+    try:
+        players = (_stratz(query).get("match") or {}).get("players") or []
+    except Exception:
+        players = []
+    stats = {
+        p["steamAccountId"]: p.get("stats") or {}
+        for p in players
+        if p.get("steamAccountId") is not None
+    }
+    _match_stats_cache[match_id] = stats
+    return stats
+
+
 def _load_items() -> None:
     if _items:
         return
@@ -236,5 +305,3 @@ def _is_completed(item_id: int) -> bool:
     short = (_items.get(item_id) or {}).get("shortName")
     quality = (item_data.get(f"item_{short}") or {}).get("quality")
     return quality in _COMPLETED_QUALITY
-
-

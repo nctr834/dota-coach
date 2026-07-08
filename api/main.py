@@ -3,7 +3,7 @@ import os
 import json
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -14,7 +14,10 @@ os.chdir(PROJECT_ROOT)
 
 from evaluator import Hero, rank_picks, score_teams
 from process_query import generate_response
-from match_review import review_match, chat_about_match
+from match_review import review_match, chat_about_match, session_transcript
+from tools import _team_by_pos
+from utils import _get_obj
+import chat_session
 
 with open(PROJECT_ROOT / "data/hero_data.json") as f:
     hero_data = json.load(f)
@@ -86,6 +89,22 @@ def api_score_teams(req: ScoreRequest):
     }
 
 
+@app.get("/api/match-draft-score")
+def api_match_draft_score(matchId: int):
+    """The draft screen's score-teams math over a finished match: positions
+    are assigned from lane and last-hits, same as the review agent's
+    get_draft_advantage."""
+    match = _get_obj(f"/matches/{matchId}")
+    radiant = [p for p in match["players"] if p["player_slot"] < 128]
+    dire = [p for p in match["players"] if p["player_slot"] >= 128]
+    r, d, delta = score_teams(_team_by_pos(radiant, True), _team_by_pos(dire, False))
+    return {
+        "radiantScore": round(r, 2),
+        "direScore": round(d, 2),
+        "delta": round(delta, 2),
+    }
+
+
 @app.post("/api/rank-picks")
 def api_rank_picks(req: RankRequest):
     team = picks_to_dict(req.team)
@@ -113,11 +132,35 @@ def api_query(req: QueryRequest):
 
 @app.post("/api/review-match")
 def api_review_match(req: ReviewRequest):
-    result = review_match(account_id=req.accountId, match_id=req.matchId)
+    try:
+        result = review_match(account_id=req.accountId, match_id=req.matchId)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"review failed: {e}")
     return {"review": result["review"], "toolTrace": result["tool_trace"]}
 
 
 @app.post("/api/chat")
 def api_chat(req: ChatRequest):
-    result = chat_about_match(req.accountId, req.matchId, req.message)
+    try:
+        result = chat_about_match(req.accountId, req.matchId, req.message)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"chat failed: {e}")
     return {"reply": result["reply"], "toolTrace": result["tool_trace"]}
+
+
+@app.get("/api/chat-history")
+def api_chat_history(accountId: int, matchId: int):
+    transcript = session_transcript(accountId, matchId)
+    if transcript is None:
+        return {"found": False}
+    return {"found": True, **transcript}
+
+
+@app.get("/api/review-history")
+def api_review_history(accountId: int):
+    reviews = []
+    for match_id in chat_session.list_matches(accountId):
+        transcript = session_transcript(accountId, match_id)
+        snippet = ((transcript or {}).get("review") or "").split("\n")[0][:120]
+        reviews.append({"matchId": match_id, "snippet": snippet})
+    return {"reviews": reviews}

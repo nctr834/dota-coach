@@ -15,6 +15,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 import anthropic
@@ -24,7 +25,12 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "analyzer"))
 os.chdir(ROOT)
 
+import chat_session
 from match_review import review_match, AGENT_MODEL
+
+# Eval reviews must not overwrite the user's real saved sessions for these
+# matches, so the session store points at a throwaway dir for this process.
+chat_session._DIR = Path(tempfile.mkdtemp(prefix="eval-sessions-"))
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -45,9 +51,11 @@ def cached_review(match_id: int, fresh: bool = False) -> dict:
     if not fresh and key in cache:
         return cache[key]
     result = review_match(account_id=LABELS["account_id"], match_id=match_id)
-    cache[key] = result
+    # The result's "messages" carry SDK objects and are chat-session state, not
+    # eval material; cache only what gets scored.
+    cache[key] = {"review": result["review"], "tool_trace": result["tool_trace"]}
     REVIEW_CACHE.write_text(json.dumps(cache, indent=2))
-    return result
+    return cache[key]
 
 
 JUDGE_SYSTEM = f"""You map a Dota 2 post-game review to gap tags for a position-1
@@ -57,11 +65,16 @@ Return ONLY a JSON object: {{"predicted_gaps": [<subset of {TAXONOMY}>]}}.
 predicted_gaps must be a subset of exactly these tags: {TAXONOMY}. Never output
 any string outside this list (not a metric name, not a hero name).
 
-Read ONLY the "Main gap:" section; ignore "What went well", "Minor notes", and
-nitpicks elsewhere. If it says "none, played well", return ["no_gap"]. Map the
-mistake it names to the matching tag(s). A hard lane or losing draft framed as
-context the player overcame is not a gap; tag lane_matchup_disadvantage or
-draft_disadvantage only if "Main gap" blames it for the loss."""
+The review renders no verdicts; it lays out evidence and ends on an open
+question. Tag the candidate reasons its "Read:" foregrounds as evidence:
+deaths cited with context (caught alone, first in fight, farmed and behind)
+-> deaths; a lost lane or missed CS checkpoints -> lane_cs; farm droughts or
+slow farm after laning -> mid_game_farm; item choices or timings questioned
+-> itemization; power spikes farmed through, fights the team took without the
+player, low fight participation -> teamfight_impact. A hard lane or losing
+draft mentioned as context is not a gap; tag lane_matchup_disadvantage or
+draft_disadvantage only when the Read centers it as the leading candidate.
+A clean confirmation flagging nothing -> ["no_gap"]."""
 
 
 def predict_gaps(review: str) -> dict:
@@ -90,8 +103,14 @@ PHASE_BOUNDARIES = {10, 25}
 
 def _fact_numbers(tool_trace: list) -> set[int]:
     """Every numeric tool value, as a set of rounded ints and their +/-1
-    neighbors, so a review that rounds a long float still matches."""
+    neighbors, so a review that rounds a long float still matches. Numbers
+    embedded in string facts count too — gold_swings, largest_team_deficit,
+    building/objective timelines, and CS targets are strings by design."""
     nums: set[int] = set()
+
+    def _add(x: float):
+        r = round(x)
+        nums.update((r - 1, r, r + 1))
 
     def walk(node):
         if isinstance(node, dict):
@@ -103,8 +122,10 @@ def _fact_numbers(tool_trace: list) -> set[int]:
         elif isinstance(node, bool):
             return
         elif isinstance(node, (int, float)):
-            r = round(node)
-            nums.update((r - 1, r, r + 1))
+            _add(node)
+        elif isinstance(node, str):
+            for tok in re.findall(r"-?\d+(?:\.\d+)?", node):
+                _add(float(tok))
 
     for s in tool_trace:
         walk(s.get("result"))
@@ -117,6 +138,8 @@ def unsupported_numbers(review: str, tool_trace: list) -> list[str]:
     boundary minutes the agent uses to name buckets are always allowed."""
     facts = _fact_numbers(tool_trace)
     review = re.sub(r"(?<=\d),(?=\d)", "", review)
+    # "22-35 minutes" is a range and "tier-4" a hyphenation, not negative numbers.
+    review = re.sub(r"(?<=[\dA-Za-z])-(?=\d)", " ", review)
     bad = []
     for token in re.findall(r"-?\d+(?:\.\d+)?", review):
         val = round(float(token))
@@ -124,6 +147,22 @@ def unsupported_numbers(review: str, tool_trace: list) -> list[str]:
             continue
         bad.append(token)
     return bad
+
+
+_VERDICT_SHAPES = re.compile(
+    r"\b(came from|came through|hinged on|decided by|closed (it|the game) out"
+    r"|turned the (deficit|game|tide)|the (problem|issue|reason) (was|is)"
+    r"|was(n't| not) the (problem|issue)|could( not|n't)? have won"
+    r"|(execution|mechanics|positioning) (was|were))\b",
+    re.IGNORECASE,
+)
+
+
+def verdict_shapes(review: str) -> list[str]:
+    """Attribution phrasings the prompt bans — cause claims the data cannot
+    settle. Deterministic regex, so prompt regressions surface without
+    hand-reading reviews."""
+    return [m.group(0) for m in _VERDICT_SHAPES.finditer(review)]
 
 
 def score_gaps(true_gaps: set, predicted: set):
@@ -153,7 +192,8 @@ def main(argv):
         p, r, f1 = score_gaps(true_g, pred_g)
         claims = unsupported_numbers(result["review"], result["tool_trace"])
         total_unsupported += len(claims)
-        rows.append((m["match_id"], true_g, pred_g, p, r, f1, len(claims)))
+        verdicts = verdict_shapes(result["review"])
+        rows.append((m["match_id"], true_g, pred_g, p, r, f1, len(claims), len(verdicts)))
 
         print(f"match {m['match_id']}")
         print(f"  true:      {sorted(true_g)}")
@@ -162,6 +202,8 @@ def main(argv):
         print(f"  P={p:.2f} R={r:.2f} F1={f1:.2f}{flag}")
         if claims:
             print(f"  unsupported numbers ({len(claims)}): {', '.join(claims)}")
+        if verdicts:
+            print(f"  verdict shapes ({len(verdicts)}): {', '.join(verdicts)}")
         if verbose:
             print(f"  --- review ---\n{result['review']}\n")
         print()
@@ -173,6 +215,7 @@ def main(argv):
     print(f"  macro F1:        {sum(x[5] for x in rows)/n:.2f}")
     print(f"  faithful reviews: {sum(1 for x in rows if x[6]==0)}/{n}")
     print(f"  total unsupported numbers: {total_unsupported}")
+    print(f"  verdict-free reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
     return 0
 
 

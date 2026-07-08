@@ -1,8 +1,8 @@
 """Run the match-review agent against a match and print the review + tool trace.
 
-  python3 scripts/try_review.py <match_id> [account_id]
-  python3 scripts/try_review.py --account <account_id>   # picks a recent match
-  python3 scripts/try_review.py <match_id> [account_id] --tool-trace  # full results
+python3 scripts/try_review.py <match_id> [account_id]
+python3 scripts/try_review.py --account <account_id>   # picks a recent match
+python3 scripts/try_review.py <match_id> [account_id] --tool-trace  # full results
 """
 
 import json

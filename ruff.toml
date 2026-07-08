@@ -3,4 +3,5 @@
 # analyzer import must come after the path setup rather than at the top.
 "api/main.py" = ["E402"]
 "scripts/try_review.py" = ["E402"]
+"scripts/build_item_tags.py" = ["E402"]
 "eval/run_eval.py" = ["E402"]

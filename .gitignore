@@ -6,6 +6,7 @@ analyzer/__pycache__/*/*
 backup_transcripts_condensed/*
 data/transcripts_raw/*
 data/*.json
+data/sessions/*
 data/vectordb/*
 frontend/src/data/*.json
 eval/labels.json

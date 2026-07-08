@@ -102,6 +102,15 @@ ITEM_NAME_OVERRIDES = {
     "item_witches_switch": "Witch's Switch",
 }
 
+# Valve marks the Blink Dagger family ItemQuality "component" (they build into
+# each other); for build analysis they are completed items.
+ITEM_QUALITY_OVERRIDES = {
+    "item_blink": "epic",
+    "item_overwhelming_blink": "epic",
+    "item_swift_blink": "epic",
+    "item_arcane_blink": "epic",
+}
+
 
 class Rank(Enum):
     HERALD_GUARDIAN = "HERALD_GUARDIAN"
@@ -490,7 +499,9 @@ def gather_item_game_data():
             cost = int(cost_str)
         except ValueError:
             cost = 0
-        quality = item_info.get("ItemQuality", "")
+        quality = ITEM_QUALITY_OVERRIDES.get(
+            item_name, item_info.get("ItemQuality", "")
+        )
 
         # Skip non-purchasable/internal items
         if cost <= 0 and quality != "consumable":
@@ -548,6 +559,19 @@ def gather_item_game_data():
             "quality": quality,
             "notes": notes,
         }
+        # Self/ally buff a basic dispel (Nullifier) removes: dispellable per
+        # Valve, cast on allies or self, and not a consumable (dust etc. apply
+        # to enemies despite being no-target).
+        if (
+            item_info.get("SpellDispellableType") == "SPELL_DISPELLABLE_YES"
+            and quality != "consumable"
+            and (
+                "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+                in item_info.get("AbilityUnitTargetTeam", "")
+                or "DOTA_ABILITY_BEHAVIOR_NO_TARGET" in behavior
+            )
+        ):
+            item_data[item_name]["basic_dispellable"] = True
 
     # Build display name mapping
     item_displayName_to_id = {
@@ -823,6 +847,59 @@ def gather_item_builds():
     return builds
 
 
+# Placeholder entries in Valve's ability data that pass the passive filter but
+# are not real abilities (Invoker's unassigned invoke slots).
+ABILITY_SKIP = {"Invoked Spell"}
+
+
+def gather_break_dispel():
+    """Per-hero ability lists for item-counter checks, stored to
+    data/hero_break_dispel.json: passives (what Silver Edge's break disables)
+    and basic-dispellable effects (what a basic dispel like Nullifier removes),
+    from OpenDota's Valve ability constants. Dispellable keeps ally-target and
+    self-cast abilities only; debuffs cast on the player's team are the
+    player's own dispel to handle, not Nullifier's."""
+    if not hero_data:
+        print("Skipping break/dispel — hero_data not loaded")
+        return
+    print("Fetching OpenDota ability constants...")
+    ab = get("https://api.opendota.com/api/constants/abilities")
+    ha = get("https://api.opendota.com/api/constants/hero_abilities")
+    if ab.status_code != 200 or ha.status_code != 200:
+        print(f"Failed ability constants: HTTP {ab.status_code}/{ha.status_code}")
+        return
+    abilities, hero_abilities = ab.json(), ha.json()
+
+    out = {}
+    for hero_id, h in hero_data.items():
+        npc = f"npc_dota_hero_{h['shortName']}"
+        brk, disp = [], []
+        for key in (hero_abilities.get(npc) or {}).get("abilities") or []:
+            if not isinstance(key, str):  # Monkey King nests his transform pair
+                continue
+            a = abilities.get(key) or {}
+            dname = a.get("dname")
+            if not dname or dname in ABILITY_SKIP:
+                continue
+            behavior = a.get("behavior") or ()
+            if "Passive" in behavior and dname not in brk:
+                brk.append(dname)
+            if (
+                a.get("dispellable") == "Yes"
+                and (a.get("target_team") == "Friendly" or "No Target" in behavior)
+                and dname not in disp
+            ):
+                disp.append(dname)
+        out[hero_id] = {
+            "name": h["displayName"],
+            "breakable_passives": brk,
+            "basic_dispellable": disp,
+        }
+    Path("data/hero_break_dispel.json").write_text(json.dumps(out, indent=2))
+    print(f"Break/dispel lists gathered for {len(out)} heroes")
+    return out
+
+
 def _load(fname):
     try:
         with open(f"data/{fname}.json", "r") as f:
@@ -856,3 +933,4 @@ if __name__ == "__main__":
     gather_pos_data()
     gather_patch_data()
     gather_item_builds()
+    gather_break_dispel()
