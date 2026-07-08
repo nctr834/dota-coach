@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 
-export default function ChatBox({ onSend, loading, disabled }) {
+export default function ChatBox({ onSend, loading, disabled, subtitle, emptyText, placeholder, initialMessages }) {
   const [input, setInput] = useState('')
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState(initialMessages || [])
   const bottomRef = useRef(null)
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function ChatBox({ onSend, loading, disabled }) {
       <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
         <div className={`w-2 h-2 rounded-full ${disabled ? 'bg-gray-600' : 'bg-indigo-500'}`} />
         <span className={`text-sm font-semibold uppercase tracking-wider ${disabled ? 'text-gray-600' : 'text-indigo-400'}`}>Coach</span>
-        <span className="text-xs text-gray-600 ml-auto">{disabled ? 'Waiting for hero pick' : 'AI-powered draft advice'}</span>
+        <span className="text-xs text-gray-600 ml-auto">{subtitle ?? (disabled ? 'Waiting for hero pick' : 'AI-powered draft advice')}</span>
       </div>
 
       {/* Messages */}
@@ -37,9 +37,10 @@ export default function ChatBox({ onSend, loading, disabled }) {
         {messages.length === 0 && !loading && (
           <div className="flex items-center justify-center h-full">
             <p className="text-sm text-gray-600 text-center">
-              {disabled
-                ? 'Select your team, role, and hero to start chatting with your coach'
-                : 'Ask about matchups, builds, game plans...'}
+              {emptyText ??
+                (disabled
+                  ? 'Select your team, role, and hero to start chatting with your coach'
+                  : 'Ask about matchups, builds, game plans...')}
             </p>
           </div>
         )}
@@ -78,7 +79,7 @@ export default function ChatBox({ onSend, loading, disabled }) {
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder={disabled ? 'Pick a hero first...' : 'Ask your coach...'}
+            placeholder={placeholder ?? (disabled ? 'Pick a hero first...' : 'Ask your coach...')}
             disabled={loading || disabled}
             className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-gray-100 placeholder-gray-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/25 transition-all disabled:opacity-50"
           />
