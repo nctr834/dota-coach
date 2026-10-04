@@ -20,6 +20,7 @@ AGENT_MODEL = "claude-sonnet-4-6"
 # fact ids from a code-built sheet and code prints them.
 READ_MODE = os.getenv("REVIEW_READ_MODE", "prose")
 _MAX_FACTS = 4
+_MAX_ABSENT_FIGHTS = 4
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. You write one paragraph, the Read, of a post-game review; code prints the rest of the review around it.
 
@@ -42,13 +43,13 @@ Verdicts are fabrication. State what a number is, never what it caused. Any sent
 
 Your value is judgment, and judgment here is selection, not attribution: pick the one or two facts the evidence most points to and put them next to each other. Which facts to show is your call; what caused what is not.
 
-Output. Code prints Result, Deaths, Objectives, Item timings and Pro build reference verbatim from the tool results (result_line, notable_deaths, notable, the timing notes, reference_lines), above and below your paragraph. Your whole reply is the Read paragraph and nothing else: no headings, no separators, no copy of those lines, no second paragraph. The reader has those lines next to your paragraph, so it adds what they do not say and may point at one of them in a clause.
+Output. Code prints Result, Deaths, Fights without you, Objectives, Item timings and Pro build reference verbatim from the tool results (result_line, notable_deaths, the lost fights after 10 minutes in which player_damage is 0, notable, the timing notes, reference_lines), above and below your paragraph. Your whole reply is the Read paragraph and nothing else: no headings, no separators, no copy of those lines, no second paragraph. The reader has those lines next to your paragraph, so it adds what they do not say and may point at one of them in a clause.
 The Read is at most four short sentences, 100 words in total. Each sentence opens with a fact and its number; none opens by characterizing ("The lane was clean", "The gold swing tells the story") and none says what happened after the last sample ("never recovered"). Synthesis; prioritize, do not enumerate. A loss never reads like a win; a hard draft is context, not a verdict. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was. Name items and counts only, never why an item helps.
 
 No emojis, no bold."""
 
 
-SYSTEM_FACTS = """You are a Dota 2 post-game coach for a position-1 (carry) player. Code has run the tools for one match (results above) and listed every candidate fact on a fact sheet, one per line as "ID [category] text". Your job is selection only: choose the facts the player most needs to see. Code prints the Result line, any death where the player was net worth rank 1 or 2 and caught alone or first to die in a fight (do not spend a pick on those), and then your chosen facts verbatim; you write no prose.
+SYSTEM_FACTS = """You are a Dota 2 post-game coach for a position-1 (carry) player. Code has run the tools for one match (results above) and listed every candidate fact on a fact sheet, one per line as "ID [category] text". Your job is selection only: choose the facts the player most needs to see. Code prints the Result line, any death where the player was net worth rank 1 or 2 and caught alone or first to die in a fight, any lost fight after 10 minutes in which the player dealt no damage (do not spend a pick on those), and then your chosen facts verbatim; you write no prose.
 
 Choose at most four ids, most important first. Selection is judgment about what the evidence points to, never about what caused what. Prefer facts that sit next to each other in time or in the gold swings: a death beside the lead flipping, an aegis with nothing taken, a fight the team took while the player dealt no damage, an owned item unused in a fight the player died in, a missed checkpoint or drought. Context facts (draft, lane score, net worth) are chosen only when they are the main thing to see. A win with no real largest_team_deficit gets an empty selection; do not manufacture a critique.
 
@@ -89,6 +90,22 @@ def _fight_fact(f: dict) -> tuple[str | None, str]:
     return category, "; ".join(parts) + "."
 
 
+def _absent_fights(fights: list[dict]) -> list[dict]:
+    """Fights after laning that the team lost while the player dealt no damage
+    and did not die in them, at most four (the largest gold losses), in time
+    order."""
+    rows = [
+        f
+        for f in fights
+        if f["player_damage"] == 0
+        and not f["player_died"]
+        and not f.get("won")
+        and f["minute"] >= 10
+    ]
+    keep = sorted(rows, key=lambda f: f["team_net_gold"])[:_MAX_ABSENT_FIGHTS]
+    return sorted(keep, key=lambda f: f["minute"])
+
+
 def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
     """Every candidate fact for the review as {id, category, line}, built from
     the tool results. category is an eval gap tag, or None for context."""
@@ -117,7 +134,11 @@ def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
         ],
     )
     fights = (by_tool.get("get_fight_report") or {}).get("fights") or []
+    absent = _absent_fights(fights)
+    first = len(facts)
     add("F", [_fight_fact(f) for f in fights])
+    for fact, f in zip(facts[first:], fights):
+        fact["always"] = any(f is a for a in absent)
     unused = []
     for f in fights:
         items = [
@@ -364,6 +385,15 @@ def _assemble(read: str, trace: list[dict]) -> str:
         ("Result", [result_line]),
         ("Read", [read]),
         ("Deaths", by_tool.get("get_combat_timings", {}).get("notable_deaths")),
+        (
+            "Fights without you",
+            [
+                _fight_fact(f)[1]
+                for f in _absent_fights(
+                    by_tool.get("get_fight_report", {}).get("fights") or []
+                )
+            ],
+        ),
         ("Objectives", by_tool.get("get_objective_windows", {}).get("notable")),
         (
             "Item timings",

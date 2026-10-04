@@ -475,6 +475,33 @@ def _review_assembly():
         {"tool": "get_combat_timings", "result": {"notable_deaths": ["31m: died."]}},
         {"tool": "get_objective_windows", "result": {"notable": []}},
         {
+            "tool": "get_fight_report",
+            "result": {
+                "fights": [
+                    {
+                        "minute": 17,
+                        "ally_deaths": 3,
+                        "ally_death_spread_s": 19,
+                        "enemy_deaths": 1,
+                        "team_net_gold": -2158,
+                        "won": False,
+                        "player_damage": 0,
+                        "player_died": False,
+                    },
+                    {
+                        "minute": 25,
+                        "ally_deaths": 0,
+                        "ally_death_spread_s": 0,
+                        "enemy_deaths": 3,
+                        "team_net_gold": 2321,
+                        "won": True,
+                        "player_damage": 0,
+                        "player_died": False,
+                    },
+                ]
+            },
+        },
+        {
             "tool": "get_timing_windows",
             "result": {"missed": [], "verdict": "No fight items were completed."},
         },
@@ -483,6 +510,8 @@ def _review_assembly():
     text = match_review._assemble("Read: Two facts.", trace)
     assert text == (
         "Result: Lost in 40 minutes.\n\nRead: Two facts.\n\nDeaths: 31m: died.\n\n"
+        "Fights without you: 17m fight: 3 ally deaths over 19s, 1 enemy death; "
+        "team net gold -2158; you dealt 0 damage.\n\n"
         "Item timings: No fight items were completed.\n\n"
         "Pro build reference:\nA.\nB."
     ), text
