@@ -93,15 +93,17 @@ def _find_player(match: dict, account_id: int | None) -> dict | None:
 
 
 class PlayerNotFound(ValueError):
-    """The account is not among the match's players."""
+    """The account id is missing or not among the match's players."""
 
 
 def _player(match: dict, account_id: int | None) -> dict:
-    """The account's player in the match, or the first player when no account
-    is given. Raises when the account is not among the players (OpenDota hides
-    the account id of a private profile) instead of reviewing someone else."""
+    """The account's player in the match. Raises PlayerNotFound when no account
+    is given or the account is not among the players (OpenDota hides the
+    account id of a private profile) instead of reviewing someone else."""
     if account_id is None:
-        return match["players"][0]
+        raise PlayerNotFound(
+            "no account id given, so there is no way to tell which player to review"
+        )
     player = _find_player(match, account_id)
     if player is None:
         raise PlayerNotFound(

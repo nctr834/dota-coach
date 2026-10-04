@@ -672,11 +672,12 @@ def _wrong_player_rejected():
         ],
     }
     assert utils._player(match, 2)["hero_id"] == 6
-    try:
-        utils._player(match, 3)
-        raise AssertionError("_player picked a player for an absent account")
-    except utils.PlayerNotFound:
-        pass
+    for acc in (None, 3):
+        try:
+            utils._player(match, acc)
+            raise AssertionError(f"_player picked a player for account {acc}")
+        except utils.PlayerNotFound:
+            pass
 
     def boom(*a, **k):
         raise AssertionError("run_agent called with no player to review")
