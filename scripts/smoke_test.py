@@ -513,7 +513,7 @@ def _review_assembly():
         "Fights without you: 17m fight: 3 ally deaths over 19s, 1 enemy death; "
         "team net gold -2158; you dealt 0 damage.\n\n"
         "Item timings: No fight items were completed.\n\n"
-        "Pro build reference:\nA.\nB."
+        "Pro build reference:\n- A.\n- B."
     ), text
     errored = [{"tool": "get_match_detail", "result": {"error": "522"}}]
     assert match_review._assemble("OpenDota is down.", errored) == "OpenDota is down."
@@ -577,6 +577,15 @@ def _fact_selection():
         "you dealt 0 damage; followed by Roshan."
     ), sheet[1]
     assert sheet[0]["always"] is True, sheet[0]
+    assert [f["id"] for f in match_review._rule_picks(sheet)] == ["F1"]
+    assert match_review._never_behind({"won": True, "largest_team_deficit": None})
+    assert match_review._never_behind(
+        {"won": True, "largest_team_deficit": "-1500 at 9m"}
+    )
+    assert not match_review._never_behind(
+        {"won": True, "largest_team_deficit": "-8616 at 43m"}
+    )
+    assert not match_review._never_behind({"won": False})
     picked = match_review._selected_facts('Here: ["F1", "Z9", "D1", "F1"]', sheet)
     assert [f["id"] for f in picked] == ["F1", "D1"], picked
     assert match_review._selected_facts("no json", sheet) == []
@@ -662,13 +671,12 @@ def _wrong_player_rejected():
             {"account_id": 2, "player_slot": 128, "hero_id": 6},
         ],
     }
-    assert utils._find_player(match, 2)["hero_id"] == 6
-    for acc in (None, 3):
-        try:
-            utils._find_player(match, acc)
-        except utils.PlayerNotFound:
-            continue
-        raise AssertionError(f"_find_player picked a player for account {acc}")
+    assert utils._player(match, 2)["hero_id"] == 6
+    try:
+        utils._player(match, 3)
+        raise AssertionError("_player picked a player for an absent account")
+    except utils.PlayerNotFound:
+        pass
 
     def boom(*a, **k):
         raise AssertionError("run_agent called with no player to review")
@@ -685,7 +693,7 @@ def _wrong_player_rejected():
         except utils.PlayerNotFound:
             pass
         out = match_review.review_match(account_id=3, match_id=77)
-        assert "account_id 3 is not among the players" in out["review"], out
+        assert "account 3 is not among this match's players" in out["review"], out
         assert out["tool_trace"] == [] and out["messages"] == []
         out = match_review.review_match(match_id=77)
         assert out["review"] == match_review.NO_ACCOUNT_NOTE, out

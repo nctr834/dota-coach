@@ -10,6 +10,7 @@ deterministic code check (review numbers vs tool-result numbers). Labels are you
   python3 eval/run_eval.py            # all labeled matches
   python3 eval/run_eval.py -v         # also print each review + judge reasoning
   python3 eval/run_eval.py --read facts   # fact-selection mode (own cache entries)
+  python3 eval/run_eval.py --read rule    # no-model baseline, costs only judge calls
   python3 eval/run_eval.py --matches 9028258550,9026632686   # only these matches
 """
 
@@ -250,12 +251,19 @@ def main(argv):
         must_cite = m.get("must_cite") or []
         # Only what the model chose counts: the Read it wrote, or the fact lines
         # it selected. Blocks code prints every time would pass trivially.
+        # In facts mode only the model's own picks; the facts code prints every
+        # time are scored separately below. The rule baseline has no model, so
+        # everything it shows is its choice.
+        picks = selected
+        if selected is not None and read_mode == "facts":
+            picks = [f for f in selected if f.get("picked")]
         chosen = (
-            " ".join(f["line"] for f in selected)
-            if selected is not None
+            " ".join(f["line"] for f in picks)
+            if picks is not None
             else read_section(review)
         )
         missing = uncited(chosen, must_cite)
+        missing_shown = uncited(review, must_cite)
         # Stricter than the trace check: numbers the model chose to state that
         # are not on the fact sheet or the Result line.
         by_tool = _by_tool(result["tool_trace"])
@@ -274,6 +282,7 @@ def main(argv):
             "read_sentences": read_sentences,
             "must_cite": len(must_cite),
             "missing": len(missing),
+            "missing_shown": len(missing_shown),
             "tokens_in": usage.get("input_tokens"),
             "tokens_out": usage.get("output_tokens"),
         }
@@ -285,11 +294,13 @@ def main(argv):
         p, r, f1 = row["judge"]
         print(f"  judge P={p:.2f} R={r:.2f} F1={f1:.2f}{flag}")
         if selected is not None:
-            cats = {f["category"] for f in selected if f["category"]} or {"no_gap"}
+            cats = {f["category"] for f in picks if f["category"]} or {"no_gap"}
             row["category"] = score_gaps(true_g, cats)
             p, r, f1 = row["category"]
-            print(f"  selected:  {[f['id'] for f in selected]} -> {sorted(cats)}")
-            print(f"  category P={p:.2f} R={r:.2f} F1={f1:.2f}")
+            by_code = [f["id"] for f in selected if f not in picks]
+            print(f"  printed by code: {by_code}")
+            print(f"  picked:    {[f['id'] for f in picks]} -> {sorted(cats)}")
+            print(f"  category (picks) P={p:.2f} R={r:.2f} F1={f1:.2f}")
         print(
             f"  length: {words} words, {read_sentences} Read sentences, "
             f"{row['numbers']} numbers"
@@ -299,7 +310,11 @@ def main(argv):
                 f"  numbers not on the fact sheet ({len(off_sheet)}): {', '.join(off_sheet)}"
             )
         if must_cite:
-            print(f"  must-cite: {len(must_cite) - len(missing)}/{len(must_cite)}")
+            n_cite = len(must_cite)
+            print(
+                f"  must-cite: {n_cite - len(missing)}/{n_cite} chosen, "
+                f"{n_cite - len(missing_shown)}/{n_cite} anywhere in the review"
+            )
             if missing:
                 print(f"  not cited: {', '.join(missing)}")
         if usage:
@@ -344,7 +359,9 @@ def main(argv):
     total_cite = sum(x["must_cite"] for x in rows)
     if total_cite:
         cited = total_cite - sum(x["missing"] for x in rows)
-        print(f"  must-cite facts cited: {cited}/{total_cite}")
+        shown = total_cite - sum(x["missing_shown"] for x in rows)
+        print(f"  must-cite facts chosen by the model or rule: {cited}/{total_cite}")
+        print(f"  must-cite facts anywhere in the review: {shown}/{total_cite}")
     metered = [x for x in rows if x["tokens_in"] is not None]
     if metered:
         print(

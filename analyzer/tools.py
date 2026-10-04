@@ -2,6 +2,7 @@
 
 import json
 import string
+from bisect import bisect_right
 from collections import Counter
 from functools import lru_cache
 from statistics import median
@@ -20,6 +21,7 @@ from utils import (
     _get_obj,
     _get_list,
     _find_player,
+    _player,
     _is_parsed,
     _pct,
     _phase_counts,
@@ -60,7 +62,7 @@ def get_recent_matches(account_id: int, limit: int = 10) -> dict:
 
 def get_match_detail(match_id: int, account_id: int | None = None) -> dict:
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     parsed = _is_parsed(player)
     radiant = player["player_slot"] < 128
     won = match["radiant_win"] == radiant
@@ -134,7 +136,7 @@ def get_hero_benchmarks(hero_id: int) -> dict:
 
 def compute_metrics(match_id: int, account_id: int | None = None) -> dict:
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     metrics = {}
     for metric in (
         "gold_per_min",
@@ -279,6 +281,8 @@ def _death_details(match: dict, player: dict) -> list[dict]:
         prior = [t for t in death_ts if t <= e["time"]]
         if prior:
             bought_back.add(max(prior))
+    playback = utils._stratz_playback(match.get("match_id"), player.get("account_id"))
+    aegis_times = _aegis_times(match, player)
     out = []
     for t, killer in sorted(_deaths(match, player)):
         rank = _nw_rank(match, player, round(t / 60))
@@ -292,17 +296,72 @@ def _death_details(match: dict, player: dict) -> list[dict]:
             near.remove(t)
             context = "skirmish" if near else "caught_alone"
         minute = round(t / 60)
-        out.append(
-            {
-                "minute": minute,
-                "killed_by": killer,
-                "context": context,
-                "networth_rank": f"{rank} of 10" if rank else None,
-                "team_gold_adv": _gold_adv_at(match, player, minute),
-                "bought_back": t in bought_back,
-            }
-        )
+        entry = {
+            "minute": minute,
+            "killed_by": killer,
+            "context": context,
+            "networth_rank": f"{rank} of 10" if rank else None,
+            "team_gold_adv": _gold_adv_at(match, player, minute),
+            "bought_back": t in bought_back,
+        }
+        # health and mana going in: at the fight's start, or 10s before a death
+        # outside a fight
+        state = _state_at(playback, window[0] if window else t - 10)
+        if state:
+            entry.update(state)
+            entry["state_at"] = "fight start" if window else "10s before"
+        if _had_aegis(aegis_times, death_ts, t):
+            entry["had_aegis"] = True
+        out.append(entry)
     return out
+
+
+def _state_at(playback: dict | None, t: int) -> dict:
+    """Health and mana percent from the last playback sample at or before t."""
+    if not playback:
+        return {}
+    i = bisect_right(playback["health"], (t, float("inf")))
+    if not i:
+        return {}
+    _, hp, max_hp, mp, max_mp = playback["health"][i - 1]
+    if not max_hp or not max_mp:
+        return {}
+    return {
+        "health_pct": round(100 * hp / max_hp),
+        "mana_pct": round(100 * mp / max_mp),
+    }
+
+
+def _item_cooldown(short: str) -> float:
+    cooldown = str((item_data.get(f"item_{short}") or {}).get("cooldown") or 0)
+    return float(cooldown.split()[0])
+
+
+def _items_ready(playback: dict, owned: dict[str, str], t: int):
+    """(ready, on_cooldown) display names of the owned active items at time t,
+    from the timestamped item uses."""
+    ready, cooling = [], []
+    for short, name in owned.items():
+        used = [u for u, s in playback["item_uses"] if s == short and u <= t]
+        on_cd = bool(used) and t < used[-1] + _item_cooldown(short)
+        (cooling if on_cd else ready).append(name)
+    return ready, cooling
+
+
+def _aegis_times(match: dict, player: dict) -> list[int]:
+    return [
+        e["time"]
+        for e in _objective_events(match, player)
+        if e["kind"] == "aegis" and e["slot"] == player["player_slot"]
+    ]
+
+
+def _had_aegis(aegis_times: list[int], death_times: list[int], t: int) -> bool:
+    """Whether the player held an unexpired, unused aegis at time t."""
+    return any(
+        a <= t <= a + _AEGIS_S and not any(a < d < t for d in death_times)
+        for a in aegis_times
+    )
 
 
 _OBJECTIVE_KIND = {
@@ -396,6 +455,7 @@ def _fights(match: dict, player: dict) -> list[dict]:
                 "team_net_gold": net,
                 "won": net > 0 or (net == 0 and n_enemy > n_ally),
                 "player_damage": mine["damage"],
+                "player_gold_delta": mine.get("gold_delta"),
                 "player_died": mine["deaths"] > 0,
                 "item_uses": mine.get("item_uses") or {},
             }
@@ -419,6 +479,17 @@ def _death_line(d: dict) -> str:
         + (f" to {d['killed_by']}" if d["killed_by"] else ""),
         f"net worth rank {d['networth_rank']}" if d["networth_rank"] else "",
         f"team gold {gold:+d}" if gold is not None else "",
+        (
+            f"{d['health_pct']}% health, {d['mana_pct']}% mana "
+            + (
+                "at the fight's start"
+                if d["state_at"] == "fight start"
+                else "10s before"
+            )
+            if "health_pct" in d
+            else ""
+        ),
+        "holding the aegis" if d.get("had_aegis") else "",
         "bought back" if d["bought_back"] else "",
     ]
     return "; ".join(p for p in parts if p) + "."
@@ -456,7 +527,7 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
     bought back (each also flagged on its death), and objective_timeline the
     Roshan/tormentor kills and aegis pickups, sides relative to the player."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     if not _is_parsed(player):
         return {
             "parsed": False,
@@ -597,7 +668,7 @@ def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
     farming, and the team fought without them. It is a prompt to ask, not a verdict;
     the data cannot show intent."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; timing windows unavailable"}
 
@@ -820,7 +891,7 @@ def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
     (gap says who was ahead and by how much). Facts only — whether a
     drought was justified (dead map, defending) is not in the data."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; farm data unavailable"}
     lh = player.get("lh_t") or []
@@ -893,7 +964,7 @@ def score_lane_matchup(match_id: int, account_id: int | None = None) -> dict:
     at 10 minutes and lane efficiency. Positive advantage favors the player's
     side."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     lane = player.get("lane")
     if lane not in (1, 2, 3):
         return {"note": "player's lane is unknown or jungle; cannot score lane"}
@@ -991,7 +1062,7 @@ def get_draft_advantage(match_id: int, account_id: int | None = None) -> dict:
     assigned from physical lane and last-hits. Positive advantage favors the
     player's team."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     radiant = player["player_slot"] < 128
     allies = [p for p in match["players"] if (p["player_slot"] < 128) == radiant]
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
@@ -1051,10 +1122,16 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     player died in; maybe_on_cooldown is true when the item was used in an
     earlier fight that ended less than its cooldown before. Uses outside fights
     and disables on the player are not in the data, so an unused item may have
-    been unusable. summary splits fights into present and absent with the
+    been unusable. player_gold_delta is the player's gold change during the
+    fight and player_tower_damage (Stratz, when available) their tower damage in
+    the minutes the fight touched: what the player was doing in a fight they
+    were absent from. When Stratz has playback for the match, each row also has
+    the player's health and mana percent at the fight's start and which active
+    items were ready or on cooldown then (and maybe_on_cooldown is exact);
+    player_had_aegis marks fights entered holding an aegis. summary splits fights into present and absent with the
     summed team_net_gold of each."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; fight data unavailable"}
     buildings = _team_building_kills(match, player["player_slot"] < 128)
@@ -1068,9 +1145,29 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     present = {"fights": 0, "team_net_gold": 0}
     absent = {"fights": 0, "team_net_gold": 0}
     my_deaths = [t for t, _ in _deaths(match, player)]
+    aegis_times = _aegis_times(match, player)
+    stratz_stats = _stratz_match_stats(match_id).get(player.get("account_id")) or {}
+    playback = utils._stratz_playback(match_id, player.get("account_id"))
     fights = []
     for f in _fights(match, player):
         start, end = f.pop("start_s"), f.pop("end_s")
+        owned = _active_items_owned(player, start)
+        tower = _tower_damage_between(stratz_stats, start, end)
+        if tower is not None:
+            f["player_tower_damage"] = tower
+        if _had_aegis(aegis_times, my_deaths, start):
+            f["player_had_aegis"] = True
+        cooling: list[str] = []
+        if playback:
+            state = _state_at(playback, start)
+            if state:
+                f["player_health_pct"] = state["health_pct"]
+                f["player_mana_pct"] = state["mana_pct"]
+            ready, cooling = _items_ready(playback, owned, start)
+            if ready:
+                f["items_ready"] = ready
+            if cooling:
+                f["items_on_cooldown"] = cooling
         died_at = [round(t / 60) for t in my_deaths if start <= t <= end]
         if died_at:
             # same rounding as deaths_detail, so one death has one minute
@@ -1086,7 +1183,6 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
             taken += [e["kind"] for e in objectives if start <= e["time"] <= until]
             f["taken_by_90s_after"] = taken or "nothing"
         if f["player_present"] or f["player_died"]:
-            owned = _active_items_owned(player, start)
             if owned:
                 f["active_item_uses"] = {
                     name: uses.get(s, 0) for s, name in owned.items()
@@ -1099,11 +1195,11 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
                 unused = [
                     {
                         "item": name,
-                        "maybe_on_cooldown": s in last_used_end
-                        and start
-                        < last_used_end[s]
-                        + float(
-                            (item_data.get(f"item_{s}") or {}).get("cooldown") or 0
+                        "maybe_on_cooldown": (
+                            name in cooling
+                            if playback
+                            else s in last_used_end
+                            and start < last_used_end[s] + _item_cooldown(s)
                         ),
                     }
                     for s, name in owned.items()
@@ -1142,7 +1238,7 @@ def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
     aegis window with no buildings taken or the carrier dying, and a tormentor
     span the team led without taking it."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; objectives unavailable"}
     by_slot = {p["player_slot"]: p for p in match["players"]}
@@ -1277,7 +1373,7 @@ def _player_completed_items(match_id: int, account_id: int | None) -> dict[str, 
     replay and can miss items, the slots are always present and hold the actual
     final build (but not items sold or consumed into upgrades mid-game)."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     shorts = [e["key"] for e in player.get("purchase_log") or []]
     slots = [f"item_{i}" for i in range(6)] + [f"backpack_{i}" for i in range(3)]
     shorts += [_item_short(player[s]) for s in slots if player.get(s)]
@@ -1442,7 +1538,7 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     player_items_in_builds_vs_enemy (per enemy in this game, how many of that
     enemy's sampled builds contained each player item — small n, counts only)."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     carry_id = player["hero_id"]
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
@@ -1626,7 +1722,7 @@ def get_break_dispel_targets(match_id: int, account_id: int | None = None) -> di
     if not hero_break_dispel:
         return {"error": "hero_break_dispel.json missing; run scripts/gather_data.py"}
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id)
+    player = _player(match, account_id)
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
     breakable, dispellable = _break_dispel_lists([e["hero_id"] for e in enemies])
@@ -1786,7 +1882,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_fight_report",
-        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (positive team_net_gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. summary gives fights present vs absent with summed team_net_gold.",
+        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (positive team_net_gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. player_gold_delta and player_tower_damage say what the player gained while a fight went on; player_health_pct, player_mana_pct, items_ready and items_on_cooldown (Stratz playback, when present) give the player's state at the fight's start; player_had_aegis marks fights entered holding an aegis. summary gives fights present vs absent with summed team_net_gold.",
         "input_schema": {
             "type": "object",
             "properties": {

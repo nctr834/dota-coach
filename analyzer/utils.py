@@ -83,24 +83,32 @@ def _get_list(path: str, params: dict | None = None) -> list:
     return data
 
 
+def _find_player(match: dict, account_id: int | None) -> dict | None:
+    players = match.get("players", [])
+    if account_id is not None:
+        for p in players:
+            if p.get("account_id") == account_id:
+                return p
+    return None
+
+
 class PlayerNotFound(ValueError):
-    """The account id is missing or not among the match's players."""
+    """The account is not among the match's players."""
 
 
-def _find_player(match: dict, account_id: int | None) -> dict:
-    """The match player with this account id. Raises PlayerNotFound rather than
-    picking someone: a review of the wrong player reads just as confident."""
+def _player(match: dict, account_id: int | None) -> dict:
+    """The account's player in the match, or the first player when no account
+    is given. Raises when the account is not among the players (OpenDota hides
+    the account id of a private profile) instead of reviewing someone else."""
     if account_id is None:
+        return match["players"][0]
+    player = _find_player(match, account_id)
+    if player is None:
         raise PlayerNotFound(
-            "no account_id given, so there is no way to tell which player to review"
+            f"account {account_id} is not among this match's players; a private "
+            "profile has no account id in OpenDota"
         )
-    for p in match.get("players", []):
-        if p.get("account_id") == account_id:
-            return p
-    raise PlayerNotFound(
-        f"account_id {account_id} is not among the players OpenDota lists for "
-        f"match {match.get('match_id')}"
-    )
+    return player
 
 
 def _is_parsed(player: dict) -> bool:
@@ -291,6 +299,52 @@ def _stratz_match_stats(match_id: int) -> dict:
     }
     _match_stats_cache[match_id] = stats
     return stats
+
+
+_playback_cache: dict[tuple[int, int], dict | None] = {}
+
+
+def _stratz_playback(match_id: int | None, account_id: int | None) -> dict | None:
+    """Stratz playback for one player: health/mana samples as (time, hp, max_hp,
+    mp, max_mp) and item uses as (time, shortName), both in time order. None
+    when Stratz has no playback for the match, the API key is missing, or the
+    call fails — every consumer treats it as optional."""
+    if match_id is None or account_id is None:
+        return None
+    key = (match_id, account_id)
+    if key in _playback_cache:
+        return _playback_cache[key]
+    query = f"""
+    {{
+    match(id: {match_id}) {{
+        players(steamAccountId: {account_id}) {{
+            playbackData {{
+                playerUpdateHealthEvents {{ time hp maxHp mp maxMp }}
+                itemUsedEvents {{ time itemId }}
+            }}
+        }}
+    }}
+    }}
+    """
+    try:
+        players = (_stratz(query).get("match") or {}).get("players") or []
+        raw = players[0].get("playbackData") if players else None
+    except Exception:
+        raw = None
+    playback = None
+    if raw and raw.get("playerUpdateHealthEvents"):
+        playback = {
+            "health": sorted(
+                (e["time"], e["hp"], e["maxHp"], e["mp"], e["maxMp"])
+                for e in raw["playerUpdateHealthEvents"]
+            ),
+            "item_uses": sorted(
+                (e["time"], _item_short(e["itemId"]))
+                for e in raw.get("itemUsedEvents") or []
+            ),
+        }
+    _playback_cache[key] = playback
+    return playback
 
 
 def _load_items() -> None:
