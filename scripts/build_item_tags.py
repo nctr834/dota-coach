@@ -31,14 +31,38 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 TAG_KEYS = [
-    "mobility", "initiation", "escape",
-    "disable", "silence", "root", "slow",
-    "burst_damage", "sustained_damage", "aoe_damage", "cleave",
-    "attack_speed", "crit", "lifesteal",
-    "survivability", "armor", "magic_resist", "spell_immunity", "evasion",
-    "self_dispel", "enemy_dispel", "break",
-    "anti_heal", "anti_illusion", "true_sight", "invisibility", "illusions",
-    "save_ally", "aura", "tower_damage", "farm_acceleration", "mana_sustain",
+    "mobility",
+    "initiation",
+    "escape",
+    "disable",
+    "silence",
+    "root",
+    "slow",
+    "burst_damage",
+    "sustained_damage",
+    "aoe_damage",
+    "cleave",
+    "attack_speed",
+    "crit",
+    "lifesteal",
+    "survivability",
+    "armor",
+    "magic_resist",
+    "spell_immunity",
+    "evasion",
+    "self_dispel",
+    "enemy_dispel",
+    "break",
+    "anti_heal",
+    "anti_illusion",
+    "true_sight",
+    "invisibility",
+    "illusions",
+    "save_ally",
+    "aura",
+    "tower_damage",
+    "farm_acceleration",
+    "mana_sustain",
 ]
 
 SYSTEM_PROMPT = """You are a Dota 2 analyst. Rate item capabilities on a 0-2 scale.
@@ -100,9 +124,7 @@ def generate_tags(short: str, item: dict, model: str) -> dict | None:
                 system=[{"type": "text", "text": SYSTEM_PROMPT}],
                 messages=[{"role": "user", "content": prompt}],
             )
-            text = "".join(
-                b.text for b in response.content if b.type == "text"
-            ).strip()
+            text = "".join(b.text for b in response.content if b.type == "text").strip()
             if response.stop_reason != "end_turn":
                 print(f"  stop_reason={response.stop_reason}", end=" ")
             start = text.find("{")
@@ -131,7 +153,11 @@ def generate_tags(short: str, item: dict, model: str) -> dict | None:
 def main():
     parser = argparse.ArgumentParser(description="Generate item capability tags")
     parser.add_argument("--model", default="claude-haiku-4-5-20251001")
-    parser.add_argument("--items", default="", help="Comma-separated display names (default: all notable)")
+    parser.add_argument(
+        "--items",
+        default="",
+        help="Comma-separated display names (default: all notable)",
+    )
     parser.add_argument("--output", default="data/item_tags.json")
     args = parser.parse_args()
 
@@ -150,12 +176,16 @@ def main():
         targets = [(s, v) for s, v in notable.items() if s not in existing]
 
     if not targets:
-        print("No items to process. Use --items to regenerate, or delete the output file.")
+        print(
+            "No items to process. Use --items to regenerate, or delete the output file."
+        )
         return
     print(f"Generating tags for {len(targets)} items using {args.model}...")
 
     for i, (short, item) in enumerate(targets):
-        print(f"  [{i + 1}/{len(targets)}] {item['displayName']}...", end=" ", flush=True)
+        print(
+            f"  [{i + 1}/{len(targets)}] {item['displayName']}...", end=" ", flush=True
+        )
         tags = generate_tags(short, item, args.model)
         if tags:
             existing[short] = {"displayName": item["displayName"], "tags": tags}

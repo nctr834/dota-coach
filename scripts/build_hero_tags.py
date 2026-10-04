@@ -29,11 +29,31 @@ with open("data/hero_data.json") as f:
     hero_data = json.load(f)
 
 TAG_KEYS = [
-    "mobility", "initiation", "escape", "waveclear", "tower_damage", "roshan_damage",
-    "stun", "root", "silence", "slow", "displacement",
-    "burst_damage", "sustained_damage", "magic_damage", "physical_damage", "pure_damage",
-    "save", "buff", "heal", "vision", "aura",
-    "farm_speed", "item_dependency", "late_game_scaling", "early_game_strength",
+    "mobility",
+    "initiation",
+    "escape",
+    "waveclear",
+    "tower_damage",
+    "roshan_damage",
+    "stun",
+    "root",
+    "silence",
+    "slow",
+    "displacement",
+    "burst_damage",
+    "sustained_damage",
+    "magic_damage",
+    "physical_damage",
+    "pure_damage",
+    "save",
+    "buff",
+    "heal",
+    "vision",
+    "aura",
+    "farm_speed",
+    "item_dependency",
+    "late_game_scaling",
+    "early_game_strength",
 ]
 
 SYSTEM_PROMPT = """You are a Dota 2 analyst. Rate hero capabilities on a 0-2 scale.
@@ -129,17 +149,26 @@ def generate_tags(hero: dict, model: str) -> dict | None:
             if validate_tags(tags):
                 return tags
             print(f"  validation failed (attempt {attempt + 1}), retrying...")
-        except (json.JSONDecodeError, ValueError, anthropic.InternalServerError, anthropic.RateLimitError) as e:
+        except (
+            json.JSONDecodeError,
+            ValueError,
+            anthropic.InternalServerError,
+            anthropic.RateLimitError,
+        ) as e:
             print(f"  attempt {attempt + 1} failed: {e}")
             if attempt < 2:
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
     return None
 
 
 def main():
     parser = argparse.ArgumentParser(description="Generate hero capability tags")
-    parser.add_argument("--model", default="claude-haiku-4-5-20251001", help="Claude model")
-    parser.add_argument("--heroes", default="", help="Comma-separated hero names (default: all)")
+    parser.add_argument(
+        "--model", default="claude-haiku-4-5-20251001", help="Claude model"
+    )
+    parser.add_argument(
+        "--heroes", default="", help="Comma-separated hero names (default: all)"
+    )
     parser.add_argument("--output", default="data/hero_tags.json", help="Output file")
     args = parser.parse_args()
 
@@ -165,7 +194,9 @@ def main():
 
     total = len(targets)
     if total == 0:
-        print("No heroes to process. Use --heroes to regenerate specific heroes, or delete output file to regenerate all.")
+        print(
+            "No heroes to process. Use --heroes to regenerate specific heroes, or delete output file to regenerate all."
+        )
         return
 
     print(f"Generating tags for {total} heroes using {args.model}...")

@@ -143,12 +143,41 @@ def _building_kills_parse():
 
     match = {
         "objectives": [
-            {"type": "building_kill", "key": "npc_dota_goodguys_tower2_mid", "player_slot": 130, "time": 1998},
-            {"type": "building_kill", "key": "npc_dota_badguys_tower1_top", "player_slot": 2, "time": 700},
-            {"type": "building_kill", "key": "npc_dota_badguys_tower1_bot", "time": 861},
-            {"type": "building_kill", "key": "npc_dota_goodguys_melee_rax_bot", "player_slot": 130, "time": 2672},
-            {"type": "building_kill", "key": "npc_dota_goodguys_tower4", "player_slot": 130, "time": 2900},
-            {"type": "building_kill", "key": "npc_dota_goodguys_fort", "player_slot": 130, "time": 3000},
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_tower2_mid",
+                "player_slot": 130,
+                "time": 1998,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_badguys_tower1_top",
+                "player_slot": 2,
+                "time": 700,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_badguys_tower1_bot",
+                "time": 861,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_melee_rax_bot",
+                "player_slot": 130,
+                "time": 2672,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_tower4",
+                "player_slot": 130,
+                "time": 2900,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_fort",
+                "player_slot": 130,
+                "time": 3000,
+            },
         ]
     }
     ks = t._building_kills(match, {"player_slot": 130})
@@ -279,8 +308,12 @@ def _lane_matchup():
     lm = t.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in lm
     assert lm["breakdown"]["ally_lane"], "no heroes resolved for player's lane"
-    ally_pos = {h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 6}], 1, True).values()}
-    enemy_pos = {h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 69}], 1, False).values()}
+    ally_pos = {
+        h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 6}], 1, True).values()
+    }
+    enemy_pos = {
+        h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 69}], 1, False).values()
+    }
     assert ally_pos == {"1"} and enemy_pos == {"3"}, (ally_pos, enemy_pos)
     outcome = lm["lane_outcome"]["ally_lane"]
     assert outcome, "no lane_outcome"
@@ -305,7 +338,9 @@ def _chat_history_transcript():
     # below never touch (or leave) real sessions in data/sessions/.
     chat_session._DIR = Path(tempfile.mkdtemp(prefix="smoke-sessions-"))
 
-    chat_session.save(9, 9, [{"role": "assistant", "content": [TextBlock(type="text", text="hi")]}])
+    chat_session.save(
+        9, 9, [{"role": "assistant", "content": [TextBlock(type="text", text="hi")]}]
+    )
     loaded = chat_session.load(9, 9)
     assert loaded[0]["content"][0]["text"] == "hi", loaded
     assert chat_session.list_matches(9) == [9]
@@ -322,9 +357,14 @@ def _chat_history_transcript():
             },
             {
                 "role": "user",
-                "content": [{"type": "tool_result", "tool_use_id": "x", "content": "{}"}],
+                "content": [
+                    {"type": "tool_result", "tool_use_id": "x", "content": "{}"}
+                ],
             },
-            {"role": "assistant", "content": [{"type": "text", "text": "Result: won."}]},
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": "Result: won."}],
+            },
             {"role": "user", "content": "was my build ok?"},
             {"role": "assistant", "content": [{"type": "text", "text": "Yes."}]},
         ],
@@ -357,7 +397,9 @@ def _review_not_saved_when_ungrounded():
     try:
         match_review.ensure_parsed = lambda match_id: True
         match_review._triage = lambda match_id, account_id: []
-        errored = [{"tool": "get_match_detail", "input": {}, "result": {"error": "522"}}]
+        errored = [
+            {"tool": "get_match_detail", "input": {}, "result": {"error": "522"}}
+        ]
         match_review.run_agent = fake_run(errored)
         match_review.review_match(account_id=3, match_id=3)
         assert chat_session.load(3, 3) is None, "ungrounded review was saved"
@@ -785,7 +827,10 @@ for name, fn in [
     ("match_review: get_farm_pattern", _farm_pattern_live),
     ("match_review: break/dispel ability lists", _break_dispel_lists),
     ("match_review: compute_metrics", _compute_metrics),
-    ("match_review: objectives + buybacks (synthetic)", _objectives_and_buybacks_synthetic),
+    (
+        "match_review: objectives + buybacks (synthetic)",
+        _objectives_and_buybacks_synthetic,
+    ),
     (
         "match_review: fight report + objective windows (synthetic)",
         _fights_and_objective_windows_synthetic,
