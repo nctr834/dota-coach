@@ -34,9 +34,7 @@ def load(account_id: int, match_id: int) -> list[MessageParam] | None:
 
 def save(account_id: int, match_id: int, messages: list[MessageParam]) -> None:
     _DIR.mkdir(parents=True, exist_ok=True)
-    _path(account_id, match_id).write_text(
-        json.dumps(messages, default=_jsonable)
-    )
+    _path(account_id, match_id).write_text(json.dumps(messages, default=_jsonable))
 
 
 def list_matches(account_id: int) -> list[int]:

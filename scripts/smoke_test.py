@@ -143,12 +143,41 @@ def _building_kills_parse():
 
     match = {
         "objectives": [
-            {"type": "building_kill", "key": "npc_dota_goodguys_tower2_mid", "player_slot": 130, "time": 1998},
-            {"type": "building_kill", "key": "npc_dota_badguys_tower1_top", "player_slot": 2, "time": 700},
-            {"type": "building_kill", "key": "npc_dota_badguys_tower1_bot", "time": 861},
-            {"type": "building_kill", "key": "npc_dota_goodguys_melee_rax_bot", "player_slot": 130, "time": 2672},
-            {"type": "building_kill", "key": "npc_dota_goodguys_tower4", "player_slot": 130, "time": 2900},
-            {"type": "building_kill", "key": "npc_dota_goodguys_fort", "player_slot": 130, "time": 3000},
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_tower2_mid",
+                "player_slot": 130,
+                "time": 1998,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_badguys_tower1_top",
+                "player_slot": 2,
+                "time": 700,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_badguys_tower1_bot",
+                "time": 861,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_melee_rax_bot",
+                "player_slot": 130,
+                "time": 2672,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_tower4",
+                "player_slot": 130,
+                "time": 2900,
+            },
+            {
+                "type": "building_kill",
+                "key": "npc_dota_goodguys_fort",
+                "player_slot": 130,
+                "time": 3000,
+            },
         ]
     }
     ks = t._building_kills(match, {"player_slot": 130})
@@ -279,8 +308,12 @@ def _lane_matchup():
     lm = t.score_lane_matchup(PARSED_MATCH, CARRY_ACC)
     assert "advantage" in lm
     assert lm["breakdown"]["ally_lane"], "no heroes resolved for player's lane"
-    ally_pos = {h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 6}], 1, True).values()}
-    enemy_pos = {h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 69}], 1, False).values()}
+    ally_pos = {
+        h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 6}], 1, True).values()
+    }
+    enemy_pos = {
+        h.pos for h in t._lane_heroes([{"lane": 1, "hero_id": 69}], 1, False).values()
+    }
     assert ally_pos == {"1"} and enemy_pos == {"3"}, (ally_pos, enemy_pos)
     outcome = lm["lane_outcome"]["ally_lane"]
     assert outcome, "no lane_outcome"
@@ -305,7 +338,9 @@ def _chat_history_transcript():
     # below never touch (or leave) real sessions in data/sessions/.
     chat_session._DIR = Path(tempfile.mkdtemp(prefix="smoke-sessions-"))
 
-    chat_session.save(9, 9, [{"role": "assistant", "content": [TextBlock(type="text", text="hi")]}])
+    chat_session.save(
+        9, 9, [{"role": "assistant", "content": [TextBlock(type="text", text="hi")]}]
+    )
     loaded = chat_session.load(9, 9)
     assert loaded[0]["content"][0]["text"] == "hi", loaded
     assert chat_session.list_matches(9) == [9]
@@ -322,9 +357,14 @@ def _chat_history_transcript():
             },
             {
                 "role": "user",
-                "content": [{"type": "tool_result", "tool_use_id": "x", "content": "{}"}],
+                "content": [
+                    {"type": "tool_result", "tool_use_id": "x", "content": "{}"}
+                ],
             },
-            {"role": "assistant", "content": [{"type": "text", "text": "Result: won."}]},
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": "Result: won."}],
+            },
             {"role": "user", "content": "was my build ok?"},
             {"role": "assistant", "content": [{"type": "text", "text": "Yes."}]},
         ],
@@ -357,7 +397,9 @@ def _review_not_saved_when_ungrounded():
     try:
         match_review.ensure_parsed = lambda match_id: True
         match_review._triage = lambda match_id, account_id: []
-        errored = [{"tool": "get_match_detail", "input": {}, "result": {"error": "522"}}]
+        errored = [
+            {"tool": "get_match_detail", "input": {}, "result": {"error": "522"}}
+        ]
         match_review.run_agent = fake_run(errored)
         match_review.review_match(account_id=3, match_id=3)
         assert chat_session.load(3, 3) is None, "ungrounded review was saved"
@@ -610,12 +652,15 @@ def _triage_message_shape():
         match_review.ensure_parsed = lambda match_id: True
         match_review._triage = lambda match_id, account_id: steps
         match_review.run_agent = fake_run
-        out = match_review.review_match(match_id=5)
+        out = match_review.review_match(account_id=7, match_id=5)
     finally:
         match_review.run_agent, match_review.ensure_parsed = real_run, real_ensure
         match_review._triage = real_triage
     ask, calls, results = seen["history"]
-    assert ask == {"role": "user", "content": "Write the Read for match_id 5."}, ask
+    assert ask == {
+        "role": "user",
+        "content": "Write the Read for match_id 5 for account_id 7.",
+    }, ask
     assert [b["name"] for b in calls["content"]] == [
         "get_match_detail",
         "compute_metrics",
@@ -653,6 +698,51 @@ def _unparsed_gate_synthetic():
         utils._get_obj, utils.request_parse = real_get, real_req
         match_review.run_agent = real_run
     assert requested == [123, 123, 123], f"parse requests: {requested}"
+
+
+def _wrong_player_rejected():
+    import match_review
+    import tools as t
+    import utils
+
+    match = {
+        "match_id": 77,
+        "version": 21,
+        "players": [
+            {"account_id": 1, "player_slot": 0, "hero_id": 1},
+            {"account_id": 2, "player_slot": 128, "hero_id": 6},
+        ],
+    }
+    assert utils._player(match, 2)["hero_id"] == 6
+    for acc in (None, 3):
+        try:
+            utils._player(match, acc)
+            raise AssertionError(f"_player picked a player for account {acc}")
+        except utils.PlayerNotFound:
+            pass
+
+    def boom(*a, **k):
+        raise AssertionError("run_agent called with no player to review")
+
+    real_get, real_run = t._get_obj, match_review.run_agent
+    real_ensure = match_review.ensure_parsed
+    try:
+        t._get_obj = lambda path, params=None: match
+        match_review.ensure_parsed = lambda match_id: True
+        match_review.run_agent = boom
+        try:
+            t.get_match_detail(77, 3)
+            raise AssertionError("get_match_detail described a player not in it")
+        except utils.PlayerNotFound:
+            pass
+        out = match_review.review_match(account_id=3, match_id=77)
+        assert "account 3 is not among this match's players" in out["review"], out
+        assert out["tool_trace"] == [] and out["messages"] == []
+        out = match_review.review_match(match_id=77)
+        assert out["review"] == match_review.NO_ACCOUNT_NOTE, out
+    finally:
+        t._get_obj, match_review.run_agent = real_get, real_run
+        match_review.ensure_parsed = real_ensure
 
 
 # --- API wiring (no LLM call) ----------------------------------------------
@@ -737,7 +827,10 @@ for name, fn in [
     ("match_review: get_farm_pattern", _farm_pattern_live),
     ("match_review: break/dispel ability lists", _break_dispel_lists),
     ("match_review: compute_metrics", _compute_metrics),
-    ("match_review: objectives + buybacks (synthetic)", _objectives_and_buybacks_synthetic),
+    (
+        "match_review: objectives + buybacks (synthetic)",
+        _objectives_and_buybacks_synthetic,
+    ),
     (
         "match_review: fight report + objective windows (synthetic)",
         _fights_and_objective_windows_synthetic,
@@ -750,6 +843,7 @@ for name, fn in [
     ("chat session transcript", _chat_history_transcript),
     ("review not saved when ungrounded", _review_not_saved_when_ungrounded),
     ("unparsed match gates review + requests parse", _unparsed_gate_synthetic),
+    ("missing or absent account gets no review", _wrong_player_rejected),
     ("api app loads (8 routes)", _api_loads),
     ("api /score-teams endpoint", _api_score_endpoint),
     ("api /match-draft-score endpoint", _api_match_draft_score),

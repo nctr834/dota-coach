@@ -34,7 +34,7 @@ python3 eval/run_eval.py
 ## Code Style
 - **Python**: Black formatter (line-length 88, Python 3.12). Pre-commit hook runs Black automatically.
 - **JS/JSX**: ESLint with react-hooks + react-refresh plugins
-- No test suite exists yet
+- No pytest suite; `scripts/smoke_test.py` runs 30 pass/fail checks (needs `data/` and network, no LLM calls)
 
 ## Critical Constraints
 - **LLM reads verified tool facts, never supplies game knowledge.** The review/chat agent (Sonnet, `AGENT_MODEL` in `match_review.py`) states what tools returned and may not attribute causes — it gives confidently wrong Dota advice otherwise. Offline LLM steps (`build_hero_tags.py`, `build_item_tags.py`) generate reviewable per-patch data only.

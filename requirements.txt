@@ -1,14 +1,8 @@
 anthropic
-beautifulsoup4
-chromadb
 fastapi
-json-repair
-playwright
+httpx
+pydantic
 python-dotenv
-rapidfuzz
-regex
 requests
-scrapetube
 uvicorn
-youtube-transcript-api
 vdf

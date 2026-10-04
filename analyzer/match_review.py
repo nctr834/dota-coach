@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 import chat_session
 from tools import TOOLS, _TOOL_FNS, _death_line
-from utils import ensure_parsed
+from utils import PlayerNotFound, ensure_parsed
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -368,6 +368,8 @@ def _triage(match_id: int, account_id: int | None) -> list[dict]:
     def call(name: str) -> dict:
         try:
             out = _TOOL_FNS[name](**args)
+        except PlayerNotFound:
+            raise  # no player to review; not a data-source outage
         except Exception as e:
             out = {"error": str(e)}
         trace.append({"tool": name, "input": args, "result": out})
@@ -465,6 +467,11 @@ UNPARSED_NOTE = (
     "to parse, in which case detailed stats never arrive."
 )
 
+NO_ACCOUNT_NOTE = (
+    "A review needs the account id of the player to review; without it there "
+    "is no way to tell which of the ten players the review is about."
+)
+
 
 def review_match(
     account_id: int | None = None,
@@ -474,6 +481,8 @@ def review_match(
 ) -> dict:
     if account_id is None and match_id is None:
         raise ValueError("provide account_id or match_id")
+    if account_id is None:
+        return {"review": NO_ACCOUNT_NOTE, "tool_trace": [], "messages": []}
     if match_id is not None and not ensure_parsed(match_id):
         return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
     if match_id is None:
@@ -484,11 +493,13 @@ def review_match(
             return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
     mode = read_mode or READ_MODE
     task = "Write the Read" if mode == "prose" else "Select the facts"
-    ask = f"{task} for match_id {match_id}" + (
-        f" for account_id {account_id}." if account_id else "."
-    )
+    ask = f"{task} for match_id {match_id} for account_id {account_id}."
 
-    trace = _triage(match_id, account_id)
+    try:
+        trace = _triage(match_id, account_id)
+    except PlayerNotFound as e:
+        note = f"No review: {e}. Check the match id and account id."
+        return {"review": note, "tool_trace": [], "messages": []}
     history = _triage_messages(ask, trace)
     selected = None
     if mode in ("facts", "rule"):
@@ -571,10 +582,13 @@ already reviewed (the review and its tool results are in the history above).
 Answer the player's follow-up directly and concisely, in plain prose, not the
 review format. Reuse facts already gathered; call a tool only for one you lack.
 Faithfulness is absolute: every number comes from a tool result, used as given,
-at its own time — base gold-swing claims on gold_swings. If a tool errors, say
-the data source (OpenDota) is temporarily unavailable. Never render a fault
-verdict in either direction ("purely the draft's fault", "your play was not the
-issue"); lay out the evidence, leave the judgment to the player. Never claim one
+at its own time — base gold-swing claims on gold_swings. If a tool errors
+because no account id was given or the account is not among the match's
+players, call it again with the account_id from this conversation; for any
+other tool error, say the data source (OpenDota) is temporarily unavailable.
+Never render a fault verdict in either direction ("purely the draft's fault",
+"your play was not the issue"); lay out the evidence, leave the judgment to the
+player. Never claim one
 hero counters another from your own knowledge; for Silver Edge or Nullifier
 questions call get_break_dispel_targets and state only the abilities and counts
 it returns. For a question about a fight, item use in fights, Roshan, aegis or
