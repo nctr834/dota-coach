@@ -1,7 +1,9 @@
 """Agent tool implementations and the TOOLS / _TOOL_FNS registry."""
 
 import json
+import string
 from collections import Counter
+from functools import lru_cache
 from statistics import median
 
 from anthropic.types import ToolParam
@@ -302,9 +304,7 @@ def _objective_timeline(match: dict, player: dict) -> list[str]:
             if o.get("team") in (2, 3):
                 side = "ally" if (o["team"] == 2) == radiant else "enemy"
             elif o.get("player_slot") is not None:
-                side = (
-                    "ally" if (o["player_slot"] < 128) == radiant else "enemy"
-                )
+                side = "ally" if (o["player_slot"] < 128) == radiant else "enemy"
             else:
                 side = "unknown"
             out.append(f"{minute}m {label} by {side} team")
@@ -851,6 +851,17 @@ CARRY_SEED = {
 }
 
 
+@lru_cache(maxsize=1)
+def _patch_start() -> int:
+    """Unix time the current major patch began (7.41 for 7.41f)."""
+    versions = _stratz("{ constants { gameVersions { id name asOfDateTime } } }")[
+        "constants"
+    ]["gameVersions"]
+    latest = max(versions, key=lambda v: v["id"])["name"]
+    major = latest.rstrip(string.ascii_lowercase)
+    return min(v["asOfDateTime"] for v in versions if v["name"].startswith(major))
+
+
 def _player_completed_items(match_id: int, account_id: int | None) -> dict[str, str]:
     """shortName -> displayName for the player's completed items in this match.
     Union of the purchase log and the final inventory: the log needs a parsed
@@ -895,14 +906,15 @@ def _collapse_upgrades(shorts: set[str]) -> set[str]:
 
 def get_matchup_builds(
     carry_hero_id: int,
-    enemy_hero_id: int,
+    enemy_hero_id: int | None,
     match_id: int | None = None,
     account_id: int | None = None,
     n: int = 6,
 ) -> dict:
-    """Recent completed-item builds (item + minute) pro pos-1 carries bought on
-    carry_hero_id in games where enemy_hero_id was on the opposing team.
-    enemy_hero_id can be a support, which is often the more useful matchup. Only
+    """Completed-item builds (item + minute) pro pos-1 carries bought on
+    carry_hero_id this major patch, in games where enemy_hero_id was on the
+    opposing team (None: against any enemy). enemy_hero_id can be a support,
+    which is often the more useful matchup. Only
     completed items are shown (no components, consumables, or recipes), like
     dota2protracker. Each build also carries final: the item slots actually held
     at the end of the game. Pass match_id/account_id to also get the player's
@@ -910,12 +922,14 @@ def get_matchup_builds(
     bought here that the player did not, the basis for itemization advice."""
     cache = _load_cache(MATCHUP_BUILDS_CACHE)
     key = f"{carry_hero_id}-{enemy_hero_id}"
-    # v3 entries include the Blink family in purchase lists (Valve quality
-    # override) and the larger sample (n=6); older entries refetch once.
-    if not utils._FRESH and cache.get(key, {}).get("v") == 3:
+    since = _patch_start()
+    if not utils._FRESH and cache.get(key, {}).get("since") == since:
         builds = cache[key]["builds"]
     else:
         builds = []
+        enemy_filter = (
+            f"withEnemyHeroIds: [{enemy_hero_id}]," if enemy_hero_id is not None else ""
+        )
         for name, seed_account in CARRY_SEED.items():
             if len(builds) >= n:
                 break
@@ -924,7 +938,8 @@ def get_matchup_builds(
             player(steamAccountId: {seed_account}) {{
                 matches(request: {{
                     heroIds: [{carry_hero_id}],
-                    withEnemyHeroIds: [{enemy_hero_id}],
+                    {enemy_filter}
+                    startDateTime: {since},
                     isParsed: true,
                     take: 3
                 }}) {{
@@ -965,7 +980,7 @@ def get_matchup_builds(
                     }
                 )
         cache[key] = {
-            "v": 3,
+            "since": since,
             "carry": ID_TO_NAME.get(carry_hero_id, str(carry_hero_id)),
             "vs": ID_TO_NAME.get(enemy_hero_id, str(enemy_hero_id)),
             "builds": builds,
@@ -993,6 +1008,7 @@ def get_matchup_builds(
     return result
 
 
+_GENERAL_BUILDS = 18  # any-enemy sample: 3 games from each of the 6 seed carries
 _CORE_FRAC = 0.5  # a notable item in this share of pro builds is the core build
 _ALT_MIN_GAMES = 2  # an alternative item must appear in at least this many builds
 _DISTINCT_MAX_OVERLAP = 1  # a build sharing <= this with the core is a distinct build
@@ -1001,7 +1017,8 @@ _DISTINCT_MAX_OVERLAP = 1  # a build sharing <= this with the core is a distinct
 def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     """How pros build the player's hero, and which of those items the player
     skipped. A pro build is the endgame inventory of one pro game, not purchase
-    order. Pulls pro builds across every enemy (each is single-hero-conditioned,
+    order. Pulls current-patch pro builds on the hero against any enemy, plus
+    the builds against each enemy in this game (each is single-hero-conditioned,
     not vs the whole lineup, so this is the general build, not matchup-reactive).
     Reports: core (items in most pro builds), alternatives (situational items that
     recur but are not core), any distinct_build (a genuinely different build that
@@ -1029,12 +1046,11 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     # Purchases count too: consumed items (Aghanim's Shard) never sit in the
     # final inventory but were bought all the same.
     bought_in: Counter = Counter()
-    for e in enemies:
-        result = get_matchup_builds(
-            carry_id, e["hero_id"], match_id=match_id, account_id=account_id
-        )
+    pulls = [get_matchup_builds(carry_id, None, n=_GENERAL_BUILDS)]
+    pulls += [get_matchup_builds(carry_id, e["hero_id"]) for e in enemies]
+    for result in pulls:
         ebuilds = list({b["match_id"]: b for b in result["builds"]}.values())
-        if ebuilds and player_items:
+        if ebuilds and player_items and result is not pulls[0]:
             counts = {}
             for s in player_items:
                 c = sum(
@@ -1106,7 +1122,9 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     timing = []
     for s in sorted(player_items, key=lambda s: -bought_in.get(s, 0)):
         entry = {"item": mine[s], "pro_builds": bought_in.get(s, 0), "of": n}
-        tags = [k for k, v in (item_tags.get(s) or {}).get("tags", {}).items() if v == 2]
+        tags = [
+            k for k, v in (item_tags.get(s) or {}).get("tags", {}).items() if v == 2
+        ]
         if tags:
             entry["tags"] = tags
         annotated.append(entry)
@@ -1183,8 +1201,8 @@ def get_break_dispel_targets(match_id: int, account_id: int | None = None) -> di
 
     seen = set()
     with_se = with_null = 0
-    for e in enemies:
-        for b in get_matchup_builds(player["hero_id"], e["hero_id"])["builds"]:
+    for enemy_id in [None] + [e["hero_id"] for e in enemies]:
+        for b in get_matchup_builds(player["hero_id"], enemy_id)["builds"]:
             if b["match_id"] in seen:
                 continue
             seen.add(b["match_id"])
