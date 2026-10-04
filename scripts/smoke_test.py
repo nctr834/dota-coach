@@ -513,7 +513,7 @@ def _review_assembly():
         "Fights without you: 17m fight: 3 ally deaths over 19s, 1 enemy death; "
         "team net gold -2158; you dealt 0 damage.\n\n"
         "Item timings: No fight items were completed.\n\n"
-        "Pro build reference:\nA.\nB."
+        "Pro build reference:\n- A.\n- B."
     ), text
     errored = [{"tool": "get_match_detail", "result": {"error": "522"}}]
     assert match_review._assemble("OpenDota is down.", errored) == "OpenDota is down."

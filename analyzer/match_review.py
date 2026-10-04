@@ -69,9 +69,30 @@ def _fight_fact(f: dict) -> tuple[str | None, str]:
         f"{f['minute']}m fight: {deaths(f['ally_deaths'], 'ally')}{spread}, "
         f"{deaths(f['enemy_deaths'], 'enemy')}",
         f"team net gold {f['team_net_gold']:+d}",
-        f"you dealt {f['player_damage']} damage"
-        + (f" and died at {f['player_death_minute']}m" if f["player_died"] else ""),
     ]
+    gold = f.get("player_gold_delta")
+    if f["player_damage"] == 0 and not f["player_died"] and gold is not None:
+        tower = f.get("player_tower_damage")
+        parts.append(
+            (f"you gained {gold} gold" if gold >= 0 else f"your gold fell by {-gold}")
+            + (f" and dealt {tower} tower damage" if tower else "")
+            + " in that time"
+        )
+    else:
+        parts.append(
+            f"you dealt {f['player_damage']} damage"
+            + (f" and died at {f['player_death_minute']}m" if f["player_died"] else "")
+        )
+    if "player_health_pct" in f:
+        parts.append(
+            f"{f['player_health_pct']}% health, {f['player_mana_pct']}% mana at the start"
+        )
+    if f.get("player_had_aegis"):
+        parts.append("holding the aegis")
+    if f.get("items_ready"):
+        parts.append(f"ready: {', '.join(f['items_ready'])}")
+    if f.get("items_on_cooldown"):
+        parts.append(f"on cooldown: {', '.join(f['items_on_cooldown'])}")
     after = f.get("taken_by_90s_after")
     if after:
         parts.append(
@@ -406,7 +427,11 @@ def _assemble(read: str, trace: list[dict]) -> str:
         ),
     ]
     return "\n\n".join(
-        f"{title}: {lines[0]}" if len(lines) == 1 else f"{title}:\n" + "\n".join(lines)
+        (
+            f"{title}: {lines[0]}"
+            if len(lines) == 1
+            else f"{title}:\n" + "\n".join(f"- {line}" for line in lines)
+        )
         for title, lines in blocks
         if lines
     )
@@ -466,7 +491,7 @@ def review_match(
             selected = [f for f in sheet if f.get("always")]
             selected += [f for f in picked if f not in selected]
             read = (
-                "\n" + "\n".join(f["line"] for f in selected)
+                "\n" + "\n".join(f"- {f['line']}" for f in selected)
                 if selected
                 else " Nothing in the data stands out."
             )
