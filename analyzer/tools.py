@@ -113,6 +113,13 @@ def get_match_detail(match_id: int, account_id: int | None = None) -> dict:
             if (p["player_slot"] < 128) != radiant
         ],
     }
+    parts = [
+        f"{'Won' if won else 'Lost'} in {detail['duration_min']} minutes on "
+        f"{detail['hero']}, {detail['kda']}, {detail['gpm']} GPM",
+        f"largest team lead {lead}" if lead else "",
+        f"largest team deficit {deficit}" if deficit else "",
+    ]
+    detail["result_line"] = "; ".join(p for p in parts if p) + "."
     return detail
 
 
@@ -395,6 +402,36 @@ def _fights(match: dict, player: dict) -> list[dict]:
     return rows
 
 
+_DEATH_CONTEXT = {
+    "caught_alone": "died caught alone",
+    "skirmish": "died in a skirmish",
+    "first_death_of_teamfight": "died first in a teamfight",
+    "died_in_teamfight": "died in a teamfight",
+}
+_NOTABLE_DEATHS = 4
+
+
+def _notable_death_lines(details: list[dict]) -> list[str]:
+    """Ready-made lines for the deaths at net-worth rank 1 or 2, at most four:
+    caught alone or first in a fight are kept ahead of the rest, and the lines
+    print in time order."""
+    farmed = [d for d in details if (d["networth_rank"] or "")[:2] in ("1 ", "2 ")]
+    early = ("caught_alone", "first_death_of_teamfight")
+    chosen = sorted(farmed, key=lambda d: d["context"] not in early)[:_NOTABLE_DEATHS]
+    lines = []
+    for d in sorted(chosen, key=lambda d: d["minute"]):
+        gold = d["team_gold_adv"]
+        parts = [
+            f"{d['minute']}m: {_DEATH_CONTEXT[d['context']]}"
+            + (f" to {d['killed_by']}" if d["killed_by"] else ""),
+            f"net worth rank {d['networth_rank']}",
+            f"team gold {gold:+d}" if gold is not None else "",
+            "bought back" if d["bought_back"] else "",
+        ]
+        lines.append("; ".join(p for p in parts if p) + ".")
+    return lines
+
+
 def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
     """Kills and deaths broken down by game phase and by opposing hero, computed
     from the parsed kill logs. Returns only these aggregates (no raw timeline),
@@ -452,7 +489,8 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
         "deaths_by_phase": _phase_counts(death_times),
         "kills_by_victim": kills_by_victim,
         "deaths_by_killer": deaths_by_killer,
-        "deaths_detail": _death_details(match, player),
+        "deaths_detail": (details := _death_details(match, player)),
+        "notable_deaths": _notable_death_lines(details),
         "gold_swings": _gold_swings(match, player),
         "enemy_buildings_killed": [
             f"{t // 60}m {name}" for t, name in _building_kills(match, player)
@@ -737,6 +775,11 @@ def _networth_vs_enemy_carry(match: dict, player: dict) -> dict | None:
     if not carry or not mine or not theirs:
         return None
     last = min(len(mine), len(theirs)) - 1
+
+    def gap(m: int) -> str:
+        d = mine[m] - theirs[m]
+        return f"player ahead by {d}" if d >= 0 else f"{carry.name} ahead by {-d}"
+
     return {
         "enemy_carry": carry.name,
         "checkpoints": [
@@ -744,7 +787,7 @@ def _networth_vs_enemy_carry(match: dict, player: dict) -> dict | None:
                 "minute": m,
                 "player": mine[m],
                 "enemy_carry": theirs[m],
-                "diff": mine[m] - theirs[m],
+                "gap": gap(m),
             }
             for m in [m for m in (10, 20, 30) if m < last] + [last]
         ],
@@ -760,7 +803,7 @@ def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
     farm_gold_by_zone (Stratz deep parse, when available): gold from lane
     creeps vs neutral camps vs ancients vs buildings. networth_vs_enemy_carry:
     the player's net worth next to the enemy pos 1's at 10, 20, 30 and the end
-    (diff positive = player ahead). Facts only — whether a
+    (gap says who was ahead and by how much). Facts only — whether a
     drought was justified (dead map, defending) is not in the data."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
@@ -1356,6 +1399,7 @@ def get_matchup_builds(
 
 
 _GENERAL_BUILDS = 18  # any-enemy sample: 3 games from each of the 6 seed carries
+_LOW_FRAC = 0.25  # a player item in under this share of pro builds is a rare pick
 _CORE_FRAC = 0.5  # a notable item in this share of pro builds is the core build
 _ALT_MIN_GAMES = 2  # an alternative item must appear in at least this many builds
 _DISTINCT_MAX_OVERLAP = 1  # a build sharing <= this with the core is a distinct build
@@ -1516,6 +1560,24 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     }
     if distinct:
         out["distinct_build"] = names(distinct)
+    lines = []
+    if skipped:
+        build = "distinct build" if on_distinct else "core"
+        lines.append(f"Player skipped ({build}): {', '.join(names(skipped))}.")
+    if distinct and not on_distinct:
+        lines.append(f"Distinct build option: {', '.join(names(distinct))}.")
+    lines += [
+        f"{e['item']}: {e['pro_builds']} of {e['of']} sampled builds."
+        for e in annotated
+        if e["pro_builds"] < e["of"] * _LOW_FRAC
+    ]
+    lines += [
+        f"Item {e['slot']}: you had {e['player_item']} at {e['player_min']}m; pros "
+        f"most often had {e['pro_most_common_item']} ({e['pro_most_common_in']} of "
+        f"{e['pro_builds']} builds), median {e['pro_median_min']}m."
+        for e in out["slot_differences"]
+    ]
+    out["reference_lines"] = lines
     return out
 
 

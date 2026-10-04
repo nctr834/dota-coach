@@ -467,6 +467,29 @@ def _fights_and_objective_windows_synthetic():
     ], ow["notable"]
 
 
+def _review_assembly():
+    import match_review
+
+    trace = [
+        {"tool": "get_match_detail", "result": {"result_line": "Lost in 40 minutes."}},
+        {"tool": "get_combat_timings", "result": {"notable_deaths": ["31m: died."]}},
+        {"tool": "get_objective_windows", "result": {"notable": []}},
+        {
+            "tool": "get_timing_windows",
+            "result": {"missed": [], "verdict": "No fight items were completed."},
+        },
+        {"tool": "get_build_gaps", "result": {"reference_lines": ["A.", "B."]}},
+    ]
+    text = match_review._assemble("Read: Two facts.", trace)
+    assert text == (
+        "Result: Lost in 40 minutes.\n\nRead: Two facts.\n\nDeaths: 31m: died.\n\n"
+        "Item timings: No fight items were completed.\n\n"
+        "Pro build reference:\nA.\nB."
+    ), text
+    errored = [{"tool": "get_match_detail", "result": {"error": "522"}}]
+    assert match_review._assemble("OpenDota is down.", errored) == "OpenDota is down."
+
+
 def _triage_message_shape():
     import match_review
 
@@ -491,7 +514,7 @@ def _triage_message_shape():
         match_review.run_agent, match_review.ensure_parsed = real_run, real_ensure
         match_review._triage = real_triage
     ask, calls, results = seen["history"]
-    assert ask == {"role": "user", "content": "Review match_id 5."}, ask
+    assert ask == {"role": "user", "content": "Write the Read for match_id 5."}, ask
     assert [b["name"] for b in calls["content"]] == [
         "get_match_detail",
         "compute_metrics",
@@ -619,6 +642,7 @@ for name, fn in [
         _fights_and_objective_windows_synthetic,
     ),
     ("match_review: triage message shape", _triage_message_shape),
+    ("match_review: review assembly", _review_assembly),
     ("match_review: score_lane_matchup", _lane_matchup),
     ("match_review: get_draft_advantage", _draft_advantage),
     ("chat session transcript", _chat_history_transcript),

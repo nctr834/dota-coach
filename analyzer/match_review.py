@@ -17,15 +17,15 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 AGENT_MODEL = "claude-sonnet-4-6"
 
-SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. Review one match and give short, concrete feedback.
+SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. You write one paragraph, the Read, of a post-game review; code prints the rest of the review around it.
 
 The tool results for this match are already in the conversation, run for you: the profile (get_match_detail, compute_metrics), deaths and gold (get_combat_timings), every teamfight (get_fight_report), aegis and tormentor windows (get_objective_windows), farm (get_farm_pattern), the lane and draft scores, and, on a loss or a good-farm low-damage game, get_timing_windows and get_build_gaps. Do not call those again. Call another tool only for something they do not contain (get_patch_notes, get_break_dispel_targets, get_metric_trend).
 
 Select, do not dump: most of what is in front of you does not belong in the review. How to read it:
 - A missed CS checkpoint or a farm drought is a fact for the Read, cited with its fight overlap and gold state.
-- A power spike farmed through while the team fought is a candidate reason for a loss. The Read ties it to what the gold did next in one clause; the full note appears only under Item timings, never in both.
+- A power spike farmed through while the team fought is a candidate reason for a loss. The Read ties it to what the gold did next in one clause; the full note is printed under Item timings.
 - Fights: a death is cited by its deaths_detail minute (player_death_minute in the fight row), not the fight's start minute. Cite a fight by its minute with its own numbers (ally deaths, ally_death_spread_s, team_net_gold, player_damage). What a won fight or an aegis was followed by is taken_by_90s_after and buildings_taken_by_holder_team, stated as given, "nothing" included.
-- Objectives: get_objective_windows.notable holds the one or two lines worth showing, chosen in code. They go under "Objectives:" verbatim; the Read may point at one in a clause and never restates the windows.
+- Objectives: get_objective_windows.notable holds the one or two lines worth showing, chosen in code and printed for you; the Read never restates the windows.
 - Words that grade are verdicts too: catastrophic, clean, strong, big, dominant, key, hinge, turning point, wipeout. Give the number instead.
 - Join facts with "and", "then" or a semicolon. Connectors that assign cause are verdicts: driven by, through, because, cost, erased, gave back, clawed back, tells the story, despite.
 - Items: an unused_while_dying item is stated with its fight minute and, in words, whether it had been used in an earlier fight within its cooldown (maybe_on_cooldown); never as a mistake, since disables and uses outside fights are not visible. Never print field names.
@@ -38,12 +38,8 @@ Verdicts are fabrication. State what a number is, never what it caused. Any sent
 
 Your value is judgment, and judgment here is selection, not attribution: pick the one or two facts the evidence most points to and put them next to each other. Which facts to show is your call; what caused what is not.
 
-Structure. Begin directly at "Result:" — no preamble. Always "Result:" and "Read:"; a reference block only when its tool result is present.
-- "Result:" one sentence: won or lost and what it came down to — once, only here. A loss never reads like a win; a hard draft is context, not a verdict.
-- "Read:" at most four short sentences, 100 words in total. Each sentence opens with a fact and its number; none opens by characterizing ("The lane was clean", "The gold swing tells the story") and none says what happened after the last sample ("never recovered"). Synthesis; prioritize, do not enumerate. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was.
-- "Objectives:" only if get_objective_windows.notable is not empty: its lines verbatim, nothing added.
-- "Item timings:" only if a get_timing_windows result is present; write each "missed" entry's "note" verbatim, else its "verdict" line. Do not compose your own timing sentence.
-- "Pro build reference:" only if a get_build_gaps result is present: the player_skipped items (core first), distinct_build as a separate option, any player item with a low pro_builds count stated as its count ("Radiance: 1 of 18 sampled builds"), and each slot_differences entry with both items and both minutes as given. Nothing else from order_vs_pros, and no per-enemy counts unless a player item has a low overall count. Name items and counts only — never why an item helps; that pros build it is the whole point.
+Output. Code prints Result, Deaths, Objectives, Item timings and Pro build reference verbatim from the tool results (result_line, notable_deaths, notable, the timing notes, reference_lines), above and below your paragraph. Your whole reply is the Read paragraph and nothing else: no headings, no separators, no copy of those lines, no second paragraph. The reader has those lines next to your paragraph, so it adds what they do not say and may point at one of them in a clause.
+The Read is at most four short sentences, 100 words in total. Each sentence opens with a fact and its number; none opens by characterizing ("The lane was clean", "The gold swing tells the story") and none says what happened after the last sample ("never recovered"). Synthesis; prioritize, do not enumerate. A loss never reads like a win; a hard draft is context, not a verdict. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was. Name items and counts only, never why an item helps.
 
 No emojis, no bold."""
 
@@ -189,6 +185,40 @@ def _triage_messages(ask: str, trace: list[dict]) -> list[MessageParam]:
     ]
 
 
+def _assemble(read: str, trace: list[dict]) -> str:
+    """The review as shown: the model's Read between the blocks code prints
+    verbatim from the tool results. Without a result_line (the match data never
+    loaded) the model's text is returned as is."""
+    by_tool: dict[str, dict] = {}
+    for step in trace:
+        by_tool.setdefault(step["tool"], step["result"])
+    result_line = by_tool.get("get_match_detail", {}).get("result_line")
+    if not result_line:
+        return read
+    read = re.sub(r"^\s*Read:\s*", "", read)
+    timing = by_tool.get("get_timing_windows") or {}
+    blocks = [
+        ("Result", [result_line]),
+        ("Read", [read]),
+        ("Deaths", by_tool.get("get_combat_timings", {}).get("notable_deaths")),
+        ("Objectives", by_tool.get("get_objective_windows", {}).get("notable")),
+        (
+            "Item timings",
+            [m["note"] for m in timing.get("missed") or []]
+            or ([timing["verdict"]] if timing.get("verdict") else None),
+        ),
+        (
+            "Pro build reference",
+            by_tool.get("get_build_gaps", {}).get("reference_lines"),
+        ),
+    ]
+    return "\n\n".join(
+        f"{title}: {lines[0]}" if len(lines) == 1 else f"{title}:\n" + "\n".join(lines)
+        for title, lines in blocks
+        if lines
+    )
+
+
 UNPARSED_NOTE = (
     "OpenDota has no parsed replay data for this match yet, so a detailed "
     "review is not possible. A parse was just requested — retry in a few "
@@ -212,7 +242,7 @@ def review_match(
         ]
         if not ensure_parsed(match_id):
             return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
-    ask = f"Review match_id {match_id}" + (
+    ask = f"Write the Read for match_id {match_id}" + (
         f" for account_id {account_id}." if account_id else "."
     )
 
@@ -223,10 +253,13 @@ def review_match(
         max_turns=max_turns,
         trace=trace,
     )
-    # The prompt says begin at "Result:", but the model still sometimes narrates
-    # first ("I have everything I need. ---"); trim deterministically.
-    if "Result:" in result["text"]:
-        result["text"] = result["text"][result["text"].index("Result:") :]
+    result["text"] = _assemble(result["text"], result["tool_trace"])
+    if result["messages"] and result["messages"][-1]["role"] == "assistant":
+        # the saved session opens with the review as shown, not the bare Read
+        result["messages"][-1] = {
+            "role": "assistant",
+            "content": [{"type": "text", "text": result["text"]}],
+        }
     # Persist the review as the opening of the chat session so a follow-up
     # continues this conversation instead of regenerating the review. A run
     # where get_match_detail never succeeded saw no match data: saving it

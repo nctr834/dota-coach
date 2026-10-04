@@ -67,17 +67,14 @@ JUDGE_SYSTEM = f"""You map a Dota 2 post-game review to gap tags for a position-
 
 Return ONLY a JSON object: {{"predicted_gaps": [<subset of {TAXONOMY}>],
 "verdict_phrases": [<exact quotes>]}}. verdict_phrases are short exact quotes
-(a few words each) where the review assigns a cause or grades the play:
-causal connectors ("driven by", "because of", "cost them", "erased it", "gave
-it back through", "tells the story") and grading words ("catastrophic",
-"clean lane", "the hinge of the game", "played well", "wipeout"). A statement
-of what happened with its numbers and minutes is not a verdict, whatever it
-describes ("the lead went from +6673 to -4384", "no buildings taken", "died at
-31m"), and neither is the closing open question. Ignore the lines under
-"Objectives:", "Item timings:" and "Pro build reference:". [] if there are
-none.
-predicted_gaps must be a subset of exactly these tags: {TAXONOMY}. Never output
-any string outside this list (not a metric name, not a hero name).
+(a few words each) where the review assigns a cause or grades the play. Read
+only the "Read:" section for these; the other sections are printed by code.
+Verdicts: "the hinge of the game", "catastrophic fights", "the lane was
+clean", "tells the story", "driven by the 30m fight", "gave it back through",
+"sit right at the inflection", "never stabilized", "clawed back".
+Not verdicts: "produced no buildings", "Manta Style unused while you died",
+"the lead peaked at +6673 at 27m, then -4384 by 37m", "you died at 31m as the
+second of four allies", the closing open question. [] if there are none.
 
 The review renders no verdicts; it lays out evidence and ends on an open
 question. Tag the candidate reasons its "Read:" foregrounds as evidence:
@@ -141,6 +138,8 @@ def _fact_numbers(tool_trace: list) -> set[int]:
         elif isinstance(node, (int, float)):
             _add(node)
         elif isinstance(node, str):
+            # "50-60" in a tool string is a range, not 50 and -60
+            node = re.sub(r"(?<=\d)-(?=\d)", " ", node)
             for tok in re.findall(r"-?\d+(?:\.\d+)?", node):
                 _add(float(tok))
 
@@ -149,22 +148,28 @@ def _fact_numbers(tool_trace: list) -> set[int]:
     return nums
 
 
-def unsupported_numbers(review: str, tool_trace: list) -> list[str]:
-    """Numbers in the review that no tool returned. A value matches if its
-    rounded int is within 1 of a tool value (covers rounded floats); the phase
-    boundary minutes the agent uses to name buckets are always allowed."""
-    facts = _fact_numbers(tool_trace)
+def check_numbers(review: str, tool_trace: list) -> tuple[list[str], list[str]]:
+    """(unsupported, sign_flipped) numbers in the review. A value is supported
+    if its rounded int is within 1 of a tool value (covers rounded floats); the
+    phase boundary minutes the agent uses to name buckets are always allowed.
+    sign_flipped are values only the negation of which a tool returned: a
+    tool's -4109 restated as "4109 behind" is the same fact, but a direction
+    error would look the same, so they are counted apart."""
+    facts = _fact_numbers(tool_trace) | PHASE_BOUNDARIES
     review = re.sub(r"(?<=\d),(?=\d)", "", review)
     # "22-35 minutes" is a range and "tier-4" a hyphenation, not negative numbers.
     review = re.sub(r"(?<=[\dA-Za-z])-(?=\d)", " ", review)
-    bad = []
+    bad, flipped = [], []
     for token in re.findall(r"-?\d+(?:\.\d+)?", review):
         val = round(float(token))
-        # a tool's -4109 restated as "4109 behind" is the same fact
-        if {val, -val} & (facts | PHASE_BOUNDARIES):
+        if val in facts:
             continue
-        bad.append(token)
-    return bad
+        (flipped if -val in facts else bad).append(token)
+    return bad, flipped
+
+
+def unsupported_numbers(review: str, tool_trace: list) -> list[str]:
+    return check_numbers(review, tool_trace)[0]
 
 
 _VERDICT_SHAPES = re.compile(
@@ -221,7 +226,7 @@ def main(argv):
         true_g = set(m["true_gaps"])
         pred_g = set(j.get("predicted_gaps", [])) & TAXONOMY_SET
         p, r, f1 = score_gaps(true_g, pred_g)
-        claims = unsupported_numbers(result["review"], result["tool_trace"])
+        claims, flipped = check_numbers(result["review"], result["tool_trace"])
         total_unsupported += len(claims)
         verdicts = verdict_shapes(result["review"])
         words, read_sentences = review_length(result["review"])
@@ -244,7 +249,7 @@ def main(argv):
                 len(missing),
                 usage.get("input_tokens"),
                 usage.get("output_tokens"),
-                len(j.get("verdict_phrases") or []),
+                len(flipped),
             )
         )
 
@@ -264,8 +269,11 @@ def main(argv):
             print(f"  unsupported numbers ({len(claims)}): {', '.join(claims)}")
         if verdicts:
             print(f"  verdict shapes ({len(verdicts)}): {', '.join(verdicts)}")
+        if flipped:
+            print(f"  sign-flipped numbers ({len(flipped)}): {', '.join(flipped)}")
         if j.get("verdict_phrases"):
-            print(f"  judge verdict phrases: {'; '.join(j['verdict_phrases'])}")
+            # a reading aid for the reviewer, not scored
+            print(f"  judge-flagged phrases: {'; '.join(j['verdict_phrases'])}")
         if verbose:
             print(f"  --- review ---\n{result['review']}\n")
         print()
@@ -278,7 +286,7 @@ def main(argv):
     print(f"  faithful reviews: {sum(1 for x in rows if x[6]==0)}/{n}")
     print(f"  total unsupported numbers: {total_unsupported}")
     print(f"  regex-clean reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
-    print(f"  judge verdict-free reviews: {sum(1 for x in rows if x[14]==0)}/{n}")
+    print(f"  sign-flipped numbers: {sum(x[14] for x in rows)}")
     print(f"  mean words: {sum(x[8] for x in rows)/n:.0f}")
     print(f"  mean Read sentences: {sum(x[9] for x in rows)/n:.1f}")
     total_cite = sum(x[10] for x in rows)
