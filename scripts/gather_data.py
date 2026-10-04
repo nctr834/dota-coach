@@ -100,6 +100,9 @@ ITEM_NAME_OVERRIDES = {
     "item_angels_demise": "Khanda",
     "item_grandmasters_glaive": "Grandmaster's Glaive",
     "item_witches_switch": "Witch's Switch",
+    "item_famango": "Healing Lotus",
+    "item_great_famango": "Great Healing Lotus",
+    "item_greater_famango": "Greater Healing Lotus",
 }
 
 # Valve marks the Blink Dagger family ItemQuality "component" (they build into

@@ -312,6 +312,9 @@ def _death_details(match: dict, player: dict) -> list[dict]:
             entry["state_at"] = "fight start" if window else "10s before"
         if _had_aegis(aegis_times, death_ts, t):
             entry["had_aegis"] = True
+        heals = _unused_heals(playback, t)
+        if heals:
+            entry["unused_heals"] = heals
         out.append(entry)
     return out
 
@@ -346,6 +349,35 @@ def _items_ready(playback: dict, owned: dict[str, str], t: int):
         on_cd = bool(used) and t < used[-1] + _item_cooldown(short)
         (cooling if on_cd else ready).append(name)
     return ready, cooling
+
+
+_MIN_WAND_CHARGES = 5  # fewer charges than this is not worth a line
+
+
+def _unused_heals(playback: dict | None, death_t: int) -> list[str]:
+    """Instant heals (wand charges, lotus, cheese, faerie fire) still in the
+    player's main inventory when they died: items whose text says they
+    instantly restore health, held in the last snapshot before the death and
+    not used between that snapshot and the death."""
+    if not playback or not playback.get("inventory"):
+        return []
+    i = bisect_right(playback["inventory"], (death_t, [("~", None)]))
+    if not i:
+        return []
+    snap_t, slots = playback["inventory"][i - 1]
+    used = {s for u, s in playback["item_uses"] if snap_t < u <= death_t}
+    out = []
+    for short, charges in slots:
+        v = item_data.get(f"item_{short}") or {}
+        text = v.get("description") or ""
+        heals = "Instantly restores" in text and "health" in text
+        charged = "per charge" in text or "per_charge" in text
+        if not heals or short in used:
+            continue
+        if charged and (charges or 0) < _MIN_WAND_CHARGES:
+            continue
+        out.append(v["displayName"] + (f" ({charges} charges)" if charged else ""))
+    return out
 
 
 def _aegis_times(match: dict, player: dict) -> list[int]:
@@ -490,6 +522,11 @@ def _death_line(d: dict) -> str:
             else ""
         ),
         "holding the aegis" if d.get("had_aegis") else "",
+        (
+            f"unused in inventory: {', '.join(d['unused_heals'])}"
+            if d.get("unused_heals")
+            else ""
+        ),
         "bought back" if d["bought_back"] else "",
     ]
     return "; ".join(p for p in parts if p) + "."
@@ -517,7 +554,9 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
     deaths_detail gives each death's context — caught_alone, skirmish, or a
     teamfight with first_death_of_teamfight flagged — with the player's
     net-worth rank (1 = richest hero in the game) and the team's gold advantage
-    at the time: the evidence for judging whether deaths threw the game.
+    at the time, plus (Stratz playback, when present) health and mana going in,
+    had_aegis, and unused_heals — instant heals still in the main inventory at
+    the death: the evidence for judging whether deaths threw the game.
     gold_swings is one chronological line of the advantage's turning points
     (minute: value of each reversal, ending at the final state).
     enemy_buildings_killed is the towers/rax the player last-hit, with minutes,
@@ -1128,7 +1167,9 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     were absent from. When Stratz has playback for the match, each row also has
     the player's health and mana percent at the fight's start and which active
     items were ready or on cooldown then (and maybe_on_cooldown is exact);
-    player_had_aegis marks fights entered holding an aegis. summary splits fights into present and absent with the
+    player_had_aegis marks fights entered holding an aegis, and
+    unused_heals_at_death lists instant heals (wand charges, lotus, cheese,
+    faerie fire) still in the main inventory when the player died. summary splits fights into present and absent with the
     summed team_net_gold of each."""
     match = _get_obj(f"/matches/{match_id}")
     player = _player(match, account_id)
@@ -1168,10 +1209,10 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
                 f["items_ready"] = ready
             if cooling:
                 f["items_on_cooldown"] = cooling
-        died_at = [round(t / 60) for t in my_deaths if start <= t <= end]
+        died_at = [t for t in my_deaths if start <= t <= end]
         if died_at:
             # same rounding as deaths_detail, so one death has one minute
-            f["player_death_minute"] = died_at[0]
+            f["player_death_minute"] = round(died_at[0] / 60)
         uses = f.pop("item_uses")
         f["player_present"] = f["player_damage"] > 0
         bucket = present if f["player_present"] else absent
@@ -1207,6 +1248,9 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
                 ]
                 if unused:
                     f["unused_while_dying"] = unused
+                heals = _unused_heals(playback, died_at[0]) if died_at else []
+                if heals:
+                    f["unused_heals_at_death"] = heals
         for s, count in uses.items():
             if count:
                 last_used_end[s] = end
@@ -1882,7 +1926,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_fight_report",
-        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (positive team_net_gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. player_gold_delta and player_tower_damage say what the player gained while a fight went on; player_health_pct, player_mana_pct, items_ready and items_on_cooldown (Stratz playback, when present) give the player's state at the fight's start; player_had_aegis marks fights entered holding an aegis. summary gives fights present vs absent with summed team_net_gold.",
+        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (positive team_net_gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. player_gold_delta and player_tower_damage say what the player gained while a fight went on; player_health_pct, player_mana_pct, items_ready and items_on_cooldown (Stratz playback, when present) give the player's state at the fight's start; player_had_aegis marks fights entered holding an aegis; unused_heals_at_death lists instant heals (wand charges, lotus, cheese, faerie fire) still in the main inventory when the player died. summary gives fights present vs absent with summed team_net_gold.",
         "input_schema": {
             "type": "object",
             "properties": {

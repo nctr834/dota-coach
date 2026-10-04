@@ -172,7 +172,7 @@ def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
         items = [
             u["item"] + (" (possibly on cooldown)" if u["maybe_on_cooldown"] else "")
             for u in f.get("unused_while_dying") or []
-        ]
+        ] + (f.get("unused_heals_at_death") or [])
         if items:
             unused.append(
                 (

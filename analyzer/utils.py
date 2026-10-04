@@ -302,7 +302,8 @@ _playback_cache: dict[tuple[int, int], dict | None] = {}
 
 def _stratz_playback(match_id: int | None, account_id: int | None) -> dict | None:
     """Stratz playback for one player: health/mana samples as (time, hp, max_hp,
-    mp, max_mp) and item uses as (time, shortName), both in time order. None
+    mp, max_mp), item uses as (time, shortName) and main-slot inventory
+    snapshots as (time, [(shortName, charges)]), all in time order. None
     when Stratz has no playback for the match, the API key is missing, or the
     call fails — every consumer treats it as optional."""
     if match_id is None or account_id is None:
@@ -317,6 +318,12 @@ def _stratz_playback(match_id: int | None, account_id: int | None) -> dict | Non
             playbackData {{
                 playerUpdateHealthEvents {{ time hp maxHp mp maxMp }}
                 itemUsedEvents {{ time itemId }}
+                inventoryEvents {{
+                    time
+                    item0 {{ itemId charges }} item1 {{ itemId charges }}
+                    item2 {{ itemId charges }} item3 {{ itemId charges }}
+                    item4 {{ itemId charges }} item5 {{ itemId charges }}
+                }}
             }}
         }}
     }}
@@ -337,6 +344,18 @@ def _stratz_playback(match_id: int | None, account_id: int | None) -> dict | Non
             "item_uses": sorted(
                 (e["time"], _item_short(e["itemId"]))
                 for e in raw.get("itemUsedEvents") or []
+            ),
+            # the six main slots only: a backpack item cannot be used
+            "inventory": sorted(
+                (
+                    e["time"],
+                    [
+                        (_item_short(slot["itemId"]), slot.get("charges"))
+                        for i in range(6)
+                        if (slot := e.get(f"item{i}"))
+                    ],
+                )
+                for e in raw.get("inventoryEvents") or []
             ),
         }
     _playback_cache[key] = playback
