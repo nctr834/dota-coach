@@ -11,8 +11,7 @@
 ## Commands
 ```bash
 # Backend
-python3 api/main.py                    # Start API server
-# or: uvicorn api.main:app --reload
+uvicorn api.main:app --reload          # Start API server (run from project root)
 
 # Frontend (run gather_data.py first: it generates the gitignored
 # frontend/src/data/hero_data.json that the UI imports at build time)

@@ -119,55 +119,24 @@ class Rank(Enum):
     DIVINE_IMMORTAL = "DIVINE_IMMORTAL"
 
 
-def _fetch_vdf(url: str) -> dict:
-    """Fetch a VDF file from GitHub and parse it."""
-    text = get(url).text
+def _parse_vdf(text: str) -> dict:
     # Fix malformed entries: a key on one line followed by a bare "" on the next
     # e.g. "SomeKey"\n"" → "SomeKey"\t\t""
     text = re.sub(r'("[\w]+")\s*\n(\s*"")\s*\n', r'\1\t\t""\n', text)
+    # vdf.loads rejects two closing braces on one line (npc_dota_hero_mirana.txt)
+    text = re.sub(r"\}[ \t]+\}", "}\n}", text)
     return vdf.loads(text)
+
+
+def _fetch_vdf(url: str) -> dict:
+    """Fetch a VDF file from GitHub and parse it."""
+    return _parse_vdf(get(url).text)
 
 
 def _fetch_localization(url: str) -> dict:
     """Fetch a Valve localization VDF file and return the flat Tokens dict."""
     data = _fetch_vdf(url)
     return data.get("lang", {}).get("Tokens", {})
-
-
-def _parse_hero_list_from_npc_heroes(text: str) -> dict:
-    """Parse npc_heroes.txt (which vdf.loads chokes on) with regex.
-
-    Returns {shortName: {"id": int, "roles": [...], "stats": {...}, "abilities": [...], "talents": [...], "facets": [...]}}.
-    """
-    lines = text.split("\n")
-    heroes = {}
-    current_hero = None
-    current_block = []
-    brace_depth = 0
-
-    for line in lines:
-        stripped = line.strip().strip('"')
-        # Detect hero header: standalone "npc_dota_hero_xyz" line
-        if (
-            stripped.startswith("npc_dota_hero_")
-            and stripped != "npc_dota_hero_base"
-            and "\t" not in stripped
-            and current_hero is None
-        ):
-            current_hero = stripped.replace("npc_dota_hero_", "")
-            current_block = [line]
-            brace_depth = 0
-            continue
-
-        if current_hero is not None:
-            current_block.append(line)
-            brace_depth += line.count("{") - line.count("}")
-            if brace_depth <= 0 and len(current_block) > 2:
-                heroes[current_hero] = _extract_hero_info(current_block)
-                current_hero = None
-                current_block = []
-
-    return heroes
 
 
 def _val(lines: list, key: str, default: str = "") -> str:
@@ -180,7 +149,7 @@ def _val(lines: list, key: str, default: str = "") -> str:
 
 
 def _extract_hero_info(block_lines: list) -> dict:
-    """Extract relevant info from a hero block in npc_heroes.txt."""
+    """Extract relevant info from the hero block of a per-hero npc file."""
     hero_id = int(_val(block_lines, "HeroID", "0"))
     display_name = _val(block_lines, "workshop_guide_name", "")
     roles_str = _val(block_lines, "Role", "")
@@ -246,7 +215,7 @@ def _extract_hero_info(block_lines: list) -> dict:
         lvl = level_map.get(slot, "?")
         talents.setdefault(lvl, []).append(name)
 
-    # Facets. Valve kept the facet definitions in npc_heroes.txt but flagged
+    # Facets. Valve kept the facet definitions in the hero files but flagged
     # them "Deprecated" "true" after 7.41 removed the mechanic, so skip those.
     facets = []
     in_facets = False
@@ -299,16 +268,25 @@ def _extract_hero_info(block_lines: list) -> dict:
 
 
 def gather_hero_game_data():
-    """Fetch hero data from d2vpkr: stats from npc_heroes.txt, abilities from
-    individual hero files, descriptions from abilities_english.txt, tips from
-    tips_english.txt."""
+    """Fetch hero data from d2vpkr: hero list from npc_heroes.txt, stats and
+    abilities from individual hero files, descriptions from
+    abilities_english.txt, tips from tips_english.txt."""
     if ignore["hero_data"]:
         return
 
     print("Fetching hero list from npc_heroes.txt...")
     heroes_text = get(f"{D2VPKR_BASE}/dota/scripts/npc/npc_heroes.txt").text
-    hero_info = _parse_hero_list_from_npc_heroes(heroes_text)
-    print(f"  Found {len(hero_info)} heroes in npc_heroes.txt")
+    hero_names = [
+        name
+        for name in re.findall(
+            r'#base\s+"heroes/npc_dota_hero_(\w+)\.txt"', heroes_text
+        )
+        if name != "base"
+    ]
+    print(f"  Found {len(hero_names)} heroes in npc_heroes.txt")
+    if not hero_names:
+        print("  No heroes found, keeping existing hero_data.json")
+        return
 
     print("Fetching abilities_english.txt...")
     loc_tokens = _fetch_localization(
@@ -326,21 +304,28 @@ def gather_hero_game_data():
     # Filter out non-playable entries
     skip_heroes = {"target_dummy"}
 
-    for short_name, info in hero_info.items():
+    for short_name in hero_names:
         if short_name in skip_heroes:
             continue
+
+        url = f"{D2VPKR_BASE}/dota/scripts/npc/heroes/npc_dota_hero_{short_name}.txt"
+        try:
+            hero_text = get(url).text
+            hero_block = _parse_vdf(hero_text)["DOTAHeroes"][
+                f"npc_dota_hero_{short_name}"
+            ]
+        except Exception as e:
+            failed.append((short_name, str(e)))
+            continue
+
+        # Stop before AbilityDefinitions so ability keys can't shadow hero keys
+        info = _extract_hero_info(
+            hero_text.split('"AbilityDefinitions"')[0].split("\n")
+        )
         hero_id = str(info["id"])
         display_name = info["displayName"] or short_name.replace("_", " ").title()
 
-        # Fetch individual hero ability file
-        url = f"{D2VPKR_BASE}/dota/scripts/npc/heroes/npc_dota_hero_{short_name}.txt"
-        try:
-            ability_vdf = _fetch_vdf(url)
-        except Exception as e:
-            failed.append((short_name, str(e)))
-            ability_vdf = {}
-
-        ability_defs = ability_vdf.get("DOTAAbilities", {})
+        ability_defs = hero_block.get("AbilityDefinitions", {})
 
         # Build abilities list
         abilities = []
@@ -457,7 +442,7 @@ def gather_hero_game_data():
         }
 
     if failed:
-        print(f"  Failed to fetch ability files for: {[f[0] for f in failed]}")
+        print(f"  Failed to fetch hero files for: {failed}")
 
     Path("data/hero_data.json").write_text(json.dumps(hero_data))
     Path("frontend/src/data/hero_data.json").write_text(json.dumps(hero_data))
@@ -666,7 +651,6 @@ def gather_pos_data():
     except Exception as e:
         print(f"Error gathering role data: {e}")
         exit(1)
-
 
 
 # ---------------------------------------------------------------------------
