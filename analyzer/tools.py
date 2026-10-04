@@ -361,8 +361,9 @@ def _objective_timeline(match: dict, player: dict) -> list[str]:
 
 def _fights(match: dict, player: dict) -> list[dict]:
     """One row per OpenDota teamfight, sides relative to the player. won is a
-    definition, not a judgment: more enemy deaths than ally deaths, ties broken
-    by team_net_gold (ally gold gained minus enemy gold gained in the fight)."""
+    definition, not a judgment: positive team_net_gold (ally gold gained minus
+    enemy gold gained in the fight, so trading two heroes for one rich one can
+    be a win), with an exact tie decided by deaths."""
     radiant = player["player_slot"] < 128
     slots = [p["player_slot"] for p in match["players"]]
     me = slots.index(player["player_slot"])
@@ -393,7 +394,7 @@ def _fights(match: dict, player: dict) -> list[dict]:
                 "ally_death_spread_s": died[-1][0] - died[0][0] if died else 0,
                 "enemy_deaths": n_enemy,
                 "team_net_gold": net,
-                "won": n_enemy > n_ally or (n_enemy == n_ally and net > 0),
+                "won": net > 0 or (net == 0 and n_enemy > n_ally),
                 "player_damage": mine["damage"],
                 "player_died": mine["deaths"] > 0,
                 "item_uses": mine.get("item_uses") or {},
@@ -1039,8 +1040,8 @@ def _active_items_owned(player: dict, t: int) -> dict[str, str]:
 def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     """One row per teamfight (OpenDota's fight detection; small skirmishes have
     no row). Per fight: ally deaths with their order and the seconds between the
-    first and last, enemy deaths, team_net_gold, won (more enemy than ally
-    deaths, ties by team_net_gold — a definition, not a judgment), the player's
+    first and last, enemy deaths, team_net_gold, won (positive
+    team_net_gold — a definition, not a judgment), the player's
     damage and whether they died (player_death_minute matches the minute in
     deaths_detail; a fight's own minute is when it started). player_present means the player dealt damage
     in the fight. taken_by_90s_after (won fights only): buildings, Roshan or
@@ -1785,7 +1786,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_fight_report",
-        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (more enemy than ally deaths, ties by net gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. summary gives fights present vs absent with summed team_net_gold.",
+        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (positive team_net_gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. summary gives fights present vs absent with summed team_net_gold.",
         "input_schema": {
             "type": "object",
             "properties": {

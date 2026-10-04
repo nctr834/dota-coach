@@ -91,9 +91,9 @@ def _fight_fact(f: dict) -> tuple[str | None, str]:
 
 
 def _absent_fights(fights: list[dict]) -> list[dict]:
-    """Fights after laning that the team lost while the player dealt no damage
-    and did not die in them, at most four (the largest gold losses), in time
-    order."""
+    """Fights after laning that the team lost (negative net gold) while the
+    player dealt no damage and did not die in them, at most four (the largest
+    gold losses), in time order."""
     rows = [
         f
         for f in fights
