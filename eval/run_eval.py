@@ -10,6 +10,7 @@ deterministic code check (review numbers vs tool-result numbers). Labels are you
   python3 eval/run_eval.py            # all labeled matches
   python3 eval/run_eval.py -v         # also print each review + judge reasoning
   python3 eval/run_eval.py --read facts   # fact-selection mode (own cache entries)
+  python3 eval/run_eval.py --matches 9028258550,9026632686   # only these matches
 """
 
 import json
@@ -27,7 +28,7 @@ sys.path.insert(0, str(ROOT / "analyzer"))
 os.chdir(ROOT)
 
 import chat_session
-from match_review import review_match, AGENT_MODEL
+from match_review import review_match, AGENT_MODEL, _by_tool, _fact_sheet
 
 # Eval reviews must not overwrite the user's real saved sessions for these
 # matches, so the session store points at a throwaway dir for this process.
@@ -223,6 +224,9 @@ def main(argv):
     verbose = "-v" in argv
     read_mode = argv[argv.index("--read") + 1] if "--read" in argv else "prose"
     labeled = [m for m in LABELS["matches"] if m["true_gaps"]]
+    if "--matches" in argv:
+        only = set(argv[argv.index("--matches") + 1].split(","))
+        labeled = [m for m in labeled if str(m["match_id"]) in only]
     if not labeled:
         print("No labeled matches. Fill in 'true_gaps' in eval/labels.json.")
         return 1
@@ -252,6 +256,12 @@ def main(argv):
             else read_section(review)
         )
         missing = uncited(chosen, must_cite)
+        # Stricter than the trace check: numbers the model chose to state that
+        # are not on the fact sheet or the Result line.
+        by_tool = _by_tool(result["tool_trace"])
+        sheet = [f["line"] for f in _fact_sheet(by_tool)]
+        sheet.append((by_tool.get("get_match_detail") or {}).get("result_line") or "")
+        off_sheet = check_numbers(chosen, [{"result": sheet}])[0]
         usage = result.get("usage") or {}
         row = {
             "judge": score_gaps(true_g, pred_g),
@@ -259,6 +269,8 @@ def main(argv):
             "verdicts": len(verdicts),
             "flipped": len(flipped),
             "words": words,
+            "numbers": len(re.findall(r"\d+(?:\.\d+)?", review)),
+            "off_sheet": len(off_sheet),
             "read_sentences": read_sentences,
             "must_cite": len(must_cite),
             "missing": len(missing),
@@ -278,7 +290,14 @@ def main(argv):
             p, r, f1 = row["category"]
             print(f"  selected:  {[f['id'] for f in selected]} -> {sorted(cats)}")
             print(f"  category P={p:.2f} R={r:.2f} F1={f1:.2f}")
-        print(f"  length: {words} words, {read_sentences} Read sentences")
+        print(
+            f"  length: {words} words, {read_sentences} Read sentences, "
+            f"{row['numbers']} numbers"
+        )
+        if off_sheet:
+            print(
+                f"  numbers not on the fact sheet ({len(off_sheet)}): {', '.join(off_sheet)}"
+            )
         if must_cite:
             print(f"  must-cite: {len(must_cite) - len(missing)}/{len(must_cite)}")
             if missing:
@@ -318,7 +337,9 @@ def main(argv):
     print(f"  total unsupported numbers: {sum(x['unsupported'] for x in rows)}")
     print(f"  regex-clean reviews: {sum(1 for x in rows if not x['verdicts'])}/{n}")
     print(f"  sign-flipped numbers: {sum(x['flipped'] for x in rows)}")
+    print(f"  numbers not on the fact sheet: {sum(x['off_sheet'] for x in rows)}")
     print(f"  mean words: {mean(x['words'] for x in rows):.0f}")
+    print(f"  mean numbers cited: {mean(x['numbers'] for x in rows):.0f}")
     print(f"  mean Read sentences: {mean(x['read_sentences'] for x in rows):.1f}")
     total_cite = sum(x["must_cite"] for x in rows)
     if total_cite:
