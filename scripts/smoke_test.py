@@ -353,8 +353,10 @@ def _review_not_saved_when_ungrounded():
 
     real = match_review.run_agent
     real_ensure = match_review.ensure_parsed
+    real_triage = match_review._triage
     try:
         match_review.ensure_parsed = lambda match_id: True
+        match_review._triage = lambda match_id, account_id: []
         errored = [{"tool": "get_match_detail", "input": {}, "result": {"error": "522"}}]
         match_review.run_agent = fake_run(errored)
         match_review.review_match(account_id=3, match_id=3)
@@ -367,6 +369,252 @@ def _review_not_saved_when_ungrounded():
     finally:
         match_review.run_agent = real
         match_review.ensure_parsed = real_ensure
+        match_review._triage = real_triage
+
+
+def _fights_and_objective_windows_synthetic():
+    import tools as t
+    import utils
+
+    def fight_player(deaths=0, damage=0, gold=0, items=None):
+        return {
+            "deaths": deaths,
+            "damage": damage,
+            "gold_delta": gold,
+            "item_uses": items or {},
+        }
+
+    match = {
+        "duration": 2400,
+        "players": [
+            {
+                "player_slot": 0,
+                "hero_id": 1,
+                "account_id": 1,
+                "gold_t": [0],
+                "life_state": {},
+                "purchase_log": [{"time": 600, "key": "black_king_bar"}],
+                "kills_log": [],
+            },
+            {
+                "player_slot": 128,
+                "hero_id": 6,
+                "kills_log": [{"time": 1310, "key": "npc_dota_hero_antimage"}],
+            },
+        ],
+        "teamfights": [
+            {
+                "start": 1300,
+                "end": 1340,
+                "players": [
+                    fight_player(deaths=1, damage=500, gold=-200),
+                    fight_player(gold=600),
+                ],
+            },
+            {
+                "start": 1500,
+                "end": 1530,
+                "players": [
+                    fight_player(damage=900, gold=800, items={"black_king_bar": 1}),
+                    fight_player(deaths=1, gold=-100),
+                ],
+            },
+        ],
+        "objectives": [
+            {"time": 1260, "type": "CHAT_MESSAGE_AEGIS", "player_slot": 0},
+            {
+                "time": 1560,
+                "type": "building_kill",
+                "key": "npc_dota_badguys_tower2_mid",
+                "player_slot": 0,
+            },
+            {"time": 1800, "type": "CHAT_MESSAGE_MINIBOSS_KILL", "team": 3},
+        ],
+        "radiant_gold_adv": [1000] * 41,
+    }
+    real = utils._get_obj
+    try:
+        t._get_obj = lambda path, params=None: (
+            match if path.startswith("/matches/") else real(path, params)
+        )
+        fr = t.get_fight_report(1, 1)
+        ow = t.get_objective_windows(1, 1)
+    finally:
+        t._get_obj = real
+    lost, won = fr["fights"]
+    assert lost["won"] is False and lost["team_net_gold"] == -800, lost
+    assert lost["ally_death_order"] == ["Anti-Mage"], lost
+    assert lost["unused_while_dying"] == [
+        {"item": "Black King Bar", "maybe_on_cooldown": False}
+    ], lost
+    assert won["won"] is True and won["taken_by_90s_after"] == ["mid tier2 tower"], won
+    assert won["active_item_uses"] == {"Black King Bar": 1}, won
+    assert fr["summary"]["present"] == {"fights": 2, "team_net_gold": 100}, fr
+    (aegis,) = ow["aegis_windows"]
+    assert aegis["carrier"] == "Anti-Mage" and aegis["side"] == "ally", aegis
+    assert aegis["buildings_taken_by_holder_team"] == ["mid tier2 tower"], aegis
+    assert aegis["carrier_death_minutes"] == [22], aegis
+    assert [f["minute"] for f in aegis["fights"]] == [21, 25], aegis
+    spans = [
+        (w["up_from_min"], w["until_min"], w["ended_by"])
+        for w in ow["tormentor_windows"]
+    ]
+    assert spans == [(20, 30, "enemy team kill")], spans
+    assert ow["notable"] == [
+        "Tormentor up 20m to 30m; team led 10 of 10 minutes; killed by the enemy team.",
+        "21m aegis on Anti-Mage; took mid tier2 tower; team gold +1000 to +1000; "
+        "Anti-Mage died at 22m.",
+    ], ow["notable"]
+
+
+def _review_assembly():
+    import match_review
+
+    trace = [
+        {"tool": "get_match_detail", "result": {"result_line": "Lost in 40 minutes."}},
+        {"tool": "get_combat_timings", "result": {"notable_deaths": ["31m: died."]}},
+        {"tool": "get_objective_windows", "result": {"notable": []}},
+        {
+            "tool": "get_fight_report",
+            "result": {
+                "fights": [
+                    {
+                        "minute": 17,
+                        "ally_deaths": 3,
+                        "ally_death_spread_s": 19,
+                        "enemy_deaths": 1,
+                        "team_net_gold": -2158,
+                        "won": False,
+                        "player_damage": 0,
+                        "player_died": False,
+                    },
+                    {
+                        "minute": 25,
+                        "ally_deaths": 0,
+                        "ally_death_spread_s": 0,
+                        "enemy_deaths": 3,
+                        "team_net_gold": 2321,
+                        "won": True,
+                        "player_damage": 0,
+                        "player_died": False,
+                    },
+                ]
+            },
+        },
+        {
+            "tool": "get_timing_windows",
+            "result": {"missed": [], "verdict": "No fight items were completed."},
+        },
+        {"tool": "get_build_gaps", "result": {"reference_lines": ["A.", "B."]}},
+    ]
+    text = match_review._assemble("Read: Two facts.", trace)
+    assert text == (
+        "Result: Lost in 40 minutes.\n\nRead: Two facts.\n\nDeaths: 31m: died.\n\n"
+        "Fights without you: 17m fight: 3 ally deaths over 19s, 1 enemy death; "
+        "team net gold -2158; you dealt 0 damage.\n\n"
+        "Item timings: No fight items were completed.\n\n"
+        "Pro build reference:\nA.\nB."
+    ), text
+    errored = [{"tool": "get_match_detail", "result": {"error": "522"}}]
+    assert match_review._assemble("OpenDota is down.", errored) == "OpenDota is down."
+
+
+def _fact_selection():
+    import match_review
+    import tools as t
+
+    def death(minute, context, rank):
+        return {
+            "minute": minute,
+            "killed_by": "Slark",
+            "context": context,
+            "networth_rank": f"{rank} of 10",
+            "team_gold_adv": 0,
+            "bought_back": False,
+        }
+
+    many = [death(m, "died_in_teamfight", 2) for m in (20, 25, 30, 35, 40)]
+    lines = t._notable_death_lines(many + [death(17, "caught_alone", 1)])
+    assert len(lines) == 4 and lines[0].startswith("17m: died caught alone"), lines
+
+    by_tool = {
+        "get_combat_timings": {
+            "deaths_detail": [
+                {
+                    "minute": 31,
+                    "killed_by": "Pudge",
+                    "context": "caught_alone",
+                    "networth_rank": "2 of 10",
+                    "team_gold_adv": 2654,
+                    "bought_back": False,
+                }
+            ]
+        },
+        "get_fight_report": {
+            "fights": [
+                {
+                    "minute": 37,
+                    "ally_deaths": 4,
+                    "ally_death_spread_s": 40,
+                    "enemy_deaths": 1,
+                    "team_net_gold": 1193,
+                    "player_damage": 0,
+                    "player_died": False,
+                    "taken_by_90s_after": ["Roshan"],
+                }
+            ]
+        },
+        "get_draft_advantage": {"advantage": -12.5},
+    }
+    sheet = match_review._fact_sheet(by_tool)
+    assert [(f["id"], f["category"]) for f in sheet] == [
+        ("D1", "deaths"),
+        ("F1", "teamfight_impact"),
+        ("X1", "draft_disadvantage"),
+    ], sheet
+    assert sheet[1]["line"] == (
+        "37m fight: 4 ally deaths over 40s, 1 enemy death; team net gold +1193; "
+        "you dealt 0 damage; followed by Roshan."
+    ), sheet[1]
+    assert sheet[0]["always"] is True, sheet[0]
+    picked = match_review._selected_facts('Here: ["F1", "Z9", "D1", "F1"]', sheet)
+    assert [f["id"] for f in picked] == ["F1", "D1"], picked
+    assert match_review._selected_facts("no json", sheet) == []
+
+
+def _triage_message_shape():
+    import match_review
+
+    seen = {}
+
+    def fake_run(system, user_message=None, history=None, max_turns=8, trace=None):
+        seen["history"], seen["trace"] = history, trace
+        return {"text": "Result: x", "tool_trace": trace, "messages": history}
+
+    steps = [
+        {"tool": "get_match_detail", "input": {"match_id": 5}, "result": {"won": True}},
+        {"tool": "compute_metrics", "input": {"match_id": 5}, "result": {}},
+    ]
+    real_run, real_ensure = match_review.run_agent, match_review.ensure_parsed
+    real_triage = match_review._triage
+    try:
+        match_review.ensure_parsed = lambda match_id: True
+        match_review._triage = lambda match_id, account_id: steps
+        match_review.run_agent = fake_run
+        out = match_review.review_match(match_id=5)
+    finally:
+        match_review.run_agent, match_review.ensure_parsed = real_run, real_ensure
+        match_review._triage = real_triage
+    ask, calls, results = seen["history"]
+    assert ask == {"role": "user", "content": "Write the Read for match_id 5."}, ask
+    assert [b["name"] for b in calls["content"]] == [
+        "get_match_detail",
+        "compute_metrics",
+    ]
+    assert [b["tool_use_id"] for b in results["content"]] == [
+        b["id"] for b in calls["content"]
+    ]
+    assert out["tool_trace"] == steps
 
 
 def _unparsed_gate_synthetic():
@@ -481,6 +729,13 @@ for name, fn in [
     ("match_review: break/dispel ability lists", _break_dispel_lists),
     ("match_review: compute_metrics", _compute_metrics),
     ("match_review: objectives + buybacks (synthetic)", _objectives_and_buybacks_synthetic),
+    (
+        "match_review: fight report + objective windows (synthetic)",
+        _fights_and_objective_windows_synthetic,
+    ),
+    ("match_review: triage message shape", _triage_message_shape),
+    ("match_review: review assembly", _review_assembly),
+    ("match_review: fact sheet + selection", _fact_selection),
     ("match_review: score_lane_matchup", _lane_matchup),
     ("match_review: get_draft_advantage", _draft_advantage),
     ("chat session transcript", _chat_history_transcript),
