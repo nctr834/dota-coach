@@ -460,6 +460,11 @@ def _fights_and_objective_windows_synthetic():
         for w in ow["tormentor_windows"]
     ]
     assert spans == [(20, 30, "enemy team kill")], spans
+    assert ow["notable"] == [
+        "Tormentor up 20m to 30m; team led 10 of 10 minutes; killed by the enemy team.",
+        "21m aegis on Anti-Mage; took mid tier2 tower; team gold +1000 to +1000; "
+        "Anti-Mage died at 22m.",
+    ], ow["notable"]
 
 
 def _triage_message_shape():

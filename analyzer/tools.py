@@ -955,6 +955,7 @@ _AFTER_FIGHT_S = 90
 _AEGIS_S = 300
 _TORMENTOR_SPAWN_S = 1200
 _TORMENTOR_RESPAWN_S = 600
+_NOTABLE_OBJECTIVES = 2
 
 
 def _active_items_owned(player: dict, t: int) -> dict[str, str]:
@@ -978,7 +979,8 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     no row). Per fight: ally deaths with their order and the seconds between the
     first and last, enemy deaths, team_net_gold, won (more enemy than ally
     deaths, ties by team_net_gold — a definition, not a judgment), the player's
-    damage and whether they died. player_present means the player dealt damage
+    damage and whether they died (player_death_minute matches the minute in
+    deaths_detail; a fight's own minute is when it started). player_present means the player dealt damage
     in the fight. taken_by_90s_after (won fights only): buildings, Roshan or
     tormentor the team took from the fight's start to 90 seconds after its end.
     active_item_uses: use counts in this fight for the active items the player
@@ -1002,9 +1004,14 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     use_counts: dict[str, list[int]] = {}  # name -> [fights used in, fights owned]
     present = {"fights": 0, "team_net_gold": 0}
     absent = {"fights": 0, "team_net_gold": 0}
+    my_deaths = [t for t, _ in _deaths(match, player)]
     fights = []
     for f in _fights(match, player):
         start, end = f.pop("start_s"), f.pop("end_s")
+        died_at = [round(t / 60) for t in my_deaths if start <= t <= end]
+        if died_at:
+            # same rounding as deaths_detail, so one death has one minute
+            f["player_death_minute"] = died_at[0]
         uses = f.pop("item_uses")
         f["player_present"] = f["player_damage"] > 0
         bucket = present if f["player_present"] else absent
@@ -1068,7 +1075,9 @@ def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
     tormentor was alive (first spawn 20:00, respawn 10 minutes after a kill),
     how it ended, the player's team gold advantage at its start and end, and how
     many of those minutes the team led. Whether there was room to take it is not
-    in the data."""
+    in the data. notable: at most two ready-made lines, chosen in code — an ally
+    aegis window with no buildings taken or the carrier dying, and a tormentor
+    span the team led without taking it."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
     if not _is_parsed(player):
@@ -1128,7 +1137,53 @@ def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
             )
         if e:
             up = e["time"] + _TORMENTOR_RESPAWN_S
-    return {"parsed": True, "aegis_windows": aegis, "tormentor_windows": tormentor}
+
+    def gold(w: dict) -> str:
+        a, b = w["team_gold_adv_start"], w["team_gold_adv_end"]
+        return f"team gold {a:+d} to {b:+d}" if a is not None and b is not None else ""
+
+    # Ally aegis with nothing taken and the carrier dying first, then tormentor
+    # spans the team led without taking it, then the remaining ally aegis windows.
+    ranked = []
+    for w in aegis:
+        if w["side"] != "ally" or w.get("game_ended_in_window"):
+            continue
+        taken, died = w["buildings_taken_by_holder_team"], w["carrier_death_minutes"]
+        if taken and not died:
+            continue
+        parts = [
+            f"{w['minute']}m aegis on {w['carrier']}",
+            (
+                f"took {', '.join(taken)}"
+                if taken
+                else "no buildings taken in the next 5 minutes"
+            ),
+            gold(w),
+            f"{w['carrier']} died at {died[0]}m" if died else "",
+        ]
+        ranked.append((2 if taken or not died else 0, parts))
+    for w in tormentor:
+        if w["minutes_team_led"] and w["ended_by"] != "ally team kill":
+            parts = [
+                f"Tormentor up {w['up_from_min']}m to {w['until_min']}m",
+                f"team led {w['minutes_team_led']} of {w['minutes_up']} minutes",
+                (
+                    "killed by the enemy team"
+                    if w["ended_by"] == "enemy team kill"
+                    else "not killed"
+                ),
+            ]
+            ranked.append((1, parts))
+    ranked.sort(key=lambda r: r[0])
+    return {
+        "parsed": True,
+        "aegis_windows": aegis,
+        "tormentor_windows": tormentor,
+        "notable": [
+            "; ".join(p for p in parts if p) + "."
+            for _, parts in ranked[:_NOTABLE_OBJECTIVES]
+        ],
+    }
 
 
 # --- Stratz matchup builds --------------------------------------------------
@@ -1452,6 +1507,11 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
         "player_build": "distinct" if on_distinct else "core",
         "player_skipped": names(skipped),
         "order_vs_pros": order_vs_pros,
+        "slot_differences": [
+            e
+            for e in order_vs_pros
+            if e.get("pro_most_common_item") not in (None, e["player_item"])
+        ],
         "player_items_in_builds_vs_enemy": conditioned,
     }
     if distinct:
@@ -1657,7 +1717,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_objective_windows",
-        "description": "Objectives: what followed each aegis and when the tormentor stood untaken. aegis_windows: per aegis pickup, the 5 minutes after it — buildings the holder's team took, the player's team gold advantage at the start and end, minutes the carrier died, and fights in the window. tormentor_windows: each span the tormentor was alive, how it ended (ally kill, enemy kill, game end), the team gold advantage at its start and end, and how many of those minutes the team led. Whether there was room to take it is not in the data.",
+        "description": "Objectives: what followed each aegis and when the tormentor stood untaken. aegis_windows: per aegis pickup, the 5 minutes after it — buildings the holder's team took, the player's team gold advantage at the start and end, minutes the carrier died, and fights in the window. tormentor_windows: each span the tormentor was alive, how it ended (ally kill, enemy kill, game end), the team gold advantage at its start and end, and how many of those minutes the team led. notable holds at most two ready-made lines chosen in code (an ally aegis with nothing taken or the carrier dying, a tormentor span the team led without taking it). Whether there was room to take it is not in the data.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -1717,7 +1777,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_build_gaps",
-        "description": "How pros build the player's hero and how the player's build compares, with counts as the judgment. player_items each carry pro_builds/of — how many sampled pro builds contained the item; 0 of 18 is a fact worth naming, and an item is never 'a fine choice' on your say-so. order_vs_pros compares by build order: the player's Nth completed item and its minute next to the pro median minute for the Nth item and, when at least half the builds agree, the item pros had in that slot. player_items_in_builds_vs_enemy gives, per enemy actually in this game, how many builds sampled against that enemy contained each player item — n is small, so state counts ('3 of 6 builds with Medusa'), never percentages. core/alternatives/distinct_build describe the pro build shape; player_skipped are items from the build the player was on that they did not buy. Item tags, where present, are descriptive labels derived per patch from Valve item text — state them, do not turn them into advice.",
+        "description": "How pros build the player's hero and how the player's build compares, with counts as the judgment. player_items each carry pro_builds/of — how many sampled pro builds contained the item; 0 of 18 is a fact worth naming, and an item is never 'a fine choice' on your say-so. order_vs_pros compares by build order: the player's Nth completed item and its minute next to the pro median minute for the Nth item and, when at least half the builds agree, the item pros had in that slot; slot_differences is the subset where that item differs from the player's. player_items_in_builds_vs_enemy gives, per enemy actually in this game, how many builds sampled against that enemy contained each player item — n is small, so state counts ('3 of 6 builds with Medusa'), never percentages. core/alternatives/distinct_build describe the pro build shape; player_skipped are items from the build the player was on that they did not buy. Item tags, where present, are descriptive labels derived per patch from Valve item text — state them, do not turn them into advice.",
         "input_schema": {
             "type": "object",
             "properties": {

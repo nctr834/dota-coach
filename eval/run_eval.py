@@ -65,7 +65,17 @@ def cached_review(match_id: int, fresh: bool = False) -> dict:
 JUDGE_SYSTEM = f"""You map a Dota 2 post-game review to gap tags for a position-1
 (carry) player. You see only the review text.
 
-Return ONLY a JSON object: {{"predicted_gaps": [<subset of {TAXONOMY}>]}}.
+Return ONLY a JSON object: {{"predicted_gaps": [<subset of {TAXONOMY}>],
+"verdict_phrases": [<exact quotes>]}}. verdict_phrases are short exact quotes
+(a few words each) where the review assigns a cause or grades the play:
+causal connectors ("driven by", "because of", "cost them", "erased it", "gave
+it back through", "tells the story") and grading words ("catastrophic",
+"clean lane", "the hinge of the game", "played well", "wipeout"). A statement
+of what happened with its numbers and minutes is not a verdict, whatever it
+describes ("the lead went from +6673 to -4384", "no buildings taken", "died at
+31m"), and neither is the closing open question. Ignore the lines under
+"Objectives:", "Item timings:" and "Pro build reference:". [] if there are
+none.
 predicted_gaps must be a subset of exactly these tags: {TAXONOMY}. Never output
 any string outside this list (not a metric name, not a hero name).
 
@@ -87,7 +97,7 @@ A clean confirmation flagging nothing -> ["no_gap"]."""
 def predict_gaps(review: str) -> dict:
     resp = client.messages.create(
         model=JUDGE_MODEL,
-        max_tokens=300,
+        max_tokens=600,
         temperature=0,
         system=JUDGE_SYSTEM,
         messages=[{"role": "user", "content": f"REVIEW:\n{review}"}],
@@ -150,7 +160,8 @@ def unsupported_numbers(review: str, tool_trace: list) -> list[str]:
     bad = []
     for token in re.findall(r"-?\d+(?:\.\d+)?", review):
         val = round(float(token))
-        if val in facts or val in PHASE_BOUNDARIES or -val in PHASE_BOUNDARIES:
+        # a tool's -4109 restated as "4109 behind" is the same fact
+        if {val, -val} & (facts | PHASE_BOUNDARIES):
             continue
         bad.append(token)
     return bad
@@ -233,6 +244,7 @@ def main(argv):
                 len(missing),
                 usage.get("input_tokens"),
                 usage.get("output_tokens"),
+                len(j.get("verdict_phrases") or []),
             )
         )
 
@@ -247,13 +259,13 @@ def main(argv):
             if missing:
                 print(f"  not cited: {', '.join(missing)}")
         if usage:
-            print(
-                f"  tokens: {usage['input_tokens']} in, {usage['output_tokens']} out"
-            )
+            print(f"  tokens: {usage['input_tokens']} in, {usage['output_tokens']} out")
         if claims:
             print(f"  unsupported numbers ({len(claims)}): {', '.join(claims)}")
         if verdicts:
             print(f"  verdict shapes ({len(verdicts)}): {', '.join(verdicts)}")
+        if j.get("verdict_phrases"):
+            print(f"  judge verdict phrases: {'; '.join(j['verdict_phrases'])}")
         if verbose:
             print(f"  --- review ---\n{result['review']}\n")
         print()
@@ -265,12 +277,15 @@ def main(argv):
     print(f"  macro F1:        {sum(x[5] for x in rows)/n:.2f}")
     print(f"  faithful reviews: {sum(1 for x in rows if x[6]==0)}/{n}")
     print(f"  total unsupported numbers: {total_unsupported}")
-    print(f"  verdict-free reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
+    print(f"  regex-clean reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
+    print(f"  judge verdict-free reviews: {sum(1 for x in rows if x[14]==0)}/{n}")
     print(f"  mean words: {sum(x[8] for x in rows)/n:.0f}")
     print(f"  mean Read sentences: {sum(x[9] for x in rows)/n:.1f}")
     total_cite = sum(x[10] for x in rows)
     if total_cite:
-        print(f"  must-cite facts cited: {total_cite - sum(x[11] for x in rows)}/{total_cite}")
+        print(
+            f"  must-cite facts cited: {total_cite - sum(x[11] for x in rows)}/{total_cite}"
+        )
     metered = [x for x in rows if x[12] is not None]
     if metered:
         k = len(metered)
