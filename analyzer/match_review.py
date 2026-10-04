@@ -17,10 +17,13 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 AGENT_MODEL = "claude-sonnet-4-6"
 # "prose": the model writes the Read paragraph. "facts": the model only picks
-# fact ids from a code-built sheet and code prints them.
+# fact ids from a code-built sheet and code prints them. "rule": no model; the
+# always-printed facts plus the largest gold-swing fights, as a baseline.
 READ_MODE = os.getenv("REVIEW_READ_MODE", "prose")
 _MAX_FACTS = 4
 _MAX_ABSENT_FIGHTS = 4
+_MAX_ALWAYS_DEATHS = 4
+_CLOSE_GOLD = 2000  # a win never behind by this much gets no critique
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. You write one paragraph, the Read, of a post-game review; code prints the rest of the review around it.
 
@@ -139,13 +142,16 @@ def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
     combat = by_tool.get("get_combat_timings") or {}
     deaths = combat.get("deaths_detail") or []
     add("D", [("deaths", _death_line(d)) for d in deaths])
-    for fact, d in zip(facts, deaths):
-        # a farmed carry caught alone or dying first is printed whatever the
-        # model selects
-        fact["always"] = d["context"] in (
-            "caught_alone",
-            "first_death_of_teamfight",
-        ) and (d["networth_rank"] or "")[:2] in ("1 ", "2 ")
+    # a farmed carry caught alone or dying first is printed whatever the model
+    # selects; at most four, the richest first
+    farmed = [
+        (d["networth_rank"], d["minute"], fact)
+        for fact, d in zip(facts, deaths)
+        if d["context"] in ("caught_alone", "first_death_of_teamfight")
+        and (d["networth_rank"] or "")[:2] in ("1 ", "2 ")
+    ]
+    for _, _, fact in sorted(farmed, key=lambda x: x[:2])[:_MAX_ALWAYS_DEATHS]:
+        fact["always"] = True
     objectives = by_tool.get("get_objective_windows") or {}
     add(
         "O",
@@ -160,6 +166,7 @@ def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
     add("F", [_fight_fact(f) for f in fights])
     for fact, f in zip(facts[first:], fights):
         fact["always"] = any(f is a for a in absent)
+        fact["gold_swing"] = abs(f["team_net_gold"]) if f["minute"] >= 10 else 0
     unused = []
     for f in fights:
         items = [
@@ -242,6 +249,20 @@ def _selected_facts(reply: str, sheet: list[dict]) -> list[dict]:
         ids = []
     seen = dict.fromkeys(i for i in ids if isinstance(i, str) and i in by_id)
     return [by_id[i] for i in seen][:_MAX_FACTS]
+
+
+def _never_behind(detail: dict) -> bool:
+    """A win in which the team was never behind by _CLOSE_GOLD."""
+    deficit = detail.get("largest_team_deficit")
+    return bool(detail.get("won")) and (
+        not deficit or int(deficit.split()[0]) > -_CLOSE_GOLD
+    )
+
+
+def _rule_picks(sheet: list[dict]) -> list[dict]:
+    """The no-model baseline's picks: the fights with the largest gold swings."""
+    fights = [f for f in sheet if f.get("gold_swing")]
+    return sorted(fights, key=lambda f: -f["gold_swing"])[:_MAX_FACTS]
 
 
 def _by_tool(trace: list[dict]) -> dict[str, dict]:
@@ -461,8 +482,8 @@ def review_match(
         ]
         if not ensure_parsed(match_id):
             return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
-    facts_mode = (read_mode or READ_MODE) == "facts"
-    task = "Select the facts" if facts_mode else "Write the Read"
+    mode = read_mode or READ_MODE
+    task = "Write the Read" if mode == "prose" else "Select the facts"
     ask = f"{task} for match_id {match_id}" + (
         f" for account_id {account_id}." if account_id else "."
     )
@@ -470,32 +491,45 @@ def review_match(
     trace = _triage(match_id, account_id)
     history = _triage_messages(ask, trace)
     selected = None
-    if facts_mode:
+    if mode in ("facts", "rule"):
+        detail = _by_tool(trace).get("get_match_detail") or {}
         sheet = _fact_sheet(_by_tool(trace))
-        history[-1]["content"].append(
-            {
-                "type": "text",
-                "text": "Fact sheet:\n"
-                + "\n".join(
-                    f"{f['id']} [{f['category'] or 'context'}] {f['line']}"
-                    for f in sheet
-                ),
-            }
-        )
-        result = run_agent(
-            SYSTEM_FACTS, history=history, max_turns=max_turns, trace=trace
-        )
-        result_line = _by_tool(trace).get("get_match_detail", {}).get("result_line")
-        if result_line:
+        if mode == "facts":
+            history[-1]["content"].append(
+                {
+                    "type": "text",
+                    "text": "Fact sheet:\n"
+                    + "\n".join(
+                        f"{f['id']} [{f['category'] or 'context'}] {f['line']}"
+                        for f in sheet
+                    ),
+                }
+            )
+            result = run_agent(
+                SYSTEM_FACTS, history=history, max_turns=max_turns, trace=trace
+            )
             picked = _selected_facts(result["text"], sheet)
-            selected = [f for f in sheet if f.get("always")]
-            selected += [f for f in picked if f not in selected]
+        else:
+            result = {
+                "tool_trace": trace,
+                "messages": history + [{"role": "assistant", "content": ""}],
+                "usage": {"input_tokens": 0, "output_tokens": 0},
+            }
+            picked = _rule_picks(sheet)
+        if detail.get("result_line"):
+            # a win that was never close gets no critique, from code or the rule
+            quiet = _never_behind(detail)
+            always = [] if quiet else [f for f in sheet if f.get("always")]
+            if quiet and mode == "rule":
+                picked = []
+            selected = [dict(f, picked=False) for f in always]
+            selected += [dict(f, picked=True) for f in picked if f not in always]
             read = (
                 "\n" + "\n".join(f"- {f['line']}" for f in selected)
                 if selected
                 else " Nothing in the data stands out."
             )
-            result["text"] = f"Result: {result_line}\n\nRead:{read}"
+            result["text"] = f"Result: {detail['result_line']}\n\nRead:{read}"
         else:
             result["text"] = (
                 "The match data source (OpenDota) is temporarily unavailable; "

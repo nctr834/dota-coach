@@ -92,6 +92,21 @@ def _find_player(match: dict, account_id: int | None) -> dict | None:
     return None
 
 
+def _player(match: dict, account_id: int | None) -> dict:
+    """The account's player in the match, or the first player when no account
+    is given. Raises when the account is not among the players (OpenDota hides
+    the account id of a private profile) instead of reviewing someone else."""
+    if account_id is None:
+        return match["players"][0]
+    player = _find_player(match, account_id)
+    if player is None:
+        raise ValueError(
+            f"account {account_id} is not among this match's players; a private "
+            "profile has no account id in OpenDota"
+        )
+    return player
+
+
 def _is_parsed(player: dict) -> bool:
     return bool(player.get("gold_t")) and player.get("life_state") is not None
 

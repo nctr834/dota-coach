@@ -577,6 +577,15 @@ def _fact_selection():
         "you dealt 0 damage; followed by Roshan."
     ), sheet[1]
     assert sheet[0]["always"] is True, sheet[0]
+    assert [f["id"] for f in match_review._rule_picks(sheet)] == ["F1"]
+    assert match_review._never_behind({"won": True, "largest_team_deficit": None})
+    assert match_review._never_behind(
+        {"won": True, "largest_team_deficit": "-1500 at 9m"}
+    )
+    assert not match_review._never_behind(
+        {"won": True, "largest_team_deficit": "-8616 at 43m"}
+    )
+    assert not match_review._never_behind({"won": False})
     picked = match_review._selected_facts('Here: ["F1", "Z9", "D1", "F1"]', sheet)
     assert [f["id"] for f in picked] == ["F1", "D1"], picked
     assert match_review._selected_facts("no json", sheet) == []
