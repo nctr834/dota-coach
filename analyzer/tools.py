@@ -60,7 +60,7 @@ def get_recent_matches(account_id: int, limit: int = 10) -> dict:
 
 def get_match_detail(match_id: int, account_id: int | None = None) -> dict:
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     parsed = _is_parsed(player)
     radiant = player["player_slot"] < 128
     won = match["radiant_win"] == radiant
@@ -134,7 +134,7 @@ def get_hero_benchmarks(hero_id: int) -> dict:
 
 def compute_metrics(match_id: int, account_id: int | None = None) -> dict:
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     metrics = {}
     for metric in (
         "gold_per_min",
@@ -456,7 +456,7 @@ def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
     bought back (each also flagged on its death), and objective_timeline the
     Roshan/tormentor kills and aegis pickups, sides relative to the player."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     if not _is_parsed(player):
         return {
             "parsed": False,
@@ -597,7 +597,7 @@ def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
     farming, and the team fought without them. It is a prompt to ask, not a verdict;
     the data cannot show intent."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; timing windows unavailable"}
 
@@ -820,7 +820,7 @@ def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
     (gap says who was ahead and by how much). Facts only — whether a
     drought was justified (dead map, defending) is not in the data."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; farm data unavailable"}
     lh = player.get("lh_t") or []
@@ -893,7 +893,7 @@ def score_lane_matchup(match_id: int, account_id: int | None = None) -> dict:
     at 10 minutes and lane efficiency. Positive advantage favors the player's
     side."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     lane = player.get("lane")
     if lane not in (1, 2, 3):
         return {"note": "player's lane is unknown or jungle; cannot score lane"}
@@ -991,7 +991,7 @@ def get_draft_advantage(match_id: int, account_id: int | None = None) -> dict:
     assigned from physical lane and last-hits. Positive advantage favors the
     player's team."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     radiant = player["player_slot"] < 128
     allies = [p for p in match["players"] if (p["player_slot"] < 128) == radiant]
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
@@ -1054,7 +1054,7 @@ def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
     been unusable. summary splits fights into present and absent with the
     summed team_net_gold of each."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; fight data unavailable"}
     buildings = _team_building_kills(match, player["player_slot"] < 128)
@@ -1142,7 +1142,7 @@ def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
     aegis window with no buildings taken or the carrier dying, and a tormentor
     span the team led without taking it."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     if not _is_parsed(player):
         return {"parsed": False, "note": "match not parsed; objectives unavailable"}
     by_slot = {p["player_slot"]: p for p in match["players"]}
@@ -1277,7 +1277,7 @@ def _player_completed_items(match_id: int, account_id: int | None) -> dict[str, 
     replay and can miss items, the slots are always present and hold the actual
     final build (but not items sold or consumed into upgrades mid-game)."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     shorts = [e["key"] for e in player.get("purchase_log") or []]
     slots = [f"item_{i}" for i in range(6)] + [f"backpack_{i}" for i in range(3)]
     shorts += [_item_short(player[s]) for s in slots if player.get(s)]
@@ -1442,7 +1442,7 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     player_items_in_builds_vs_enemy (per enemy in this game, how many of that
     enemy's sampled builds contained each player item — small n, counts only)."""
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     carry_id = player["hero_id"]
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
@@ -1626,7 +1626,7 @@ def get_break_dispel_targets(match_id: int, account_id: int | None = None) -> di
     if not hero_break_dispel:
         return {"error": "hero_break_dispel.json missing; run scripts/gather_data.py"}
     match = _get_obj(f"/matches/{match_id}")
-    player = _find_player(match, account_id) or match["players"][0]
+    player = _find_player(match, account_id)
     radiant = player["player_slot"] < 128
     enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
     breakable, dispellable = _break_dispel_lists([e["hero_id"] for e in enemies])

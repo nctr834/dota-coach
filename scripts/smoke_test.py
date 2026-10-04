@@ -601,12 +601,15 @@ def _triage_message_shape():
         match_review.ensure_parsed = lambda match_id: True
         match_review._triage = lambda match_id, account_id: steps
         match_review.run_agent = fake_run
-        out = match_review.review_match(match_id=5)
+        out = match_review.review_match(account_id=7, match_id=5)
     finally:
         match_review.run_agent, match_review.ensure_parsed = real_run, real_ensure
         match_review._triage = real_triage
     ask, calls, results = seen["history"]
-    assert ask == {"role": "user", "content": "Write the Read for match_id 5."}, ask
+    assert ask == {
+        "role": "user",
+        "content": "Write the Read for match_id 5 for account_id 7.",
+    }, ask
     assert [b["name"] for b in calls["content"]] == [
         "get_match_detail",
         "compute_metrics",
@@ -644,6 +647,51 @@ def _unparsed_gate_synthetic():
         utils._get_obj, utils.request_parse = real_get, real_req
         match_review.run_agent = real_run
     assert requested == [123, 123, 123], f"parse requests: {requested}"
+
+
+def _wrong_player_rejected():
+    import match_review
+    import tools as t
+    import utils
+
+    match = {
+        "match_id": 77,
+        "version": 21,
+        "players": [
+            {"account_id": 1, "player_slot": 0, "hero_id": 1},
+            {"account_id": 2, "player_slot": 128, "hero_id": 6},
+        ],
+    }
+    assert utils._find_player(match, 2)["hero_id"] == 6
+    for acc in (None, 3):
+        try:
+            utils._find_player(match, acc)
+        except utils.PlayerNotFound:
+            continue
+        raise AssertionError(f"_find_player picked a player for account {acc}")
+
+    def boom(*a, **k):
+        raise AssertionError("run_agent called with no player to review")
+
+    real_get, real_run = t._get_obj, match_review.run_agent
+    real_ensure = match_review.ensure_parsed
+    try:
+        t._get_obj = lambda path, params=None: match
+        match_review.ensure_parsed = lambda match_id: True
+        match_review.run_agent = boom
+        try:
+            t.get_match_detail(77, 3)
+            raise AssertionError("get_match_detail described a player not in it")
+        except utils.PlayerNotFound:
+            pass
+        out = match_review.review_match(account_id=3, match_id=77)
+        assert "account_id 3 is not among the players" in out["review"], out
+        assert out["tool_trace"] == [] and out["messages"] == []
+        out = match_review.review_match(match_id=77)
+        assert out["review"] == match_review.NO_ACCOUNT_NOTE, out
+    finally:
+        t._get_obj, match_review.run_agent = real_get, real_run
+        match_review.ensure_parsed = real_ensure
 
 
 # --- API wiring (no LLM call) ----------------------------------------------
@@ -741,6 +789,7 @@ for name, fn in [
     ("chat session transcript", _chat_history_transcript),
     ("review not saved when ungrounded", _review_not_saved_when_ungrounded),
     ("unparsed match gates review + requests parse", _unparsed_gate_synthetic),
+    ("missing or absent account gets no review", _wrong_player_rejected),
     ("api app loads (8 routes)", _api_loads),
     ("api /score-teams endpoint", _api_score_endpoint),
     ("api /match-draft-score endpoint", _api_match_draft_score),

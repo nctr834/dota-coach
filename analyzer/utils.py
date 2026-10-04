@@ -83,13 +83,24 @@ def _get_list(path: str, params: dict | None = None) -> list:
     return data
 
 
-def _find_player(match: dict, account_id: int | None) -> dict | None:
-    players = match.get("players", [])
-    if account_id is not None:
-        for p in players:
-            if p.get("account_id") == account_id:
-                return p
-    return None
+class PlayerNotFound(ValueError):
+    """The account id is missing or not among the match's players."""
+
+
+def _find_player(match: dict, account_id: int | None) -> dict:
+    """The match player with this account id. Raises PlayerNotFound rather than
+    picking someone: a review of the wrong player reads just as confident."""
+    if account_id is None:
+        raise PlayerNotFound(
+            "no account_id given, so there is no way to tell which player to review"
+        )
+    for p in match.get("players", []):
+        if p.get("account_id") == account_id:
+            return p
+    raise PlayerNotFound(
+        f"account_id {account_id} is not among the players OpenDota lists for "
+        f"match {match.get('match_id')}"
+    )
 
 
 def _is_parsed(player: dict) -> bool:
