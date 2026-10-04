@@ -25,6 +25,9 @@ The model gets those results and does one narrow job:
 - **Fact mode** (`REVIEW_READ_MODE=facts`): code builds a numbered fact sheet and
   the model returns up to four fact ids. It writes no text at all. Code prints
   the chosen lines, plus a few kinds of deaths and fights it always prints.
+- **Rule mode** (`REVIEW_READ_MODE=rule`): no model at all. Code prints the
+  always-printed facts plus the fights with the largest gold swings, as a
+  baseline for the other two.
 
 The prompt's rule is "State what a number is, never what it caused." Every
 number must come from a tool result as given. Attributing an outcome to a cause
@@ -66,17 +69,17 @@ category-based score that needs no judge.
 ### Eval results
 
 > **Placeholder, not yet filled in.** Paste the aggregate block from
-> `python3 eval/run_eval.py` (and `--read facts`). Nothing here has been
-> measured.
+> `python3 eval/run_eval.py` with `--read prose`, `facts` and `rule`. Nothing
+> here has been measured.
 
-| | Prose mode | Fact mode |
-|---|---|---|
-| Commit, labeled matches | TODO | TODO |
-| Gap F1 (judge / category) | TODO | TODO |
-| Faithful reviews | TODO/N | TODO/N |
-| Numbers not on the fact sheet | TODO | TODO |
-| Regex-clean reviews | TODO/N | TODO/N |
-| Must-cite facts cited | TODO | TODO |
+| | Prose | Facts | Rule (no model) |
+|---|---|---|---|
+| Commit, labeled matches | TODO | TODO | TODO |
+| Gap F1 (judge / category) | TODO | TODO | TODO |
+| Faithful reviews | TODO/N | TODO/N | TODO/N |
+| Numbers not on the fact sheet | TODO | TODO | TODO |
+| Regex-clean reviews | TODO/N | TODO/N | TODO/N |
+| Must-cite facts chosen | TODO | TODO | TODO |
 
 ### Example review
 
@@ -150,7 +153,7 @@ uvicorn api.main:app --reload          # API on :8000, run from project root
 cd frontend && npm run dev             # Vite dev server, proxies /api to :8000
 
 python3 scripts/smoke_test.py          # 30 checks; needs data/ and network, no LLM calls
-python3 eval/run_eval.py               # needs eval/labels.json; costs money; --fresh, --read facts
+python3 eval/run_eval.py               # needs eval/labels.json; costs money; --fresh, --read facts|rule
 ```
 
 `CLAUDE.md` covers architecture and conventions for contributors.
