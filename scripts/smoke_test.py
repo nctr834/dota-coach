@@ -492,6 +492,21 @@ def _review_assembly():
 
 def _fact_selection():
     import match_review
+    import tools as t
+
+    def death(minute, context, rank):
+        return {
+            "minute": minute,
+            "killed_by": "Slark",
+            "context": context,
+            "networth_rank": f"{rank} of 10",
+            "team_gold_adv": 0,
+            "bought_back": False,
+        }
+
+    many = [death(m, "died_in_teamfight", 2) for m in (20, 25, 30, 35, 40)]
+    lines = t._notable_death_lines(many + [death(17, "caught_alone", 1)])
+    assert len(lines) == 4 and lines[0].startswith("17m: died caught alone"), lines
 
     by_tool = {
         "get_combat_timings": {
@@ -532,6 +547,7 @@ def _fact_selection():
         "37m fight: 4 ally deaths over 40s, 1 enemy death; team net gold +1193; "
         "you dealt 0 damage; followed by Roshan."
     ), sheet[1]
+    assert sheet[0]["always"] is True, sheet[0]
     picked = match_review._selected_facts('Here: ["F1", "Z9", "D1", "F1"]', sheet)
     assert [f["id"] for f in picked] == ["F1", "D1"], picked
     assert match_review._selected_facts("no json", sheet) == []

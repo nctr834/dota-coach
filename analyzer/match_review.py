@@ -48,7 +48,7 @@ The Read is at most four short sentences, 100 words in total. Each sentence open
 No emojis, no bold."""
 
 
-SYSTEM_FACTS = """You are a Dota 2 post-game coach for a position-1 (carry) player. Code has run the tools for one match (results above) and listed every candidate fact on a fact sheet, one per line as "ID [category] text". Your job is selection only: choose the facts the player most needs to see. Code prints the Result line and then your chosen facts verbatim; you write no prose.
+SYSTEM_FACTS = """You are a Dota 2 post-game coach for a position-1 (carry) player. Code has run the tools for one match (results above) and listed every candidate fact on a fact sheet, one per line as "ID [category] text". Your job is selection only: choose the facts the player most needs to see. Code prints the Result line, any death where the player was net worth rank 1 or 2 and caught alone or first to die in a fight (do not spend a pick on those), and then your chosen facts verbatim; you write no prose.
 
 Choose at most four ids, most important first. Selection is judgment about what the evidence points to, never about what caused what. Prefer facts that sit next to each other in time or in the gold swings: a death beside the lead flipping, an aegis with nothing taken, a fight the team took while the player dealt no damage, an owned item unused in a fight the player died in, a missed checkpoint or drought. Context facts (draft, lane score, net worth) are chosen only when they are the main thing to see. A win with no real largest_team_deficit gets an empty selection; do not manufacture a critique.
 
@@ -99,7 +99,15 @@ def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
             facts.append({"id": f"{prefix}{i}", "category": category, "line": line})
 
     combat = by_tool.get("get_combat_timings") or {}
-    add("D", [("deaths", _death_line(d)) for d in combat.get("deaths_detail") or []])
+    deaths = combat.get("deaths_detail") or []
+    add("D", [("deaths", _death_line(d)) for d in deaths])
+    for fact, d in zip(facts, deaths):
+        # a farmed carry caught alone or dying first is printed whatever the
+        # model selects
+        fact["always"] = d["context"] in (
+            "caught_alone",
+            "first_death_of_teamfight",
+        ) and (d["networth_rank"] or "")[:2] in ("1 ", "2 ")
     objectives = by_tool.get("get_objective_windows") or {}
     add(
         "O",
@@ -424,7 +432,9 @@ def review_match(
         )
         result_line = _by_tool(trace).get("get_match_detail", {}).get("result_line")
         if result_line:
-            selected = _selected_facts(result["text"], sheet)
+            picked = _selected_facts(result["text"], sheet)
+            selected = [f for f in sheet if f.get("always")]
+            selected += [f for f in picked if f not in selected]
             read = (
                 "\n" + "\n".join(f["line"] for f in selected)
                 if selected
