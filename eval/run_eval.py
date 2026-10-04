@@ -53,7 +53,11 @@ def cached_review(match_id: int, fresh: bool = False) -> dict:
     result = review_match(account_id=LABELS["account_id"], match_id=match_id)
     # The result's "messages" carry SDK objects and are chat-session state, not
     # eval material; cache only what gets scored.
-    cache[key] = {"review": result["review"], "tool_trace": result["tool_trace"]}
+    cache[key] = {
+        "review": result["review"],
+        "tool_trace": result["tool_trace"],
+        "usage": result.get("usage"),
+    }
     REVIEW_CACHE.write_text(json.dumps(cache, indent=2))
     return cache[key]
 
@@ -71,7 +75,10 @@ deaths cited with context (caught alone, first in fight, farmed and behind)
 -> deaths; a lost lane or missed CS checkpoints -> lane_cs; farm droughts or
 slow farm after laning -> mid_game_farm; item choices or timings questioned
 -> itemization; power spikes farmed through, fights the team took without the
-player, low fight participation -> teamfight_impact. A hard lane or losing
+player, low fight participation -> teamfight_impact; an aegis, a won fight or
+a gold lead followed by no buildings or objectives, or a tormentor left up
+while ahead -> objective_conversion; an owned item not used in a fight ->
+item_usage. A hard lane or losing
 draft mentioned as context is not a gap; tag lane_matchup_disadvantage or
 draft_disadvantage only when the Read centers it as the leading candidate.
 A clean confirmation flagging nothing -> ["no_gap"]."""
@@ -165,6 +172,19 @@ def verdict_shapes(review: str) -> list[str]:
     return [m.group(0) for m in _VERDICT_SHAPES.finditer(review)]
 
 
+def review_length(review: str) -> tuple[int, int]:
+    """(total words, sentences in the "Read:" section)."""
+    read = re.search(r"Read:(.*?)(?=\n\s*\n[A-Z][\w' ]*:|\Z)", review, re.DOTALL)
+    sentences = re.findall(r"[.?!](?:\s|$)", read.group(1)) if read else []
+    return len(review.split()), len(sentences)
+
+
+def uncited(review: str, must_cite: list[str]) -> list[str]:
+    """Labeled must_cite strings (case-insensitive) the review does not contain."""
+    text = review.lower()
+    return [fact for fact in must_cite if fact.lower() not in text]
+
+
 def score_gaps(true_gaps: set, predicted: set):
     tp = len(true_gaps & predicted)
     precision = tp / len(predicted) if predicted else 0.0
@@ -193,13 +213,43 @@ def main(argv):
         claims = unsupported_numbers(result["review"], result["tool_trace"])
         total_unsupported += len(claims)
         verdicts = verdict_shapes(result["review"])
-        rows.append((m["match_id"], true_g, pred_g, p, r, f1, len(claims), len(verdicts)))
+        words, read_sentences = review_length(result["review"])
+        must_cite = m.get("must_cite") or []
+        missing = uncited(result["review"], must_cite)
+        usage = result.get("usage") or {}
+        rows.append(
+            (
+                m["match_id"],
+                true_g,
+                pred_g,
+                p,
+                r,
+                f1,
+                len(claims),
+                len(verdicts),
+                words,
+                read_sentences,
+                len(must_cite),
+                len(missing),
+                usage.get("input_tokens"),
+                usage.get("output_tokens"),
+            )
+        )
 
         print(f"match {m['match_id']}")
         print(f"  true:      {sorted(true_g)}")
         print(f"  predicted: {sorted(pred_g)}")
         flag = "  [JUDGE PARSE ERROR]" if j.get("_parse_error") else ""
         print(f"  P={p:.2f} R={r:.2f} F1={f1:.2f}{flag}")
+        print(f"  length: {words} words, {read_sentences} Read sentences")
+        if must_cite:
+            print(f"  must-cite: {len(must_cite) - len(missing)}/{len(must_cite)}")
+            if missing:
+                print(f"  not cited: {', '.join(missing)}")
+        if usage:
+            print(
+                f"  tokens: {usage['input_tokens']} in, {usage['output_tokens']} out"
+            )
         if claims:
             print(f"  unsupported numbers ({len(claims)}): {', '.join(claims)}")
         if verdicts:
@@ -216,6 +266,18 @@ def main(argv):
     print(f"  faithful reviews: {sum(1 for x in rows if x[6]==0)}/{n}")
     print(f"  total unsupported numbers: {total_unsupported}")
     print(f"  verdict-free reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
+    print(f"  mean words: {sum(x[8] for x in rows)/n:.0f}")
+    print(f"  mean Read sentences: {sum(x[9] for x in rows)/n:.1f}")
+    total_cite = sum(x[10] for x in rows)
+    if total_cite:
+        print(f"  must-cite facts cited: {total_cite - sum(x[11] for x in rows)}/{total_cite}")
+    metered = [x for x in rows if x[12] is not None]
+    if metered:
+        k = len(metered)
+        print(
+            f"  mean tokens ({k} reviews with usage): "
+            f"{sum(x[12] for x in metered)/k:.0f} in, {sum(x[13] for x in metered)/k:.0f} out"
+        )
     return 0
 
 

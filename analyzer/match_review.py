@@ -19,13 +19,15 @@ AGENT_MODEL = "claude-sonnet-4-6"
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. Review one match and give short, concrete feedback.
 
-Investigate, do not dump. Start with get_match_detail and compute_metrics (result, KDA, farm/damage percentiles), then call only the deeper tools that profile points to:
-- Low farm percentile: score_lane_matchup (hero matchup, and lane_outcome for how the lane actually went) and get_combat_timings (deaths, or a hard lane / passive play?).
-- Low farm percentile or any loss: get_farm_pattern — a missed CS checkpoint or a farm drought is a fact for the Read, cited with its fight overlap and gold state.
-- Good farm but low hero-damage percentile: get_timing_windows (missed power spikes?) and get_build_gaps (wrong or missing items?).
-- Lost despite a strong individual game: get_draft_advantage, and get_combat_timings for deaths_detail and gold_swings (how leads get thrown).
-- Any loss: also get_timing_windows — a power spike farmed through while the team fought is a candidate reason for the loss. The Read ties it to what the gold did next in one clause; the full note appears only under Item timings, never in both.
-- Won: check largest_team_deficit before praising — a real deficit means a comeback win, and get_combat_timings shows what let the enemy in and what turned it. Only a game that was never close gets the short confirmation; do not manufacture a critique of one.
+The tool results for this match are already in the conversation, run for you: the profile (get_match_detail, compute_metrics), deaths and gold (get_combat_timings), every teamfight (get_fight_report), aegis and tormentor windows (get_objective_windows), farm (get_farm_pattern), the lane and draft scores, and, on a loss or a good-farm low-damage game, get_timing_windows and get_build_gaps. Do not call those again. Call another tool only for something they do not contain (get_patch_notes, get_break_dispel_targets, get_metric_trend).
+
+Select, do not dump: most of what is in front of you does not belong in the review. How to read it:
+- A missed CS checkpoint or a farm drought is a fact for the Read, cited with its fight overlap and gold state.
+- A power spike farmed through while the team fought is a candidate reason for a loss. The Read ties it to what the gold did next in one clause; the full note appears only under Item timings, never in both.
+- Fights: cite a fight by its minute with its own numbers (ally deaths, ally_death_spread_s, team_net_gold, player_damage). What a won fight or an aegis was followed by is taken_by_90s_after and buildings_taken_by_holder_team, stated as given, "nothing" included.
+- Tormentor: state the span and minutes_team_led. Whether there was room to take it is not in the data.
+- Items: an unused_while_dying item is stated with its fight minute and, in words, whether it had been used in an earlier fight within its cooldown (maybe_on_cooldown); never as a mistake, since disables and uses outside fights are not visible. Never print field names.
+- Won: check largest_team_deficit before praising. A real deficit means a comeback win, and get_combat_timings shows what let the enemy in and what turned it. Only a game that was never close gets the short confirmation; do not manufacture a critique of one.
 If tool calls return errors, say the match data source (OpenDota) is temporarily unavailable and to retry shortly; do not blame the match id or review without data.
 
 Faithfulness is absolute. Every number you state comes from a tool result, used as given — never computed, re-rounded, or invented, and never moved in time: a deficit reported at minute 55 is the deficit at minute 55, not "the final deficit". Base any claim that the gold swung, collapsed, recovered, or widened on gold_swings and walk its points in order — consecutive points reverse direction, so skipping points to claim one straight slide is fabrication. Cite each death with its own context label and team_gold_adv; never bundle nearby deaths under one label or gold state, and never extend a death's networth_rank or gold beyond its minute ("and stayed there" is fabrication — the samples exist only at the deaths). Positive advantage is favorable, negative unfavorable. No game lore: never claim hero X counters hero Y from your own knowledge — the tool score is the fact, the per-hero why is not yours to add.
@@ -34,11 +36,12 @@ Verdicts are fabrication. State what a number is, never what it caused. Any sent
 
 Your value is judgment, and judgment here is selection, not attribution: pick the one or two facts the evidence most points to and put them next to each other. Which facts to show is your call; what caused what is not.
 
-Structure. Begin directly at "Result:" — no preamble. Always "Result:" and "Read:"; a reference block only for a tool you called.
+Structure. Begin directly at "Result:" — no preamble. Always "Result:" and "Read:"; a reference block only when its tool result is present.
 - "Result:" won or lost and what it came down to — once, only here. A loss never reads like a win; a hard draft is context, not a verdict.
-- "Read:" a few sentences of synthesis; prioritize, do not enumerate. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was.
-- "Item timings:" only if you called get_timing_windows; write each "missed" entry's "note" verbatim, else its "verdict" line. Do not compose your own timing sentence.
-- "Pro build reference:" only if you called get_build_gaps: the player_skipped items (core first), distinct_build as a separate option, and any player item with a low pro_builds count stated as its count ("Radiance: 1 of 18 sampled builds"). Name items and counts only — never why an item helps; that pros build it is the whole point.
+- "Read:" at most six sentences of synthesis; prioritize, do not enumerate. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was.
+- "Objectives:" only if get_objective_windows has an ally aegis window or a tormentor span: one line per ally aegis window (minute, carrier, buildings_taken_by_holder_team or "no buildings", team gold advantage at start and end, carrier_death_minutes) and one per tormentor span (from and until minute, how it ended, minutes_team_led of minutes_up). Facts as given, nothing about what should have been done.
+- "Item timings:" only if a get_timing_windows result is present; write each "missed" entry's "note" verbatim, else its "verdict" line. Do not compose your own timing sentence.
+- "Pro build reference:" only if a get_build_gaps result is present: the player_skipped items (core first), distinct_build as a separate option, any player item with a low pro_builds count stated as its count ("Radiance: 1 of 18 sampled builds"), and from order_vs_pros the slots where the player's item differs from pro_most_common_item, with both items and both minutes as given; a slot with no pro_most_common_item gets no item comparison. Name items and counts only — never why an item helps; that pros build it is the whole point.
 
 No emojis, no bold."""
 
@@ -51,17 +54,22 @@ def _strip_emphasis(text: str) -> str:
 
 def run_agent(
     system: str,
-    user_message: str,
+    user_message: str | None = None,
     history: list[MessageParam] | None = None,
     max_turns: int = 8,
+    trace: list[dict] | None = None,
 ) -> dict:
     """Run the tool-calling loop, optionally continuing a prior conversation.
     history is the messages from earlier turns (None to start fresh); user_message
-    is the new turn. Returns {"text", "tool_trace", "messages"} where messages is
-    the full updated history to persist and pass back next turn."""
+    is the new turn, or None when history already ends on the turn to answer.
+    trace seeds the tool trace with calls already made in code. Returns {"text",
+    "tool_trace", "messages", "usage"} where messages is the full updated history
+    to persist and pass back next turn and usage the summed token counts."""
     messages: list[MessageParam] = list(history or [])
-    messages.append({"role": "user", "content": user_message})
-    trace = []
+    if user_message is not None:
+        messages.append({"role": "user", "content": user_message})
+    trace = list(trace or [])
+    usage = {"input_tokens": 0, "output_tokens": 0}
     for _ in range(max_turns):
         resp = client.messages.create(
             model=AGENT_MODEL,
@@ -72,12 +80,15 @@ def run_agent(
             messages=messages,
         )
         messages.append({"role": "assistant", "content": resp.content})
+        usage["input_tokens"] += resp.usage.input_tokens
+        usage["output_tokens"] += resp.usage.output_tokens
         if resp.stop_reason != "tool_use":
             text = "".join(b.text for b in resp.content if b.type == "text")
             return {
                 "text": _strip_emphasis(text.strip()),
                 "tool_trace": trace,
                 "messages": messages,
+                "usage": usage,
             }
 
         results: list[ToolResultBlockParam] = []
@@ -98,7 +109,82 @@ def run_agent(
             )
         messages.append({"role": "user", "content": results})
 
-    return {"text": "max turns reached", "tool_trace": trace, "messages": messages}
+    return {
+        "text": "max turns reached",
+        "tool_trace": trace,
+        "messages": messages,
+        "usage": usage,
+    }
+
+
+_TRIAGE_ALWAYS = (
+    "get_match_detail",
+    "compute_metrics",
+    "get_combat_timings",
+    "get_fight_report",
+    "get_objective_windows",
+    "get_farm_pattern",
+    "score_lane_matchup",
+    "get_draft_advantage",
+)
+_TRIAGE_STRATZ = ("get_timing_windows", "get_build_gaps")
+
+
+def _triage(match_id: int, account_id: int | None) -> list[dict]:
+    """Run the review's tool set in code and return it as tool-trace entries.
+    The Stratz-backed item tools run only on a loss or a game with good farm
+    and a weak hero-damage percentile."""
+    args = {"match_id": match_id}
+    if account_id is not None:
+        args["account_id"] = account_id
+    trace = []
+
+    def call(name: str) -> dict:
+        try:
+            out = _TOOL_FNS[name](**args)
+        except Exception as e:
+            out = {"error": str(e)}
+        trace.append({"tool": name, "input": args, "result": out})
+        return out
+
+    results = {name: call(name) for name in _TRIAGE_ALWAYS}
+    weak = results["compute_metrics"].get("weak_areas") or []
+    lost = results["get_match_detail"].get("won") is False
+    if lost or ("hero_damage_per_min" in weak and "gold_per_min" not in weak):
+        for name in _TRIAGE_STRATZ:
+            call(name)
+    return trace
+
+
+def _triage_messages(ask: str, trace: list[dict]) -> list[MessageParam]:
+    """The triage results as a tool-use exchange, so the model, the saved chat
+    session and the eval all see them like tool calls the model made."""
+    return [
+        {"role": "user", "content": ask},
+        {
+            "role": "assistant",
+            "content": [
+                {
+                    "type": "tool_use",
+                    "id": f"triage_{i}",
+                    "name": step["tool"],
+                    "input": step["input"],
+                }
+                for i, step in enumerate(trace)
+            ],
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "tool_result",
+                    "tool_use_id": f"triage_{i}",
+                    "content": json.dumps(step["result"]),
+                }
+                for i, step in enumerate(trace)
+            ],
+        },
+    ]
 
 
 UNPARSED_NOTE = (
@@ -118,14 +204,23 @@ def review_match(
         raise ValueError("provide account_id or match_id")
     if match_id is not None and not ensure_parsed(match_id):
         return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
-    if match_id is not None:
-        ask = f"Review match_id {match_id}" + (
-            f" for account_id {account_id}." if account_id else "."
-        )
-    else:
-        ask = f"Review the most recent notable match for account_id {account_id}."
+    if match_id is None:
+        match_id = _TOOL_FNS["get_recent_matches"](account_id, 1)["matches"][0][
+            "match_id"
+        ]
+        if not ensure_parsed(match_id):
+            return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
+    ask = f"Review match_id {match_id}" + (
+        f" for account_id {account_id}." if account_id else "."
+    )
 
-    result = run_agent(SYSTEM_REVIEW, ask, max_turns=max_turns)
+    trace = _triage(match_id, account_id)
+    result = run_agent(
+        SYSTEM_REVIEW,
+        history=_triage_messages(ask, trace),
+        max_turns=max_turns,
+        trace=trace,
+    )
     # The prompt says begin at "Result:", but the model still sometimes narrates
     # first ("I have everything I need. ---"); trim deterministically.
     if "Result:" in result["text"]:
@@ -139,12 +234,13 @@ def review_match(
         s["tool"] == "get_match_detail" and "error" not in s["result"]
         for s in result["tool_trace"]
     )
-    if grounded and account_id is not None and match_id is not None:
+    if grounded and account_id is not None:
         chat_session.save(account_id, match_id, result["messages"])
     return {
         "review": result["text"],
         "tool_trace": result["tool_trace"],
         "messages": result["messages"],
+        "usage": result.get("usage"),
     }
 
 
@@ -159,7 +255,9 @@ verdict in either direction ("purely the draft's fault", "your play was not the
 issue"); lay out the evidence, leave the judgment to the player. Never claim one
 hero counters another from your own knowledge; for Silver Edge or Nullifier
 questions call get_break_dispel_targets and state only the abilities and counts
-it returns. player_items is what the player
+it returns. For a question about a fight, item use in fights, Roshan, aegis or
+tormentor, the facts are in get_fight_report and get_objective_windows; an
+unused item is a count, never a mistake. player_items is what the player
 actually bought — list it in full when asked, never infer their build from
 anything else. Name the items pros build and the player skipped, and
 distinct_build if present; never explain why an item helps — you would be

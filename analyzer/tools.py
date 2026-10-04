@@ -200,6 +200,21 @@ def _gold_swings(match: dict, player: dict) -> str | None:
     return "; ".join(f"{i}m: {vals[i]:+d}" for i in points) + " (end)"
 
 
+def _building_name(key: str) -> str | None:
+    lane = next((s for s in ("top", "mid", "bot") if key.endswith("_" + s)), None)
+    if "fort" in key:
+        base = "ancient"
+    elif "melee_rax" in key:
+        base = "melee rax"
+    elif "range_rax" in key:
+        base = "ranged rax"
+    elif "tower" in key:
+        base = f"tier{key[key.index('tower') + 5]} tower"
+    else:
+        return None
+    return f"{lane} {base}" if lane else base
+
+
 def _building_kills(match: dict, player: dict) -> list[tuple[int, str]]:
     """Enemy towers/rax/ancient the player last-hit, as (time_s, name) from the
     objectives log — the only time-resolved building credit OpenDota has."""
@@ -211,21 +226,22 @@ def _building_kills(match: dict, player: dict) -> list[tuple[int, str]]:
         if o.get("player_slot") != player["player_slot"]:
             continue
         key = o.get("key", "")
-        if enemy not in key:
-            continue
-        lane = next((s for s in ("top", "mid", "bot") if key.endswith("_" + s)), None)
-        if "fort" in key:
-            base = "ancient"
-        elif "melee_rax" in key:
-            base = "melee rax"
-        elif "range_rax" in key:
-            base = "ranged rax"
-        elif "tower" in key:
-            base = f"tier{key[key.index('tower') + 5]} tower"
-        else:
-            continue
-        out.append((o["time"], f"{lane} {base}" if lane else base))
+        name = _building_name(key) if enemy in key else None
+        if name:
+            out.append((o["time"], name))
     return out
+
+
+def _team_building_kills(match: dict, radiant: bool) -> list[tuple[int, str]]:
+    """Buildings the given side took, as (time_s, name)."""
+    enemy = "badguys" if radiant else "goodguys"
+    return [
+        (o["time"], name)
+        for o in match.get("objectives") or []
+        if o.get("type") == "building_kill"
+        and enemy in o.get("key", "")
+        and (name := _building_name(o["key"]))
+    ]
 
 
 def _tower_damage_between(stats: dict, t0: int, t1: int) -> int | None:
@@ -282,15 +298,16 @@ def _death_details(match: dict, player: dict) -> list[dict]:
     return out
 
 
-_OBJECTIVE_LABEL = {
-    "CHAT_MESSAGE_ROSHAN_KILL": "Roshan killed",
-    "CHAT_MESSAGE_MINIBOSS_KILL": "tormentor killed",
+_OBJECTIVE_KIND = {
+    "CHAT_MESSAGE_ROSHAN_KILL": "Roshan",
+    "CHAT_MESSAGE_MINIBOSS_KILL": "tormentor",
 }
 
 
-def _objective_timeline(match: dict, player: dict) -> list[str]:
-    """Roshan and tormentor kills plus aegis pickups as one chronological list,
-    sides relative to the player ('ally'/'enemy')."""
+def _objective_events(match: dict, player: dict) -> list[dict]:
+    """Roshan and tormentor kills and aegis pickups in order, as {time, kind,
+    side}, side relative to the player. Aegis events also carry the carrier's
+    slot and hero."""
     radiant = player["player_slot"] < 128
     slot_hero = {
         p["player_slot"]: ID_TO_NAME.get(p["hero_id"], str(p["hero_id"]))
@@ -298,19 +315,84 @@ def _objective_timeline(match: dict, player: dict) -> list[str]:
     }
     out = []
     for o in match.get("objectives") or []:
-        minute = max(0, o.get("time", 0)) // 60
-        label = _OBJECTIVE_LABEL.get(o.get("type"))
-        if label:
+        kind = _OBJECTIVE_KIND.get(o.get("type"))
+        slot = o.get("player_slot")
+        time_s = o.get("time", 0)
+        if kind:
             if o.get("team") in (2, 3):
                 side = "ally" if (o["team"] == 2) == radiant else "enemy"
-            elif o.get("player_slot") is not None:
-                side = "ally" if (o["player_slot"] < 128) == radiant else "enemy"
+            elif slot is not None:
+                side = "ally" if (slot < 128) == radiant else "enemy"
             else:
                 side = "unknown"
-            out.append(f"{minute}m {label} by {side} team")
-        elif o.get("type") == "CHAT_MESSAGE_AEGIS" and o.get("player_slot") is not None:
-            out.append(f"{minute}m aegis to {slot_hero.get(o['player_slot'], '?')}")
+            out.append({"time": time_s, "kind": kind, "side": side})
+        elif o.get("type") == "CHAT_MESSAGE_AEGIS" and slot is not None:
+            out.append(
+                {
+                    "time": time_s,
+                    "kind": "aegis",
+                    "side": "ally" if (slot < 128) == radiant else "enemy",
+                    "slot": slot,
+                    "hero": slot_hero.get(slot, "?"),
+                }
+            )
     return out
+
+
+def _objective_timeline(match: dict, player: dict) -> list[str]:
+    """Roshan and tormentor kills plus aegis pickups as one chronological list,
+    sides relative to the player ('ally'/'enemy')."""
+    out = []
+    for e in _objective_events(match, player):
+        minute = max(0, e["time"]) // 60
+        if e["kind"] == "aegis":
+            out.append(f"{minute}m aegis to {e['hero']}")
+        else:
+            out.append(f"{minute}m {e['kind']} killed by {e['side']} team")
+    return out
+
+
+def _fights(match: dict, player: dict) -> list[dict]:
+    """One row per OpenDota teamfight, sides relative to the player. won is a
+    definition, not a judgment: more enemy deaths than ally deaths, ties broken
+    by team_net_gold (ally gold gained minus enemy gold gained in the fight)."""
+    radiant = player["player_slot"] < 128
+    slots = [p["player_slot"] for p in match["players"]]
+    me = slots.index(player["player_slot"])
+    ally_deaths = sorted(
+        (t, ID_TO_NAME.get(p["hero_id"], str(p["hero_id"])))
+        for p in match["players"]
+        if (p["player_slot"] < 128) == radiant
+        for t, _ in _deaths(match, p)
+    )
+    rows = []
+    for tf in match.get("teamfights") or []:
+        start, end = tf["start"], tf["end"]
+        ally = [q for i, q in enumerate(tf["players"]) if (slots[i] < 128) == radiant]
+        enemy = [q for i, q in enumerate(tf["players"]) if (slots[i] < 128) != radiant]
+        n_ally = sum(q["deaths"] for q in ally)
+        n_enemy = sum(q["deaths"] for q in enemy)
+        net = sum(q["gold_delta"] for q in ally) - sum(q["gold_delta"] for q in enemy)
+        died = [(t, h) for t, h in ally_deaths if start <= t <= end]
+        mine = tf["players"][me]
+        rows.append(
+            {
+                "start_s": start,
+                "end_s": end,
+                "minute": start // 60,
+                "duration_s": end - start,
+                "ally_deaths": n_ally,
+                "ally_death_order": [h for _, h in died],
+                "ally_death_spread_s": died[-1][0] - died[0][0] if died else 0,
+                "enemy_deaths": n_enemy,
+                "team_net_gold": net,
+                "won": n_enemy > n_ally or (n_enemy == n_ally and net > 0),
+                "player_damage": mine["damage"],
+                "player_died": mine["deaths"] > 0,
+                "item_uses": mine.get("item_uses") or {},
+            }
+        )
+    return rows
 
 
 def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
@@ -644,6 +726,31 @@ def _farm_droughts(match: dict, player: dict) -> list[dict]:
     return droughts
 
 
+def _networth_vs_enemy_carry(match: dict, player: dict) -> dict | None:
+    """The player's net worth next to the enemy pos 1's at 10, 20, 30 and the
+    last minute."""
+    radiant = player["player_slot"] < 128
+    enemies = [p for p in match["players"] if (p["player_slot"] < 128) != radiant]
+    carry = _team_by_pos(enemies, not radiant).get("1")
+    foe = next((p for p in enemies if carry and str(p["hero_id"]) == carry.id), None)
+    mine, theirs = player.get("networth_t"), (foe or {}).get("networth_t")
+    if not carry or not mine or not theirs:
+        return None
+    last = min(len(mine), len(theirs)) - 1
+    return {
+        "enemy_carry": carry.name,
+        "checkpoints": [
+            {
+                "minute": m,
+                "player": mine[m],
+                "enemy_carry": theirs[m],
+                "diff": mine[m] - theirs[m],
+            }
+            for m in [m for m in (10, 20, 30) if m < last] + [last]
+        ],
+    }
+
+
 def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
     """Farming facts for a pos-1 review. cs_checkpoints: the player's last hits
     at the standard checkpoint minutes vs the target band (met = reached the
@@ -651,7 +758,9 @@ def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
     hits, each labeled with whether the player died or a teamfight ran in the
     stretch and the gold state entering it. camps_stacked from the match.
     farm_gold_by_zone (Stratz deep parse, when available): gold from lane
-    creeps vs neutral camps vs ancients vs buildings. Facts only — whether a
+    creeps vs neutral camps vs ancients vs buildings. networth_vs_enemy_carry:
+    the player's net worth next to the enemy pos 1's at 10, 20, 30 and the end
+    (diff positive = player ahead). Facts only — whether a
     drought was justified (dead map, defending) is not in the data."""
     match = _get_obj(f"/matches/{match_id}")
     player = _find_player(match, account_id) or match["players"][0]
@@ -690,6 +799,7 @@ def get_farm_pattern(match_id: int, account_id: int | None = None) -> dict:
         "farm_droughts": _farm_droughts(match, player),
         "camps_stacked": player.get("camps_stacked"),
         "farm_gold_by_zone": zones,
+        "networth_vs_enemy_carry": _networth_vs_enemy_carry(match, player),
     }
 
 
@@ -837,6 +947,188 @@ def get_draft_advantage(match_id: int, account_id: int | None = None) -> dict:
         "enemy_team_score": round(enemy_score, 1),
         "advantage": round(delta, 1),
     }
+
+
+# --- Fights and objectives --------------------------------------------------
+
+_AFTER_FIGHT_S = 90
+_AEGIS_S = 300
+_TORMENTOR_SPAWN_S = 1200
+_TORMENTOR_RESPAWN_S = 600
+
+
+def _active_items_owned(player: dict, t: int) -> dict[str, str]:
+    """shortName -> displayName of the notable active items the player had
+    bought by time t and not built into something else. purchase_log has no
+    sells, so an item sold later still counts as owned."""
+    bought = {e["key"] for e in player.get("purchase_log") or [] if e["time"] < t}
+    consumed = set()
+    for s in bought:
+        consumed |= _component_closure({s}) - {s}
+    out = {}
+    for s in bought - consumed:
+        v = item_data.get(f"item_{s}") or {}
+        if _notable(s) and "Active:" in (v.get("description") or ""):
+            out[s] = v["displayName"]
+    return out
+
+
+def get_fight_report(match_id: int, account_id: int | None = None) -> dict:
+    """One row per teamfight (OpenDota's fight detection; small skirmishes have
+    no row). Per fight: ally deaths with their order and the seconds between the
+    first and last, enemy deaths, team_net_gold, won (more enemy than ally
+    deaths, ties by team_net_gold — a definition, not a judgment), the player's
+    damage and whether they died. player_present means the player dealt damage
+    in the fight. taken_by_90s_after (won fights only): buildings, Roshan or
+    tormentor the team took from the fight's start to 90 seconds after its end.
+    active_item_uses: use counts in this fight for the active items the player
+    owned. unused_while_dying: owned active items with no use in a fight the
+    player died in; maybe_on_cooldown is true when the item was used in an
+    earlier fight that ended less than its cooldown before. Uses outside fights
+    and disables on the player are not in the data, so an unused item may have
+    been unusable. summary splits fights into present and absent with the
+    summed team_net_gold of each."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    if not _is_parsed(player):
+        return {"parsed": False, "note": "match not parsed; fight data unavailable"}
+    buildings = _team_building_kills(match, player["player_slot"] < 128)
+    objectives = [
+        e
+        for e in _objective_events(match, player)
+        if e["kind"] != "aegis" and e["side"] == "ally"
+    ]
+    last_used_end: dict[str, int] = {}
+    use_counts: dict[str, list[int]] = {}  # name -> [fights used in, fights owned]
+    present = {"fights": 0, "team_net_gold": 0}
+    absent = {"fights": 0, "team_net_gold": 0}
+    fights = []
+    for f in _fights(match, player):
+        start, end = f.pop("start_s"), f.pop("end_s")
+        uses = f.pop("item_uses")
+        f["player_present"] = f["player_damage"] > 0
+        bucket = present if f["player_present"] else absent
+        bucket["fights"] += 1
+        bucket["team_net_gold"] += f["team_net_gold"]
+        if f["won"]:
+            until = end + _AFTER_FIGHT_S
+            taken = [n for t, n in buildings if start <= t <= until]
+            taken += [e["kind"] for e in objectives if start <= e["time"] <= until]
+            f["taken_by_90s_after"] = taken or "nothing"
+        if f["player_present"] or f["player_died"]:
+            owned = _active_items_owned(player, start)
+            if owned:
+                f["active_item_uses"] = {
+                    name: uses.get(s, 0) for s, name in owned.items()
+                }
+            for s, name in owned.items():
+                counts = use_counts.setdefault(name, [0, 0])
+                counts[0] += uses.get(s, 0) > 0
+                counts[1] += 1
+            if f["player_died"]:
+                unused = [
+                    {
+                        "item": name,
+                        "maybe_on_cooldown": s in last_used_end
+                        and start
+                        < last_used_end[s]
+                        + float(
+                            (item_data.get(f"item_{s}") or {}).get("cooldown") or 0
+                        ),
+                    }
+                    for s, name in owned.items()
+                    if not uses.get(s)
+                ]
+                if unused:
+                    f["unused_while_dying"] = unused
+        for s, count in uses.items():
+            if count:
+                last_used_end[s] = end
+        fights.append(f)
+    return {
+        "parsed": True,
+        "fights": fights,
+        "summary": {
+            "present": present,
+            "absent": absent,
+            "active_item_use": {
+                name: f"used in {used} of {owned} fights"
+                for name, (used, owned) in use_counts.items()
+            },
+        },
+    }
+
+
+def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
+    """What followed each aegis, and when the tormentor stood untaken.
+    aegis_windows: per aegis pickup (side relative to the player), the 5 minutes
+    after it: buildings the holder's team took, the player's team gold advantage
+    at the start and end, the minutes the carrier died, and the teamfights in
+    the window with their team_net_gold. tormentor_windows: each span the
+    tormentor was alive (first spawn 20:00, respawn 10 minutes after a kill),
+    how it ended, the player's team gold advantage at its start and end, and how
+    many of those minutes the team led. Whether there was room to take it is not
+    in the data."""
+    match = _get_obj(f"/matches/{match_id}")
+    player = _find_player(match, account_id) or match["players"][0]
+    if not _is_parsed(player):
+        return {"parsed": False, "note": "match not parsed; objectives unavailable"}
+    by_slot = {p["player_slot"]: p for p in match["players"]}
+    events = _objective_events(match, player)
+    fights = _fights(match, player)
+    duration = match.get("duration") or 0
+
+    aegis = []
+    for e in events:
+        if e["kind"] != "aegis":
+            continue
+        t0, t1 = e["time"], e["time"] + _AEGIS_S
+        carrier_deaths = sorted(t for t, _ in _deaths(match, by_slot[e["slot"]]))
+        window = {
+            "minute": t0 // 60,
+            "side": e["side"],
+            "carrier": e["hero"],
+            "buildings_taken_by_holder_team": [
+                n
+                for t, n in _team_building_kills(match, e["slot"] < 128)
+                if t0 <= t <= t1
+            ],
+            "team_gold_adv_start": _gold_adv_at(match, player, t0 // 60),
+            "team_gold_adv_end": _gold_adv_at(match, player, t1 // 60),
+            "carrier_death_minutes": [
+                round(t / 60) for t in carrier_deaths if t0 <= t <= t1
+            ],
+            "fights": [
+                {"minute": f["minute"], "team_net_gold": f["team_net_gold"]}
+                for f in fights
+                if t0 <= f["start_s"] <= t1
+            ],
+        }
+        if duration < t1:
+            window["game_ended_in_window"] = True
+        aegis.append(window)
+
+    tormentor = []
+    up = _TORMENTOR_SPAWN_S
+    for e in [e for e in events if e["kind"] == "tormentor"] + [None]:
+        end = e["time"] if e else duration
+        if end > up:
+            m0, m1 = up // 60, end // 60
+            advs = [_gold_adv_at(match, player, m) for m in range(m0, m1 + 1)]
+            tormentor.append(
+                {
+                    "up_from_min": m0,
+                    "until_min": m1,
+                    "ended_by": f"{e['side']} team kill" if e else "game end",
+                    "minutes_up": m1 - m0,
+                    "team_gold_adv_start": advs[0],
+                    "team_gold_adv_end": advs[-1],
+                    "minutes_team_led": sum(1 for a in advs[:-1] if a and a > 0),
+                }
+            )
+        if e:
+            up = e["time"] + _TORMENTOR_RESPAWN_S
+    return {"parsed": True, "aegis_windows": aegis, "tormentor_windows": tormentor}
 
 
 # --- Stratz matchup builds --------------------------------------------------
@@ -1025,8 +1317,10 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     shares almost nothing with the core, e.g. a magic vs right-click split),
     player_items (each with its pro-build count, so a rare pick reads as rare,
     plus descriptive tags where item_tags.json has them), player_skipped (items
-    from the build the player was on that they did not buy), timing_vs_pros
-    (player completion minute vs the pro median), and
+    from the build the player was on that they did not buy), order_vs_pros
+    (the player's Nth notable completed item and its minute next to the pro
+    median minute for the Nth item and, when at least half the builds agree,
+    the item pros had in that slot), and
     player_items_in_builds_vs_enemy (per enemy in this game, how many of that
     enemy's sampled builds contained each player item — small n, counts only)."""
     match = _get_obj(f"/matches/{match_id}")
@@ -1041,7 +1335,7 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     seen = set()
     pro_builds: list[set[str]] = []  # each build's notable completed item shorts
     name_of: dict[str, str] = {}
-    pro_minutes: dict[str, list[int]] = {}  # first completion minute per build
+    pro_orders: list[list[tuple[int, str]]] = []  # each build as (minute, short)
     conditioned: dict[str, dict] = {}  # per enemy: player items in their builds
     # Purchases count too: consumed items (Aghanim's Shard) never sit in the
     # final inventory but were bought all the same.
@@ -1072,8 +1366,8 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
             for i in b["items"]:
                 name_of[i["short"]] = i["item"]
                 firsts.setdefault(i["short"], i["minute"])
-            for s, m in firsts.items():
-                pro_minutes.setdefault(s, []).append(m)
+            ordered = _collapse_upgrades({s for s in firsts if _notable(s)})
+            pro_orders.append(sorted((firsts[s], s) for s in ordered))
             bought_in.update(set(shorts) | set(firsts))
             for s in b.get("final") or []:
                 name_of.setdefault(
@@ -1117,9 +1411,7 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
     def names(shorts):
         return [name_of[s] for s in sorted(shorts, key=lambda s: -freq[s])]
 
-    purchases = {e["key"]: e["time"] for e in player.get("purchase_log") or []}
     annotated = []
-    timing = []
     for s in sorted(player_items, key=lambda s: -bought_in.get(s, 0)):
         entry = {"item": mine[s], "pro_builds": bought_in.get(s, 0), "of": n}
         tags = [
@@ -1128,16 +1420,28 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
         if tags:
             entry["tags"] = tags
         annotated.append(entry)
-        mins = pro_minutes.get(s)
-        if mins and len(mins) >= 2 and s in purchases:
-            timing.append(
-                {
-                    "item": mine[s],
-                    "player_min": round(purchases[s] / 60, 1),
-                    "pro_median_min": round(median(mins), 1),
-                    "pro_builds": len(mins),
-                }
-            )
+
+    first_bought: dict[str, int] = {}
+    for e in player.get("purchase_log") or []:
+        first_bought.setdefault(e["key"], e["time"])
+    my_order = sorted((first_bought[s], s) for s in player_items if s in first_bought)
+    order_vs_pros = []
+    for slot, (t, s) in enumerate(my_order):
+        nth = [o[slot] for o in pro_orders if len(o) > slot]
+        if len(nth) < 2:
+            break
+        entry = {
+            "slot": slot + 1,
+            "player_item": mine[s],
+            "player_min": round(t / 60, 1),
+            "pro_median_min": round(median(m for m, _ in nth), 1),
+            "pro_builds": len(nth),
+        }
+        common, count = Counter(x for _, x in nth).most_common(1)[0]
+        if count >= len(nth) * _CORE_FRAC:
+            entry["pro_most_common_item"] = name_of.get(common, common)
+            entry["pro_most_common_in"] = count
+        order_vs_pros.append(entry)
 
     out = {
         "carry": ID_TO_NAME.get(carry_id, str(carry_id)),
@@ -1147,7 +1451,7 @@ def get_build_gaps(match_id: int, account_id: int | None = None) -> dict:
         "player_items": annotated,
         "player_build": "distinct" if on_distinct else "core",
         "player_skipped": names(skipped),
-        "timing_vs_pros": timing,
+        "order_vs_pros": order_vs_pros,
         "player_items_in_builds_vs_enemy": conditioned,
     }
     if distinct:
@@ -1340,6 +1644,30 @@ TOOLS: list[ToolParam] = [
         },
     },
     {
+        "name": "get_fight_report",
+        "description": "Fights: one row per teamfight. Ally deaths with their order and the seconds between first and last, enemy deaths, team_net_gold, won (more enemy than ally deaths, ties by net gold), the player's damage, whether they died, and player_present (dealt damage). taken_by_90s_after lists what a won fight was followed by (buildings, Roshan, tormentor) or 'nothing'. active_item_uses counts the player's active item uses in the fight; unused_while_dying lists owned active items not used in a fight the player died in, with maybe_on_cooldown. Disables and uses outside fights are not visible, so state an unused item as a count, never as a mistake. summary gives fights present vs absent with summed team_net_gold.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
+            },
+            "required": ["match_id"],
+        },
+    },
+    {
+        "name": "get_objective_windows",
+        "description": "Objectives: what followed each aegis and when the tormentor stood untaken. aegis_windows: per aegis pickup, the 5 minutes after it — buildings the holder's team took, the player's team gold advantage at the start and end, minutes the carrier died, and fights in the window. tormentor_windows: each span the tormentor was alive, how it ended (ally kill, enemy kill, game end), the team gold advantage at its start and end, and how many of those minutes the team led. Whether there was room to take it is not in the data.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "match_id": {"type": "integer"},
+                "account_id": {"type": "integer"},
+            },
+            "required": ["match_id"],
+        },
+    },
+    {
         "name": "get_timing_windows",
         "description": "For each fight-enabling item the player completed (Blink, BKB, Manta, etc), what the 3 minutes after held: kills, deaths, teamfight damage, last hits farmed, whether the team fought without the player, enemy buildings taken and tower damage dealt in the window (split-pushing, not pure farming), and deaths_before_completion: the minutes the player died between 10:00 and finishing the item — fighting before the timing was online. contestable is False when the team was already decided behind, so a late item is not a missed window. Use to spot a strong item timing the player did not turn into a fight, or deaths taken before the kit was ready. Reports facts only, not intent.",
         "input_schema": {
@@ -1389,7 +1717,7 @@ TOOLS: list[ToolParam] = [
     },
     {
         "name": "get_build_gaps",
-        "description": "How pros build the player's hero and how the player's build compares, with counts as the judgment. player_items each carry pro_builds/of — how many sampled pro builds contained the item; 0 of 18 is a fact worth naming, and an item is never 'a fine choice' on your say-so. timing_vs_pros compares the player's completion minute to the pro median. player_items_in_builds_vs_enemy gives, per enemy actually in this game, how many builds sampled against that enemy contained each player item — n is small, so state counts ('3 of 6 builds with Medusa'), never percentages. core/alternatives/distinct_build describe the pro build shape; player_skipped are items from the build the player was on that they did not buy. Item tags, where present, are descriptive labels derived per patch from Valve item text — state them, do not turn them into advice.",
+        "description": "How pros build the player's hero and how the player's build compares, with counts as the judgment. player_items each carry pro_builds/of — how many sampled pro builds contained the item; 0 of 18 is a fact worth naming, and an item is never 'a fine choice' on your say-so. order_vs_pros compares by build order: the player's Nth completed item and its minute next to the pro median minute for the Nth item and, when at least half the builds agree, the item pros had in that slot. player_items_in_builds_vs_enemy gives, per enemy actually in this game, how many builds sampled against that enemy contained each player item — n is small, so state counts ('3 of 6 builds with Medusa'), never percentages. core/alternatives/distinct_build describe the pro build shape; player_skipped are items from the build the player was on that they did not buy. Item tags, where present, are descriptive labels derived per patch from Valve item text — state them, do not turn them into advice.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -1441,6 +1769,8 @@ _TOOL_FNS = {
     "compute_metrics": compute_metrics,
     "get_hero_benchmarks": get_hero_benchmarks,
     "get_combat_timings": get_combat_timings,
+    "get_fight_report": get_fight_report,
+    "get_objective_windows": get_objective_windows,
     "get_timing_windows": get_timing_windows,
     "get_farm_pattern": get_farm_pattern,
     "score_lane_matchup": score_lane_matchup,
