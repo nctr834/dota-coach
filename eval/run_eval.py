@@ -9,6 +9,7 @@ deterministic code check (review numbers vs tool-result numbers). Labels are you
 
   python3 eval/run_eval.py            # all labeled matches
   python3 eval/run_eval.py -v         # also print each review + judge reasoning
+  python3 eval/run_eval.py --read facts   # fact-selection mode (own cache entries)
 """
 
 import json
@@ -43,20 +44,25 @@ TAXONOMY_SET = set(TAXONOMY)
 REVIEW_CACHE = ROOT / "eval" / "review_cache.json"
 
 
-def cached_review(match_id: int, fresh: bool = False) -> dict:
+def cached_review(match_id: int, fresh: bool = False, read_mode: str = "prose") -> dict:
     """Reviews are stochastic; cache them so judge/scoring changes re-run without
-    regenerating the agent. Pass fresh=True (or --fresh) after changing the agent."""
+    regenerating the agent. Pass fresh=True (or --fresh) after changing the agent.
+    Each read mode has its own cache entry, so both can be compared on the same
+    matches."""
     cache = json.loads(REVIEW_CACHE.read_text()) if REVIEW_CACHE.exists() else {}
-    key = str(match_id)
+    key = str(match_id) if read_mode == "prose" else f"{match_id}:{read_mode}"
     if not fresh and key in cache:
         return cache[key]
-    result = review_match(account_id=LABELS["account_id"], match_id=match_id)
+    result = review_match(
+        account_id=LABELS["account_id"], match_id=match_id, read_mode=read_mode
+    )
     # The result's "messages" carry SDK objects and are chat-session state, not
     # eval material; cache only what gets scored.
     cache[key] = {
         "review": result["review"],
         "tool_trace": result["tool_trace"],
         "usage": result.get("usage"),
+        "selected_facts": result.get("selected_facts"),
     }
     REVIEW_CACHE.write_text(json.dumps(cache, indent=2))
     return cache[key]
@@ -188,16 +194,20 @@ def verdict_shapes(review: str) -> list[str]:
     return [m.group(0) for m in _VERDICT_SHAPES.finditer(review)]
 
 
+def read_section(review: str) -> str:
+    read = re.search(r"Read:(.*?)(?=\n\s*\n[A-Z][\w' ]*:|\Z)", review, re.DOTALL)
+    return read.group(1) if read else ""
+
+
 def review_length(review: str) -> tuple[int, int]:
     """(total words, sentences in the "Read:" section)."""
-    read = re.search(r"Read:(.*?)(?=\n\s*\n[A-Z][\w' ]*:|\Z)", review, re.DOTALL)
-    sentences = re.findall(r"[.?!](?:\s|$)", read.group(1)) if read else []
+    sentences = re.findall(r"[.?!](?:\s|$)", read_section(review))
     return len(review.split()), len(sentences)
 
 
-def uncited(review: str, must_cite: list[str]) -> list[str]:
-    """Labeled must_cite strings (case-insensitive) the review does not contain."""
-    text = review.lower()
+def uncited(text: str, must_cite: list[str]) -> list[str]:
+    """Labeled must_cite strings (case-insensitive) the text does not contain."""
+    text = text.lower()
     return [fact for fact in must_cite if fact.lower() not in text]
 
 
@@ -211,53 +221,63 @@ def score_gaps(true_gaps: set, predicted: set):
 
 def main(argv):
     verbose = "-v" in argv
+    read_mode = argv[argv.index("--read") + 1] if "--read" in argv else "prose"
     labeled = [m for m in LABELS["matches"] if m["true_gaps"]]
     if not labeled:
         print("No labeled matches. Fill in 'true_gaps' in eval/labels.json.")
         return 1
 
     fresh = "--fresh" in argv
-    print(f"agent={AGENT_MODEL}  judge={JUDGE_MODEL}  matches={len(labeled)}\n")
+    print(
+        f"agent={AGENT_MODEL}  judge={JUDGE_MODEL}  read={read_mode}  "
+        f"matches={len(labeled)}\n"
+    )
     rows = []
-    total_unsupported = 0
     for m in labeled:
-        result = cached_review(m["match_id"], fresh=fresh)
-        j = predict_gaps(result["review"])
+        result = cached_review(m["match_id"], fresh=fresh, read_mode=read_mode)
+        review = result["review"]
+        selected = result.get("selected_facts")
+        j = predict_gaps(review)
         true_g = set(m["true_gaps"])
         pred_g = set(j.get("predicted_gaps", [])) & TAXONOMY_SET
-        p, r, f1 = score_gaps(true_g, pred_g)
-        claims, flipped = check_numbers(result["review"], result["tool_trace"])
-        total_unsupported += len(claims)
-        verdicts = verdict_shapes(result["review"])
-        words, read_sentences = review_length(result["review"])
+        claims, flipped = check_numbers(review, result["tool_trace"])
+        verdicts = verdict_shapes(review)
+        words, read_sentences = review_length(review)
         must_cite = m.get("must_cite") or []
-        missing = uncited(result["review"], must_cite)
-        usage = result.get("usage") or {}
-        rows.append(
-            (
-                m["match_id"],
-                true_g,
-                pred_g,
-                p,
-                r,
-                f1,
-                len(claims),
-                len(verdicts),
-                words,
-                read_sentences,
-                len(must_cite),
-                len(missing),
-                usage.get("input_tokens"),
-                usage.get("output_tokens"),
-                len(flipped),
-            )
+        # Only what the model chose counts: the Read it wrote, or the fact lines
+        # it selected. Blocks code prints every time would pass trivially.
+        chosen = (
+            " ".join(f["line"] for f in selected)
+            if selected is not None
+            else read_section(review)
         )
+        missing = uncited(chosen, must_cite)
+        usage = result.get("usage") or {}
+        row = {
+            "judge": score_gaps(true_g, pred_g),
+            "unsupported": len(claims),
+            "verdicts": len(verdicts),
+            "flipped": len(flipped),
+            "words": words,
+            "read_sentences": read_sentences,
+            "must_cite": len(must_cite),
+            "missing": len(missing),
+            "tokens_in": usage.get("input_tokens"),
+            "tokens_out": usage.get("output_tokens"),
+        }
 
         print(f"match {m['match_id']}")
         print(f"  true:      {sorted(true_g)}")
         print(f"  predicted: {sorted(pred_g)}")
         flag = "  [JUDGE PARSE ERROR]" if j.get("_parse_error") else ""
-        print(f"  P={p:.2f} R={r:.2f} F1={f1:.2f}{flag}")
+        p, r, f1 = row["judge"]
+        print(f"  judge P={p:.2f} R={r:.2f} F1={f1:.2f}{flag}")
+        if selected is not None:
+            cats = {f["category"] for f in selected if f["category"]} or {"no_gap"}
+            row["category"] = score_gaps(true_g, cats)
+            p, r, f1 = row["category"]
+            print(f"  selected:  {[f['id'] for f in selected]} -> {sorted(cats)}")
+            print(f"  category P={p:.2f} R={r:.2f} F1={f1:.2f}")
         print(f"  length: {words} words, {read_sentences} Read sentences")
         if must_cite:
             print(f"  must-cite: {len(must_cite) - len(missing)}/{len(must_cite)}")
@@ -275,31 +295,41 @@ def main(argv):
             # a reading aid for the reviewer, not scored
             print(f"  judge-flagged phrases: {'; '.join(j['verdict_phrases'])}")
         if verbose:
-            print(f"  --- review ---\n{result['review']}\n")
+            print(f"  --- review ---\n{review}\n")
         print()
+        rows.append(row)
 
     n = len(rows)
+
+    def mean(values) -> float:
+        values = list(values)
+        return sum(values) / len(values)
+
     print("=== aggregate ===")
-    print(f"  macro precision: {sum(x[3] for x in rows)/n:.2f}")
-    print(f"  macro recall:    {sum(x[4] for x in rows)/n:.2f}")
-    print(f"  macro F1:        {sum(x[5] for x in rows)/n:.2f}")
-    print(f"  faithful reviews: {sum(1 for x in rows if x[6]==0)}/{n}")
-    print(f"  total unsupported numbers: {total_unsupported}")
-    print(f"  regex-clean reviews: {sum(1 for x in rows if x[7]==0)}/{n}")
-    print(f"  sign-flipped numbers: {sum(x[14] for x in rows)}")
-    print(f"  mean words: {sum(x[8] for x in rows)/n:.0f}")
-    print(f"  mean Read sentences: {sum(x[9] for x in rows)/n:.1f}")
-    total_cite = sum(x[10] for x in rows)
+    for i, name in enumerate(("precision", "recall", "F1")):
+        print(f"  judge macro {name}: {mean(x['judge'][i] for x in rows):.2f}")
+    scored = [x["category"] for x in rows if "category" in x]
+    if scored:
+        # tags come from the selected facts' categories, not from the judge, so
+        # this is a different metric from the judge F1 above
+        for i, name in enumerate(("precision", "recall", "F1")):
+            print(f"  category macro {name}: {mean(x[i] for x in scored):.2f}")
+    print(f"  faithful reviews: {sum(1 for x in rows if not x['unsupported'])}/{n}")
+    print(f"  total unsupported numbers: {sum(x['unsupported'] for x in rows)}")
+    print(f"  regex-clean reviews: {sum(1 for x in rows if not x['verdicts'])}/{n}")
+    print(f"  sign-flipped numbers: {sum(x['flipped'] for x in rows)}")
+    print(f"  mean words: {mean(x['words'] for x in rows):.0f}")
+    print(f"  mean Read sentences: {mean(x['read_sentences'] for x in rows):.1f}")
+    total_cite = sum(x["must_cite"] for x in rows)
     if total_cite:
-        print(
-            f"  must-cite facts cited: {total_cite - sum(x[11] for x in rows)}/{total_cite}"
-        )
-    metered = [x for x in rows if x[12] is not None]
+        cited = total_cite - sum(x["missing"] for x in rows)
+        print(f"  must-cite facts cited: {cited}/{total_cite}")
+    metered = [x for x in rows if x["tokens_in"] is not None]
     if metered:
-        k = len(metered)
         print(
-            f"  mean tokens ({k} reviews with usage): "
-            f"{sum(x[12] for x in metered)/k:.0f} in, {sum(x[13] for x in metered)/k:.0f} out"
+            f"  mean tokens ({len(metered)} reviews with usage): "
+            f"{mean(x['tokens_in'] for x in metered):.0f} in, "
+            f"{mean(x['tokens_out'] for x in metered):.0f} out"
         )
     return 0
 

@@ -10,12 +10,16 @@ from anthropic.types import MessageParam, ToolResultBlockParam
 from dotenv import load_dotenv
 
 import chat_session
-from tools import TOOLS, _TOOL_FNS
+from tools import TOOLS, _TOOL_FNS, _death_line
 from utils import ensure_parsed
 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 AGENT_MODEL = "claude-sonnet-4-6"
+# "prose": the model writes the Read paragraph. "facts": the model only picks
+# fact ids from a code-built sheet and code prints them.
+READ_MODE = os.getenv("REVIEW_READ_MODE", "prose")
+_MAX_FACTS = 4
 
 SYSTEM_REVIEW = """You are a Dota 2 post-game coach for a position-1 (carry) player. You write one paragraph, the Read, of a post-game review; code prints the rest of the review around it.
 
@@ -42,6 +46,159 @@ Output. Code prints Result, Deaths, Objectives, Item timings and Pro build refer
 The Read is at most four short sentences, 100 words in total. Each sentence opens with a fact and its number; none opens by characterizing ("The lane was clean", "The gold swing tells the story") and none says what happened after the last sample ("never recovered"). Synthesis; prioritize, do not enumerate. A loss never reads like a win; a hard draft is context, not a verdict. On a loss, end with the open question the evidence cannot settle ("whether cleaner late fights flip a draft this lopsided is not something the numbers can say"), never a verdict on what the problem was. Name items and counts only, never why an item helps.
 
 No emojis, no bold."""
+
+
+SYSTEM_FACTS = """You are a Dota 2 post-game coach for a position-1 (carry) player. Code has run the tools for one match (results above) and listed every candidate fact on a fact sheet, one per line as "ID [category] text". Your job is selection only: choose the facts the player most needs to see. Code prints the Result line and then your chosen facts verbatim; you write no prose.
+
+Choose at most four ids, most important first. Selection is judgment about what the evidence points to, never about what caused what. Prefer facts that sit next to each other in time or in the gold swings: a death beside the lead flipping, an aegis with nothing taken, a fight the team took while the player dealt no damage, an owned item unused in a fight the player died in, a missed checkpoint or drought. Context facts (draft, lane score, net worth) are chosen only when they are the main thing to see. A win with no real largest_team_deficit gets an empty selection; do not manufacture a critique.
+
+Reply with only a JSON array of ids, for example ["D3", "O1", "F7"]. If the tool results are errors, reply []."""
+
+
+def _fight_fact(f: dict) -> tuple[str | None, str]:
+    """(category, line) for one fight row. The category says which gap the line
+    is evidence for: a fight the player dealt no damage in, a death, or a won
+    fight with nothing taken after; None when it is none of those."""
+
+    def deaths(n: int, side: str) -> str:
+        return f"{n} {side} death{'' if n == 1 else 's'}"
+
+    spread = f" over {f['ally_death_spread_s']}s" if f["ally_death_spread_s"] else ""
+    parts = [
+        f"{f['minute']}m fight: {deaths(f['ally_deaths'], 'ally')}{spread}, "
+        f"{deaths(f['enemy_deaths'], 'enemy')}",
+        f"team net gold {f['team_net_gold']:+d}",
+        f"you dealt {f['player_damage']} damage"
+        + (f" and died at {f['player_death_minute']}m" if f["player_died"] else ""),
+    ]
+    after = f.get("taken_by_90s_after")
+    if after:
+        parts.append(
+            "nothing taken after"
+            if after == "nothing"
+            else f"followed by {', '.join(after)}"
+        )
+    if f["player_damage"] == 0:
+        category = "teamfight_impact"
+    elif f["player_died"]:
+        category = "deaths"
+    elif after == "nothing" and f["minute"] >= 10:
+        category = "objective_conversion"
+    else:
+        category = None
+    return category, "; ".join(parts) + "."
+
+
+def _fact_sheet(by_tool: dict[str, dict]) -> list[dict]:
+    """Every candidate fact for the review as {id, category, line}, built from
+    the tool results. category is an eval gap tag, or None for context."""
+    facts = []
+
+    def add(prefix: str, items: list[tuple[str | None, str]]):
+        for i, (category, line) in enumerate(items, 1):
+            facts.append({"id": f"{prefix}{i}", "category": category, "line": line})
+
+    combat = by_tool.get("get_combat_timings") or {}
+    add("D", [("deaths", _death_line(d)) for d in combat.get("deaths_detail") or []])
+    objectives = by_tool.get("get_objective_windows") or {}
+    add(
+        "O",
+        [
+            ("objective_conversion", x)
+            for x in objectives.get("notable_candidates") or []
+        ],
+    )
+    fights = (by_tool.get("get_fight_report") or {}).get("fights") or []
+    add("F", [_fight_fact(f) for f in fights])
+    unused = []
+    for f in fights:
+        items = [
+            u["item"] + (" (possibly on cooldown)" if u["maybe_on_cooldown"] else "")
+            for u in f.get("unused_while_dying") or []
+        ]
+        if items:
+            unused.append(
+                (
+                    "item_usage",
+                    f"{f['minute']}m fight: died at {f['player_death_minute']}m with "
+                    f"{', '.join(items)} unused.",
+                )
+            )
+    add("U", unused)
+    farm = by_tool.get("get_farm_pattern") or {}
+    add(
+        "C",
+        [
+            (
+                "lane_cs" if c["minute"] <= 10 else "mid_game_farm",
+                f"{c['minute']}m: {c['last_hits']} last hits, target {c['target']}.",
+            )
+            for c in farm.get("cs_checkpoints") or []
+            if not c["met"]
+        ],
+    )
+    add(
+        "G",
+        [
+            (
+                "mid_game_farm",
+                f"{d['from_min']}m to {d['to_min']}m: {d['last_hits_gained']} last hits"
+                + ("; died in the span" if d["died_in_span"] else "")
+                + ("; a teamfight ran in the span" if d["teamfight_in_span"] else "")
+                + ".",
+            )
+            for d in farm.get("farm_droughts") or []
+        ],
+    )
+    timing = by_tool.get("get_timing_windows") or {}
+    add("T", [("teamfight_impact", m["note"]) for m in timing.get("missed") or []])
+    build = by_tool.get("get_build_gaps") or {}
+    add("B", [("itemization", x) for x in build.get("reference_lines") or []])
+    context = []
+    draft = (by_tool.get("get_draft_advantage") or {}).get("advantage")
+    if draft is not None:
+        context.append(
+            (
+                "draft_disadvantage" if draft < 0 else None,
+                f"Draft score {draft:+.1f} for your team.",
+            )
+        )
+    lane = (by_tool.get("score_lane_matchup") or {}).get("advantage")
+    if lane is not None:
+        context.append(
+            (
+                "lane_matchup_disadvantage" if lane < 0 else None,
+                f"Lane matchup score {lane:+.1f} for your lane.",
+            )
+        )
+    checkpoints = (farm.get("networth_vs_enemy_carry") or {}).get("checkpoints")
+    if checkpoints:
+        last = checkpoints[-1]
+        context.append((None, f"{last['minute']}m net worth: {last['gap']}."))
+    if combat.get("gold_swings"):
+        context.append((None, f"Team gold swings: {combat['gold_swings']}."))
+    add("X", context)
+    return facts
+
+
+def _selected_facts(reply: str, sheet: list[dict]) -> list[dict]:
+    """The sheet entries the model's JSON array names, in its order, at most
+    _MAX_FACTS. An unreadable reply selects nothing."""
+    by_id = {f["id"]: f for f in sheet}
+    start, end = reply.find("["), reply.rfind("]")
+    try:
+        ids = json.loads(reply[start : end + 1]) if start != -1 else []
+    except json.JSONDecodeError:
+        ids = []
+    seen = dict.fromkeys(i for i in ids if isinstance(i, str) and i in by_id)
+    return [by_id[i] for i in seen][:_MAX_FACTS]
+
+
+def _by_tool(trace: list[dict]) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for step in trace:
+        out.setdefault(step["tool"], step["result"])
+    return out
 
 
 def _strip_emphasis(text: str) -> str:
@@ -189,9 +346,7 @@ def _assemble(read: str, trace: list[dict]) -> str:
     """The review as shown: the model's Read between the blocks code prints
     verbatim from the tool results. Without a result_line (the match data never
     loaded) the model's text is returned as is."""
-    by_tool: dict[str, dict] = {}
-    for step in trace:
-        by_tool.setdefault(step["tool"], step["result"])
+    by_tool = _by_tool(trace)
     result_line = by_tool.get("get_match_detail", {}).get("result_line")
     if not result_line:
         return read
@@ -231,6 +386,7 @@ def review_match(
     account_id: int | None = None,
     match_id: int | None = None,
     max_turns: int = 8,
+    read_mode: str | None = None,
 ) -> dict:
     if account_id is None and match_id is None:
         raise ValueError("provide account_id or match_id")
@@ -242,18 +398,49 @@ def review_match(
         ]
         if not ensure_parsed(match_id):
             return {"review": UNPARSED_NOTE, "tool_trace": [], "messages": []}
-    ask = f"Write the Read for match_id {match_id}" + (
+    facts_mode = (read_mode or READ_MODE) == "facts"
+    task = "Select the facts" if facts_mode else "Write the Read"
+    ask = f"{task} for match_id {match_id}" + (
         f" for account_id {account_id}." if account_id else "."
     )
 
     trace = _triage(match_id, account_id)
-    result = run_agent(
-        SYSTEM_REVIEW,
-        history=_triage_messages(ask, trace),
-        max_turns=max_turns,
-        trace=trace,
-    )
-    result["text"] = _assemble(result["text"], result["tool_trace"])
+    history = _triage_messages(ask, trace)
+    selected = None
+    if facts_mode:
+        sheet = _fact_sheet(_by_tool(trace))
+        history[-1]["content"].append(
+            {
+                "type": "text",
+                "text": "Fact sheet:\n"
+                + "\n".join(
+                    f"{f['id']} [{f['category'] or 'context'}] {f['line']}"
+                    for f in sheet
+                ),
+            }
+        )
+        result = run_agent(
+            SYSTEM_FACTS, history=history, max_turns=max_turns, trace=trace
+        )
+        result_line = _by_tool(trace).get("get_match_detail", {}).get("result_line")
+        if result_line:
+            selected = _selected_facts(result["text"], sheet)
+            read = (
+                "\n" + "\n".join(f["line"] for f in selected)
+                if selected
+                else " Nothing in the data stands out."
+            )
+            result["text"] = f"Result: {result_line}\n\nRead:{read}"
+        else:
+            result["text"] = (
+                "The match data source (OpenDota) is temporarily unavailable; "
+                "retry shortly."
+            )
+    else:
+        result = run_agent(
+            SYSTEM_REVIEW, history=history, max_turns=max_turns, trace=trace
+        )
+        result["text"] = _assemble(result["text"], result["tool_trace"])
     if result["messages"] and result["messages"][-1]["role"] == "assistant":
         # the saved session opens with the review as shown, not the bare Read
         result["messages"][-1] = {
@@ -276,6 +463,7 @@ def review_match(
         "tool_trace": result["tool_trace"],
         "messages": result["messages"],
         "usage": result.get("usage"),
+        "selected_facts": selected,
     }
 
 

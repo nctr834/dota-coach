@@ -490,6 +490,53 @@ def _review_assembly():
     assert match_review._assemble("OpenDota is down.", errored) == "OpenDota is down."
 
 
+def _fact_selection():
+    import match_review
+
+    by_tool = {
+        "get_combat_timings": {
+            "deaths_detail": [
+                {
+                    "minute": 31,
+                    "killed_by": "Pudge",
+                    "context": "caught_alone",
+                    "networth_rank": "2 of 10",
+                    "team_gold_adv": 2654,
+                    "bought_back": False,
+                }
+            ]
+        },
+        "get_fight_report": {
+            "fights": [
+                {
+                    "minute": 37,
+                    "ally_deaths": 4,
+                    "ally_death_spread_s": 40,
+                    "enemy_deaths": 1,
+                    "team_net_gold": 1193,
+                    "player_damage": 0,
+                    "player_died": False,
+                    "taken_by_90s_after": ["Roshan"],
+                }
+            ]
+        },
+        "get_draft_advantage": {"advantage": -12.5},
+    }
+    sheet = match_review._fact_sheet(by_tool)
+    assert [(f["id"], f["category"]) for f in sheet] == [
+        ("D1", "deaths"),
+        ("F1", "teamfight_impact"),
+        ("X1", "draft_disadvantage"),
+    ], sheet
+    assert sheet[1]["line"] == (
+        "37m fight: 4 ally deaths over 40s, 1 enemy death; team net gold +1193; "
+        "you dealt 0 damage; followed by Roshan."
+    ), sheet[1]
+    picked = match_review._selected_facts('Here: ["F1", "Z9", "D1", "F1"]', sheet)
+    assert [f["id"] for f in picked] == ["F1", "D1"], picked
+    assert match_review._selected_facts("no json", sheet) == []
+
+
 def _triage_message_shape():
     import match_review
 
@@ -643,6 +690,7 @@ for name, fn in [
     ),
     ("match_review: triage message shape", _triage_message_shape),
     ("match_review: review assembly", _review_assembly),
+    ("match_review: fact sheet + selection", _fact_selection),
     ("match_review: score_lane_matchup", _lane_matchup),
     ("match_review: get_draft_advantage", _draft_advantage),
     ("chat session transcript", _chat_history_transcript),

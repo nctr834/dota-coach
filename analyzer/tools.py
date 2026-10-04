@@ -411,25 +411,31 @@ _DEATH_CONTEXT = {
 _NOTABLE_DEATHS = 4
 
 
+def _death_line(d: dict) -> str:
+    gold = d["team_gold_adv"]
+    parts = [
+        f"{d['minute']}m: {_DEATH_CONTEXT[d['context']]}"
+        + (f" to {d['killed_by']}" if d["killed_by"] else ""),
+        f"net worth rank {d['networth_rank']}" if d["networth_rank"] else "",
+        f"team gold {gold:+d}" if gold is not None else "",
+        "bought back" if d["bought_back"] else "",
+    ]
+    return "; ".join(p for p in parts if p) + "."
+
+
 def _notable_death_lines(details: list[dict]) -> list[str]:
-    """Ready-made lines for the deaths at net-worth rank 1 or 2, at most four:
-    caught alone or first in a fight are kept ahead of the rest, and the lines
-    print in time order."""
-    farmed = [d for d in details if (d["networth_rank"] or "")[:2] in ("1 ", "2 ")]
+    """Ready-made lines for at most four deaths: caught alone or first in a
+    fight before the rest, then the richer the player was, and the lines print
+    in time order."""
     early = ("caught_alone", "first_death_of_teamfight")
-    chosen = sorted(farmed, key=lambda d: d["context"] not in early)[:_NOTABLE_DEATHS]
-    lines = []
-    for d in sorted(chosen, key=lambda d: d["minute"]):
-        gold = d["team_gold_adv"]
-        parts = [
-            f"{d['minute']}m: {_DEATH_CONTEXT[d['context']]}"
-            + (f" to {d['killed_by']}" if d["killed_by"] else ""),
-            f"net worth rank {d['networth_rank']}",
-            f"team gold {gold:+d}" if gold is not None else "",
-            "bought back" if d["bought_back"] else "",
-        ]
-        lines.append("; ".join(p for p in parts if p) + ".")
-    return lines
+    chosen = sorted(
+        details,
+        key=lambda d: (
+            d["context"] not in early,
+            int((d["networth_rank"] or "10").split()[0]),
+        ),
+    )[:_NOTABLE_DEATHS]
+    return [_death_line(d) for d in sorted(chosen, key=lambda d: d["minute"])]
 
 
 def get_combat_timings(match_id: int, account_id: int | None = None) -> dict:
@@ -506,20 +512,27 @@ _TIMING_MIN_GAMES = 3  # only rank an item pros bought in at least this many gam
 
 
 def _hero_fight_timings(hero_id: int) -> list[dict]:
-    """The hero's fight-timing items, learned from pro games: the completed items
+    """The hero's fight-timing items, learned from this patch's pro games: the completed items
     pros most often got a kill within 3 minutes of completing. Returns up to
     _TIMING_TOP_N as [{short, item, converted, games, rate}], highest rate first."""
     cache = _load_cache(ITEM_TIMING_CACHE)
     key = str(hero_id)
-    if not utils._FRESH and key in cache:
-        return cache[key]
+    since = _patch_start()
+    entry = cache.get(key)
+    if not utils._FRESH and isinstance(entry, dict) and entry.get("since") == since:
+        return entry["items"]
     converted: dict[str, int] = {}
     games_with: dict[str, int] = {}
     for account_id in CARRY_SEED.values():
         query = f"""
         {{
         player(steamAccountId: {account_id}) {{
-            matches(request: {{heroIds: [{hero_id}], isParsed: true, take: 3}}) {{
+            matches(request: {{
+                heroIds: [{hero_id}],
+                startDateTime: {since},
+                isParsed: true,
+                take: 3
+            }}) {{
                 players(steamAccountId: {account_id}) {{
                     stats {{
                         itemPurchases {{ itemId time }}
@@ -561,9 +574,9 @@ def _hero_fight_timings(hero_id: int) -> list[dict]:
         if g >= _TIMING_MIN_GAMES
     ]
     ranked.sort(key=lambda r: r["rate"], reverse=True)
-    cache[key] = ranked[:_TIMING_TOP_N]
+    cache[key] = {"since": since, "items": ranked[:_TIMING_TOP_N]}
     ITEM_TIMING_CACHE.write_text(json.dumps(cache, indent=2))
-    return cache[key]
+    return cache[key]["items"]
 
 
 def get_timing_windows(match_id: int, account_id: int | None = None) -> dict:
@@ -1012,7 +1025,13 @@ def _active_items_owned(player: dict, t: int) -> dict[str, str]:
     out = {}
     for s in bought - consumed:
         v = item_data.get(f"item_{s}") or {}
-        if _notable(s) and "Active:" in (v.get("description") or ""):
+        tags = (item_tags.get(s) or {}).get("tags") or {}
+        # cleave items' active is cutting trees, not a fight button
+        if (
+            _notable(s)
+            and "Active:" in (v.get("description") or "")
+            and tags.get("cleave") != 2
+        ):
             out[s] = v["displayName"]
     return out
 
@@ -1218,14 +1237,13 @@ def get_objective_windows(match_id: int, account_id: int | None = None) -> dict:
             ]
             ranked.append((1, parts))
     ranked.sort(key=lambda r: r[0])
+    lines = ["; ".join(p for p in parts if p) + "." for _, parts in ranked]
     return {
         "parsed": True,
         "aegis_windows": aegis,
         "tormentor_windows": tormentor,
-        "notable": [
-            "; ".join(p for p in parts if p) + "."
-            for _, parts in ranked[:_NOTABLE_OBJECTIVES]
-        ],
+        "notable": lines[:_NOTABLE_OBJECTIVES],
+        "notable_candidates": lines,
     }
 
 
